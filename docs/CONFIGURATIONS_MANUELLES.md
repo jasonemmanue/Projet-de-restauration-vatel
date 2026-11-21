@@ -235,20 +235,46 @@ Valeurs récoltées :
 6. Les clés vont dans Railway (`GENIUSPAY_CLE_TEST`, `GENIUSPAY_CLE_REELLE`,
    `GENIUSPAY_SECRET_WEBHOOK`), jamais dans le dépôt ni dans la conversation.
 
-Fait le 21/11 : les quatre clés sont dans Railway, sous les noms que GeniusPay emploie lui-même,
-deux par mode. Noms réels à utiliser côté API, à ne pas renommer :
-- mode test : `GENIUSPAY_API_KEY`, `GENIUSPAY_SECRET_KEY`
-- mode réel : `GENIUSPAY_LIVE_API_KEY`, `GENIUSPAY_LIVE_SECRET_KEY`
+Fait le 21/11 : les six variables sont dans Railway, trois par mode, sous les noms que GeniusPay
+emploie lui-même. Noms réels à utiliser côté API, à ne pas renommer :
+- mode test : `GENIUSPAY_API_KEY`, `GENIUSPAY_SECRET_KEY`, `GENIUSPAY_WEBHOOK_SECRET`
+- mode réel : `GENIUSPAY_LIVE_API_KEY`, `GENIUSPAY_LIVE_SECRET_KEY`, `GENIUSPAY_LIVE_WEBHOOK_SECRET`
 
-GeniusPay ne fournit pas de secret de signature distinct : la signature du webhook se vérifie avec
-la clé secrète du mode concerné. Donc pas de variable `GENIUSPAY_SECRET_WEBHOOK`.
+Le secret de signature du webhook est donc bien distinct de la clé secrète d'appel, et il y en a un
+par mode. La vérification doit utiliser celui du mode de la route appelée :
+`GENIUSPAY_WEBHOOK_SECRET` sur `/webhook/test`, `GENIUSPAY_LIVE_WEBHOOK_SECRET` sur
+`/webhook/reel`. Un webhook qui ne se vérifie qu'avec le secret de l'autre mode se refuse.
 
 Webhooks : en attente. Les deux adresses sont fixées par le contrat et ne changeront pas, mais la
 route n'est pas encore déployée (au 21/11 midi l'API en ligne expose 41 routes, aucune de
 paiement). Si l'interface GeniusPay teste l'adresse au moment de la déclaration, elle échouera :
 dans ce cas, déclarer après la mise en ligne du bloc paiements.
 
-À reporter : « webhooks déclarés », et les trois taux de frais.
+### Grille de frais, donnée par l'exploitant le 21/11
+
+Reprise de Prepaxia, où elle tourne déjà en réel. Ces valeurs vont dans la table `parametres`,
+jamais en dur, et alimentent l'écran admin des frais et le tableau de bord.
+
+| Poste | Valeur |
+|-------|--------|
+| GeniusPay, encaissement | 100 XOF fixe + 1,0 % |
+| Retrait | 1,0 % |
+| Passerelle wave | 1,5 % |
+| Passerelle orange_money | 3,5 % |
+| Passerelle mtn_money | 3,5 % |
+| Passerelle stripe | 5 % |
+| Passerelle lien_tiers | 5 % |
+
+Exemple à vérifier en recette, recharge de 500 XOF par Wave : passerelle 8 XOF, GeniusPay 105 XOF,
+retrait 4 XOF, frais 117 XOF, net 383 XOF.
+
+Arrondi, à trancher par la session API : sur Prepaxia le même exemple affiche 116 de frais et 384
+de net, parce que le total est arrondi une seule fois (7,5 + 105 + 3,875 = 116,375) alors que
+chaque ligne est arrondie à part. Résultat, les colonnes du tableau ne s'additionnent pas. Pour la
+cantine : **arrondir chaque ligne à l'entier XOF, puis faire le total par somme des lignes
+arrondies**, de sorte que ce qui est affiché s'additionne toujours.
+
+À reporter : « webhooks déclarés », et les numéros de test par opérateur.
 
 Valeurs récoltées :
 - Pourcentage à l'encaissement : _(à remplir)_
