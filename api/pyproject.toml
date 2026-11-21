@@ -1,0 +1,28 @@
+# Configuration du projet API : métadonnées, ruff et pytest.
+[project]
+name = "cantine-vatel-api"
+version = "0.1.0"
+description = "API FastAPI de CANTINE VATEL"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "SIM", "RUF"]
+# S101 : assert est le langage des tests. RUF001-003 : le français porte des caractères typographiques.
+ignore = ["RUF001", "RUF002", "RUF003", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+"recette/**" = ["S101"]
+"alembic/**" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+addopts = "-q"

@@ -1,0 +1,5 @@
+# Dépendances de développement : contrôles et tests, jamais installées dans l'image.
+-r requirements.txt
+pytest==9.2.0
+pytest-asyncio==1.5.0
+ruff==0.17.6

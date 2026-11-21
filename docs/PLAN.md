@@ -68,7 +68,7 @@ fichier.
 | --- | --- | --- | --- | --- | --- |
 | P00 | fait | cadrage / compte 1 | CLAUDE.md, docs/, .gitignore, .env.example, README.md | Dépôt initialisé, cadrage écrit et commité | Rien, étape close |
 | P01 | fait | cadrage / compte 1 | docs/CHARTE.md, docs/marque/, app/outils/marque.mjs | Palettes, contrastes, 9 SVG et 16 exports PNG produits | Rien, étape close. Les valeurs sont à reporter dans le thème Flutter en F1 |
-| A1 | à faire | | api/ | | Créer la structure FastAPI, la configuration, la migration initiale et `GET /sante` |
+| A1 | en cours | api / compte courant | api/app, api/alembic, api/tests | Structure, configuration, 26 modèles, migration 0001, /health, erreurs, middlewares ; ruff et 35 tests verts | Écrire api/recette (bloc « sante »), Dockerfile, railway.json, docker-compose.yml, README |
 | A2 | à faire | | api/, railway | | Déployer sur Railway et passer la recette « sante » en ligne |
 | F1 | à faire | | app/ | | Créer le projet Flutter, le thème des deux modes depuis docs/CHARTE.md et la navigation |
 | M1 | à faire | | api/ | | Inscription, code de vérification en mode démo, connexion, rôles |
