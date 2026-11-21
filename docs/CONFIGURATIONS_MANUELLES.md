@@ -14,7 +14,7 @@ Mis à jour le 21 novembre 2026.
 | 3 | Clients OAuth Google (hors Firebase Auth) | fait |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire, compte payant confirmé |
 | 5 | API Gmail (envoi réel des codes) | en cours |
-| 6 | GeniusPay (clés, webhooks, taux de frais) | en cours |
+| 6 | GeniusPay (clés, webhooks, taux de frais) | fait |
 | 7 | Fiches des boutiques (Play, App Store) | à faire |
 | 8 | Clé web push FCM (notifications sur le site) | fait, valeur à reporter |
 | 9 | Compte développeur Google Play (25 USD, une fois) | à faire |
@@ -215,12 +215,20 @@ Procédure :
 À reporter : « 4 variables Gmail posées dans Railway » et l'adresse expéditrice. Jamais les valeurs
 du client secret ni du jeton.
 
+Piège rencontré le 21/11, à retenir pour toutes les pages Google Cloud : le navigateur était
+connecté avec `emmanuelsakam@gmail.com`, qui n'a aucun droit sur ces projets, d'où un refus de
+permission qui proposait de demander un rôle à un administrateur. Il ne fallait accorder aucun
+rôle, seulement changer de compte. Ajouter `&authuser=emmanudev2@gmail.com` à l'adresse force le
+bon compte pour l'onglet.
+
+Utilisateur de test ajouté le 21/11.
+
 Valeurs récoltées :
 - Adresse expéditrice : _(à remplir)_
 
 ---
 
-## 6. GeniusPay — en cours
+## 6. GeniusPay — fait
 
 À récupérer dans le tableau de bord marchand GeniusPay :
 1. La clé marchand de **test**.
@@ -275,7 +283,12 @@ chaque ligne est arrondie à part. Résultat, les colonnes du tableau ne s'addit
 cantine : **arrondir chaque ligne à l'entier XOF, puis faire le total par somme des lignes
 arrondies**, de sorte que ce qui est affiché s'additionne toujours.
 
-À reporter : « webhooks déclarés », et les numéros de test par opérateur.
+Webhooks déclarés par l'exploitant le 21/11. Reste à faire une recharge de bout en bout en mode
+test pour prouver la chaîne : si le solde se crédite, le webhook est bien reçu, signé et traité ;
+s'il reste « en attente », regarder les journaux Railway (chercher `webhook`) et l'historique des
+appels sortants dans le tableau de bord GeniusPay.
+
+À reporter : les numéros de test par opérateur, s'ils en fournissent.
 
 Valeurs récoltées :
 - Pourcentage à l'encaissement : _(à remplir)_
