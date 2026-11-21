@@ -474,4 +474,52 @@ class TraductionsFr extends Traductions {
   @override
   String get commandeGeleeInfo =>
       'Figée depuis la veille, modification impossible';
+
+  @override
+  String get publierMenu => 'Publier';
+
+  @override
+  String get etatBrouillon => 'Brouillon';
+
+  @override
+  String get etatPublie => 'Publié';
+
+  @override
+  String get creerMenuJour => 'Créer le menu de ce jour';
+
+  @override
+  String get catalogue => 'Catalogue';
+
+  @override
+  String get platsDuMenu => 'Plats du menu';
+
+  @override
+  String get nouveauPlat => 'Nouveau plat';
+
+  @override
+  String get enregistrer => 'Enregistrer';
+
+  @override
+  String get supprimer => 'Supprimer';
+
+  @override
+  String get tarifsTitre => 'Tarifs par profil';
+
+  @override
+  String get nomDuPlat => 'Nom du plat';
+
+  @override
+  String get descriptionPlat => 'Description';
+
+  @override
+  String get supplementPrix => 'Prix de la part en plus';
+
+  @override
+  String get aucunPlatAuMenu => 'Aucun plat au menu ce jour';
+
+  @override
+  String get menusTitre => 'Menus de la semaine';
+
+  @override
+  String get platsTitre => 'Plats';
 }

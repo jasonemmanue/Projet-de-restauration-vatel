@@ -346,3 +346,50 @@ A5 sera en ligne.
 
 **Reste à faire.** Ticket QR et recharge (lots suivants). Brancher sur l'API dès A5 : le jeu de
 démonstration disparaît alors.
+
+---
+
+## APP-07, back office partie 1
+
+**Fait.** Le cadre du back office existait déjà (barre d'onglets sur téléphone, rail sur tablette, menu
+latéral fixe sur ordinateur). S'ajoutent la gestion des menus de la semaine (créer le menu d'un jour, y poser
+des plats pris au catalogue, publier, état brouillon ou publié visible) et le catalogue des plats (liste par
+service, création, modification, suppression, prix de la part en plus) avec les tarifs par profil éditables.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `flutter test` : 5 tests verts. Les routes
+`/admin/*` n'existent pas encore côté API : les écrans appellent l'API, avalent son absence et tiennent un
+état local pour que la démonstration tourne. Dès que A8 livre ses routes, l'état local est à retirer.
+
+**À tester par vous.**
+1. Sur ordinateur, espace admin, onglet Menus : créer le menu de demain, y ajouter trois plats par le
+   catalogue, publier. L'état passe de Brouillon à Publié.
+2. Modifier le prix d'un profil dans la liste des tarifs et vérifier qu'il tient.
+3. Créer un plat, le modifier, le supprimer.
+
+**Résultat.**
+
+**Reste à faire.** APP-08 : commandes du jour, tableau de bord, ajustement de solde. Et brancher tout cela
+sur les vraies routes dès A8.
+
+---
+
+## Clé du compte de service Firebase, pour l'Admin SDK
+
+**État.** Pas encore générée. Elle est nécessaire à l'API pour envoyer les notifications poussées (A7).
+
+**Pourquoi elle n'est pas faite ici.** Les deux comptes authentifiés dans gcloud sur ce poste
+(`emmasurfohhgreat@gmail.com` et `sakamemmanuel@gmail.com`) n'ont aucun droit sur le projet `vatel-project`,
+qui appartient à `emmanudev2@gmail.com`. Authentifier ce compte demande un navigateur, donc une action de
+l'exploitant.
+
+**Comment la poser, au choix.**
+1. `gcloud auth login` avec `emmanudev2@gmail.com`, puis la clé se crée en une commande et part dans Railway.
+2. Console Firebase, Paramètres du projet, Comptes de service, « Générer une nouvelle clé privée ». Le JSON
+   téléchargé est ensuite encodé et posé dans Railway sans jamais passer par le dépôt.
+
+**Pourquoi c'est sûr.** La clé ne touche pas le dépôt, qui est public : elle vit uniquement dans les
+variables du service Railway, encodée en base64 sous `FIREBASE_COMPTE_SERVICE`, et n'est lue que par l'API au
+démarrage. Elle ne descend jamais dans l'application mobile ni dans le site, qui n'ont besoin que des
+identifiants publics. Elle est révocable à tout moment depuis la console, ce qui coupe l'accès sans toucher au
+code. Et le `.gitignore` refuse déjà `service-account*.json` et `firebase-adminsdk*.json`, donc un
+téléchargement laissé dans le dossier ne peut pas être commité par erreur.

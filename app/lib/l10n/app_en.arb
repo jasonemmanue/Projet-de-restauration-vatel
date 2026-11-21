@@ -153,5 +153,21 @@
   "mouvementsTitre": "Transactions",
   "joursChoisis": "{jours} day(s) selected",
   "rienChoisiCeJour": "Nothing selected that day",
-  "commandeGeleeInfo": "Frozen since the day before, cannot be changed"
+  "commandeGeleeInfo": "Frozen since the day before, cannot be changed",
+  "publierMenu": "Publish",
+  "etatBrouillon": "Draft",
+  "etatPublie": "Published",
+  "creerMenuJour": "Create that day menu",
+  "catalogue": "Catalogue",
+  "platsDuMenu": "Dishes on the menu",
+  "nouveauPlat": "New dish",
+  "enregistrer": "Save",
+  "supprimer": "Delete",
+  "tarifsTitre": "Prices by profile",
+  "nomDuPlat": "Dish name",
+  "descriptionPlat": "Description",
+  "supplementPrix": "Extra portion price",
+  "aucunPlatAuMenu": "No dish on the menu that day",
+  "menusTitre": "Menus of the week",
+  "platsTitre": "Dishes"
 }

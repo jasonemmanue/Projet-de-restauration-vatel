@@ -473,4 +473,52 @@ class TraductionsEn extends Traductions {
   @override
   String get commandeGeleeInfo =>
       'Frozen since the day before, cannot be changed';
+
+  @override
+  String get publierMenu => 'Publish';
+
+  @override
+  String get etatBrouillon => 'Draft';
+
+  @override
+  String get etatPublie => 'Published';
+
+  @override
+  String get creerMenuJour => 'Create that day menu';
+
+  @override
+  String get catalogue => 'Catalogue';
+
+  @override
+  String get platsDuMenu => 'Dishes on the menu';
+
+  @override
+  String get nouveauPlat => 'New dish';
+
+  @override
+  String get enregistrer => 'Save';
+
+  @override
+  String get supprimer => 'Delete';
+
+  @override
+  String get tarifsTitre => 'Prices by profile';
+
+  @override
+  String get nomDuPlat => 'Dish name';
+
+  @override
+  String get descriptionPlat => 'Description';
+
+  @override
+  String get supplementPrix => 'Extra portion price';
+
+  @override
+  String get aucunPlatAuMenu => 'No dish on the menu that day';
+
+  @override
+  String get menusTitre => 'Menus of the week';
+
+  @override
+  String get platsTitre => 'Dishes';
 }

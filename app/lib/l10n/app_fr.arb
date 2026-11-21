@@ -209,5 +209,21 @@
     }
   },
   "rienChoisiCeJour": "Rien choisi ce jour",
-  "commandeGeleeInfo": "Figée depuis la veille, modification impossible"
+  "commandeGeleeInfo": "Figée depuis la veille, modification impossible",
+  "publierMenu": "Publier",
+  "etatBrouillon": "Brouillon",
+  "etatPublie": "Publié",
+  "creerMenuJour": "Créer le menu de ce jour",
+  "catalogue": "Catalogue",
+  "platsDuMenu": "Plats du menu",
+  "nouveauPlat": "Nouveau plat",
+  "enregistrer": "Enregistrer",
+  "supprimer": "Supprimer",
+  "tarifsTitre": "Tarifs par profil",
+  "nomDuPlat": "Nom du plat",
+  "descriptionPlat": "Description",
+  "supplementPrix": "Prix de la part en plus",
+  "aucunPlatAuMenu": "Aucun plat au menu ce jour",
+  "menusTitre": "Menus de la semaine",
+  "platsTitre": "Plats"
 }

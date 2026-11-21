@@ -979,6 +979,102 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Figée depuis la veille, modification impossible'**
   String get commandeGeleeInfo;
+
+  /// No description provided for @publierMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier'**
+  String get publierMenu;
+
+  /// No description provided for @etatBrouillon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillon'**
+  String get etatBrouillon;
+
+  /// No description provided for @etatPublie.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publié'**
+  String get etatPublie;
+
+  /// No description provided for @creerMenuJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer le menu de ce jour'**
+  String get creerMenuJour;
+
+  /// No description provided for @catalogue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue'**
+  String get catalogue;
+
+  /// No description provided for @platsDuMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plats du menu'**
+  String get platsDuMenu;
+
+  /// No description provided for @nouveauPlat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau plat'**
+  String get nouveauPlat;
+
+  /// No description provided for @enregistrer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get enregistrer;
+
+  /// No description provided for @supprimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get supprimer;
+
+  /// No description provided for @tarifsTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifs par profil'**
+  String get tarifsTitre;
+
+  /// No description provided for @nomDuPlat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du plat'**
+  String get nomDuPlat;
+
+  /// No description provided for @descriptionPlat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get descriptionPlat;
+
+  /// No description provided for @supplementPrix.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix de la part en plus'**
+  String get supplementPrix;
+
+  /// No description provided for @aucunPlatAuMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun plat au menu ce jour'**
+  String get aucunPlatAuMenu;
+
+  /// No description provided for @menusTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Menus de la semaine'**
+  String get menusTitre;
+
+  /// No description provided for @platsTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plats'**
+  String get platsTitre;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/admin/ecran_cuisine.dart';
 import '../../features/admin/ecran_menus_admin.dart';
+import '../../features/admin/ecran_plats_admin.dart';
 import '../../features/admin/ecran_reglages_admin.dart';
 import '../../features/admin/ecran_tableau_bord.dart';
 import '../../features/auth/ecran_bienvenue.dart';
@@ -456,6 +457,12 @@ StatefulShellRoute _coquilleAdmin() {
           GoRoute(
             path: '${Chemins.admin}/menus',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranMenusAdmin(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'plats',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranPlatsAdmin(),
+              ),
+            ],
           ),
         ],
       ),
