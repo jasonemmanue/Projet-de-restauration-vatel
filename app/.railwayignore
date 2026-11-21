@@ -1,0 +1,8 @@
+# Role du fichier : ce que l envoi vers Railway laisse sur le poste. Le web n a besoin ni des
+# dossiers natifs ni des resultats de build, et aucune valeur secrete ne doit partir.
+build/
+.dart_tool/
+android/
+ios/
+firebase.defines
+*.iml

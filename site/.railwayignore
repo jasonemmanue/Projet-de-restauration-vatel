@@ -1,0 +1,5 @@
+# Role du fichier : ce que l envoi vers Railway laisse sur le poste (reinstalle ou reconstruit la-bas).
+node_modules/
+.next/
+out/
+tsconfig.tsbuildinfo

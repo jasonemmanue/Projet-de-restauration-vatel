@@ -82,6 +82,14 @@ class Chemins {
     visiteur,
   ];
 
+  /// Premier ecran a l ouverture. Le back office en ligne est la meme application construite avec
+  /// ENTREE=/connexion : on y arrive sur la connexion plutot que sur l accueil grand public.
+  /// Seul un chemin public est accepte, pour qu une valeur fausse ne casse pas le demarrage.
+  static String get entree {
+    const String demande = String.fromEnvironment('ENTREE');
+    return publics.contains(demande) ? demande : bienvenue;
+  }
+
   /// Racine de l espace convive.
   static const String convive = '/convive';
 
@@ -121,7 +129,7 @@ final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
   ref.onDispose(changements.dispose);
 
   return GoRouter(
-    initialLocation: Chemins.bienvenue,
+    initialLocation: Chemins.entree,
     refreshListenable: changements,
     redirect: (BuildContext contexte, GoRouterState etat) {
       final AsyncValue<Session?> session = ref.read(sessionProvider);
