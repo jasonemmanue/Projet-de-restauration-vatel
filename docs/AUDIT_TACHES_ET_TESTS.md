@@ -137,3 +137,60 @@ https://projet-de-restauration-vatel-production.up.railway.app --bloc sante --co
 l'application (F8) et celle du site (S2) dès qu'elles existent. Lire l'adresse réelle du client derrière le
 relais (`PROXIES_DE_CONFIANCE=1`) reste à confirmer en A3 avec les premières limites par route.
 
+---
+
+## F1, fondations de l'application Flutter
+
+**Fait.** Projet `com.vatel.cantine` (Android, iOS, web) avec `lib/core` (thème des deux modes repris de la
+charte, responsive à trois tailles, client API, stockage sécurisé, routes par rôle, socle hors ligne),
+`lib/features` pour les neuf domaines et `lib/shared/widgets`. Traductions fr et en, polices embarquées,
+icônes et écrans de lancement générés depuis `docs/marque/exports/`. Firebase branché sur `vatel-project`,
+boutons Google, Apple et code QR qui ne se déforment pas, paiement ouvert à tout convive.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found » (relancé après chaque lot). `flutter test` :
+1 test vert, l'application démarre sur l'écran de bienvenue. `flutter build web` : réussi. Les trois
+applications Firebase sont créées et leurs configurations téléchargées ; l'empreinte SHA-1 de débogage
+`CA:8A:1F:20:6C:05:3D:5D:29:AE:7D:EF:BB:82:19:C9:AB:73:19:76` est enregistrée sur l'app Android. Recette en
+ligne non lancée : l'application ne consomme encore aucune route.
+
+**À tester par vous.**
+1. Sur Android, `flutter run --dart-define=API_URL=https://<URL_API>/api/v1` : l'écran de bienvenue montre le
+   symbole qui se dessine, puis les boutons Google et code QR, sans bouton Apple.
+2. Sur iPhone ou dans Chrome sur PC, même écran : les boutons Google, Apple et code QR sont là, aucun logo
+   écrasé, aucun texte coupé.
+3. Sur Android, mode clair puis mode sombre du système : toutes les couleurs suivent, le contenu passe sous
+   les barres système sans être masqué par l'encoche.
+4. Sur Android, réduire les animations dans les réglages d'accessibilité, rouvrir l'application : le symbole
+   s'affiche d'un coup, sans animation.
+
+**Résultat.**
+
+**Reste à faire.** F2 : inscription, connexion et vérification. Les écrans sont encore des pages d'attente
+qui nomment leur étape. Firebase n'est pas encore utilisé pour les notifications (F7). Le code couleur Vatel
+(bleu relevé à `#7CB5E3`) n'est pas appliqué : il attend le code officiel.
+
+---
+
+## Paiements ouverts à tous, et rythme de la semaine
+
+**Fait.** Tout convive peut recharger son propre porte-monnaie, élève compris ; un parent lié peut en plus
+recharger celui de ses enfants ; un employé, un étudiant ou un compte « autre » n'a besoin d'aucune liaison.
+Le statut `autre` est ajouté à `utilisateurs.statut_convive` et à `tarifs.profil`. Le lien de paiement est
+accessible depuis les écrans d'argent de tous les rôles. Le menu de la semaine est publié le jeudi pour la
+semaine suivante : deux réglages (`jour_publication_menu`, `semaines_preparees_a_l_avance`) entrent dans
+`parametres`.
+
+**Vérifié par Claude.** Documents mis à jour : `CLAUDE.md`, `docs/CAHIER.md`, `docs/MODELE_DONNEES.md`,
+`docs/CONTRAT_API.md`. Côté application, les routes `/convive/compte/recharge`,
+`/convive/compte/lien-paiement` et `/parent/recharge/lien-paiement` existent ; `flutter analyze` propre.
+Rien n'est vérifié côté API : ces règles sont à implémenter en A5 et A6.
+
+**À tester par vous.**
+1. Sur ordinateur, relire la ligne « Qui peut être bénéficiaire » de `docs/CONTRAT_API.md` et confirmer que
+   c'est bien la règle voulue.
+2. Dire si le statut `autre` doit avoir son propre tarif ou suivre celui des employés.
+
+**Résultat.**
+
+**Reste à faire.** A5 et A6 doivent appliquer la règle côté serveur : un bénéficiaire autre que soi-même ou
+un enfant lié rend `beneficiaire_interdit` 403.

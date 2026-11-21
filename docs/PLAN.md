@@ -70,7 +70,7 @@ fichier.
 | P01 | fait | cadrage / compte 1 | docs/CHARTE.md, docs/marque/, app/outils/marque.mjs | Palettes, contrastes, 9 SVG et 16 exports PNG produits | Rien, étape close. Les valeurs sont à reporter dans le thème Flutter en F1 |
 | A1 | en cours | api / compte courant | api/app, api/alembic, api/tests | Structure, configuration, 26 modèles, migration 0001, /health, erreurs, middlewares ; ruff et 35 tests verts | Écrire api/recette (bloc « sante »), Dockerfile, railway.json, docker-compose.yml, README |
 | A2 | fait | api / compte courant | Railway (service API, Postgres, variables, domaine), docs/CONTRAT_API.md, api/README.md | Déployé 314fc8b par la CLI, migration 0001 appliquée, recette « sante » en ligne 13/13 | Rien. Mettre à jour CORS_ORIGINS dans Railway quand l'URL web de l'application (F8) et celle du site (S2) seront connues |
-| F1 | à faire | | app/ | | Créer le projet Flutter, le thème des deux modes depuis docs/CHARTE.md et la navigation |
+| F1 | fait | app / compte 1 | app/ (lib/core, lib/features, lib/shared, l10n fr et en, assets, android, ios, web) | Projet créé, thème des deux modes, navigation par rôle, client API, socle hors ligne, icônes et écrans de lancement, Firebase branché, boutons Google, Apple et QR ; analyze propre, test vert, build web réussi | Rien. Suite en F2 : écrans d'inscription, de connexion et de vérification |
 | M1 | à faire | | api/ | | Inscription, code de vérification en mode démo, connexion, rôles |
 | A4 | à faire | | api/ | | Plats, tarifs, menus, créneaux et leurs routes |
 | M2 | à faire | | api/ | | Réservation, porte-monnaie, commandes du jour, tableau de bord |
@@ -111,7 +111,7 @@ fichier.
 
 | Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
 | --- | --- | --- | --- | --- | --- |
-| S1 | à faire | | site/ | | Créer le site public Next.js |
+| S1 | en cours | app / compte 1 | site/ (app, components, public, tailwind, package.json) | Page d'accueil, badges Play, App Store et Web selon l'appareil, boutons Google et Apple à logo non déformé, codes QR, charte en jetons CSS | Finir l'installation npm, passer `npm run build`, puis S2 pour les pages légales |
 | S2 | à faire | | site/ | | Pages légales, paiement public, suppression de compte, mise en ligne |
 | S3 | à faire | | site/ | | Mini vidéo d'accueil en HTML |
 | E1 | à faire | | api/ | | Basculer la vérification par e-mail en réel, par l'API Gmail |
