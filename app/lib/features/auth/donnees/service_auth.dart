@@ -221,6 +221,7 @@ class ServiceAuth {
       role: Role.depuisTexte(utilisateur['role'] as String?),
       utilisateurId: utilisateur['id'] as String? ?? reponse['utilisateur_id'] as String? ?? '',
       nomComplet: utilisateur['nom_complet'] as String? ?? '',
+      statutConvive: utilisateur['statut_convive'] as String?,
     );
   }
 }

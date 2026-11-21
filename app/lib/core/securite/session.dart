@@ -35,6 +35,7 @@ class Session {
     required this.role,
     required this.utilisateurId,
     required this.nomComplet,
+    this.statutConvive,
   });
 
   /// Relit une session ecrite sur l appareil.
@@ -44,6 +45,7 @@ class Session {
         role: Role.depuisTexte(json['role'] as String?),
         utilisateurId: json['utilisateur_id'] as String? ?? '',
         nomComplet: json['nom_complet'] as String? ?? '',
+        statutConvive: json['statut_convive'] as String?,
       );
 
   /// Jeton envoye a chaque requete.
@@ -61,6 +63,9 @@ class Session {
   /// Nom affiche dans l application.
   final String nomComplet;
 
+  /// Profil tarifaire du convive : eleve, etudiant, employe ou autre.
+  final String? statutConvive;
+
   /// Rend une copie avec de nouveaux jetons.
   Session avecJetons({required String acces, required String rafraichissement}) => Session(
         jetonAcces: acces,
@@ -68,6 +73,7 @@ class Session {
         role: role,
         utilisateurId: utilisateurId,
         nomComplet: nomComplet,
+        statutConvive: statutConvive,
       );
 
   /// Rend la session sous une forme ecrivable sur l appareil.
@@ -77,6 +83,7 @@ class Session {
         'role': role.name,
         'utilisateur_id': utilisateurId,
         'nom_complet': nomComplet,
+        'statut_convive': statutConvive,
       };
 }
 

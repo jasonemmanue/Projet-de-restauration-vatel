@@ -99,7 +99,7 @@ Propriétaire : A4.
 | description_fr | text | not null default chaîne vide |
 | description_en | text | not null default chaîne vide |
 | categorie | text | not null, check in (entree, resistance, sortie) |
-| image_url | text | null |
+| image_url | text | null ; photo du plat, posée et retirée par l'admin |
 | allergenes | text[] | not null default tableau vide |
 | regimes | text[] | not null default tableau vide, valeurs sans_porc, sans_gluten, vegetarien, halal |
 | calories | integer | null, >= 0 |
@@ -111,6 +111,10 @@ Index : `categorie`, `actif`. Unique sur `lower(nom_fr)` parmi les lignes non su
 
 Un repas se compose de trois services : l'entrée, la résistance et la sortie. Un menu du jour propose
 plusieurs plats dans chaque service, et un convive en choisit un par service.
+
+Les photos livrées avec la démonstration sont des données de départ comme les autres : l'admin crée,
+modifie et supprime ses plats et leurs photos depuis le back office. Un plat sans photo s'affiche sur un
+aplat d'accent, jamais sur une image cassée.
 
 ## tarifs
 Propriétaire : A4. Le prix est celui du repas du jour, pour un profil. Il ne dépend pas des plats choisis.

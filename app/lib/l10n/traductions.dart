@@ -709,6 +709,174 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Mot de passe changé. Connecte-toi.'**
   String get motDePasseChange;
+
+  /// No description provided for @bonjour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour'**
+  String get bonjour;
+
+  /// No description provided for @soldeTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde'**
+  String get soldeTitre;
+
+  /// No description provided for @repasDuJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton repas du jour'**
+  String get repasDuJour;
+
+  /// No description provided for @aucunRepasDuJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu n\'as rien commandé pour aujourd\'hui'**
+  String get aucunRepasDuJour;
+
+  /// No description provided for @commanderRepas.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander un repas'**
+  String get commanderRepas;
+
+  /// No description provided for @menuDuJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le menu du jour'**
+  String get menuDuJour;
+
+  /// No description provided for @voirLaSemaine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la semaine'**
+  String get voirLaSemaine;
+
+  /// No description provided for @semaineTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Menu de la semaine'**
+  String get semaineTitre;
+
+  /// No description provided for @aujourdhui.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get aujourdhui;
+
+  /// No description provided for @demain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demain'**
+  String get demain;
+
+  /// No description provided for @aucunMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de menu publié ce jour'**
+  String get aucunMenu;
+
+  /// No description provided for @prixDuJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas du jour'**
+  String get prixDuJour;
+
+  /// No description provided for @partEnPlus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Part en plus {prix}'**
+  String partEnPlus(String prix);
+
+  /// No description provided for @allergeneAlerte.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contient {allergene}, déclaré dans ton profil'**
+  String allergeneAlerte(String allergene);
+
+  /// No description provided for @allergenes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Allergènes'**
+  String get allergenes;
+
+  /// No description provided for @regimes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Régimes'**
+  String get regimes;
+
+  /// No description provided for @calories.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// No description provided for @note.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @heureLimiteLe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande avant {heure}'**
+  String heureLimiteLe(String heure);
+
+  /// No description provided for @geleLaVeille.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifiable jusqu à la veille {heure}'**
+  String geleLaVeille(String heure);
+
+  /// No description provided for @jourLundi.
+  ///
+  /// In fr, this message translates to:
+  /// **'lundi'**
+  String get jourLundi;
+
+  /// No description provided for @jourMardi.
+  ///
+  /// In fr, this message translates to:
+  /// **'mardi'**
+  String get jourMardi;
+
+  /// No description provided for @jourMercredi.
+  ///
+  /// In fr, this message translates to:
+  /// **'mercredi'**
+  String get jourMercredi;
+
+  /// No description provided for @jourJeudi.
+  ///
+  /// In fr, this message translates to:
+  /// **'jeudi'**
+  String get jourJeudi;
+
+  /// No description provided for @jourVendredi.
+  ///
+  /// In fr, this message translates to:
+  /// **'vendredi'**
+  String get jourVendredi;
+
+  /// No description provided for @jourSamedi.
+  ///
+  /// In fr, this message translates to:
+  /// **'samedi'**
+  String get jourSamedi;
+
+  /// No description provided for @jourDimanche.
+  ///
+  /// In fr, this message translates to:
+  /// **'dimanche'**
+  String get jourDimanche;
+
+  /// No description provided for @donneesDemo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données de démonstration'**
+  String get donneesDemo;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

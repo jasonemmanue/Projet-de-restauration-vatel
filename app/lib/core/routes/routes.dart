@@ -15,6 +15,8 @@ import '../../features/auth/ecran_connexion.dart';
 import '../../features/auth/ecran_inscription.dart';
 import '../../features/auth/ecran_mot_de_passe_oublie.dart';
 import '../../features/menus/ecran_accueil.dart';
+import '../../features/menus/donnees/modeles_menu.dart';
+import '../../features/menus/ecran_fiche_plat.dart';
 import '../../features/menus/ecran_menu.dart';
 import '../../features/notifications/ecran_notifications.dart';
 import '../../features/parent/ecran_famille.dart';
@@ -51,6 +53,9 @@ class Chemins {
 
   /// Mot de passe oublie et reinitialisation.
   static const String motDePasseOublie = '/mot-de-passe-oublie';
+
+  /// Fiche detaillee d un plat.
+  static const String fichePlat = '/convive/menu/plat';
 
   /// Les ecrans qu on atteint sans session ouverte.
   static const List<String> publics = <String>[
@@ -201,6 +206,19 @@ StatefulShellRoute _coquilleConvive() {
           GoRoute(
             path: '${Chemins.convive}/menu',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranMenu(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'plat',
+                builder: (BuildContext contexte, GoRouterState etat) {
+                  final Object? plat = etat.extra;
+                  if (plat is! Plat) {
+                    // Sans plat a montrer, on reste sur le menu.
+                    return const EcranMenu();
+                  }
+                  return EcranFichePlat(plat: plat);
+                },
+              ),
+            ],
           ),
         ],
       ),

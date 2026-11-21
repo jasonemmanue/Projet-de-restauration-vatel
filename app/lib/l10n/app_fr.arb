@@ -129,5 +129,61 @@
   "conditionsRequises": "Accepte les conditions pour continuer",
   "motDePasseFaible": "Mot de passe trop simple",
   "compteCree": "Compte créé. Vérifie ton identifiant.",
-  "motDePasseChange": "Mot de passe changé. Connecte-toi."
+  "motDePasseChange": "Mot de passe changé. Connecte-toi.",
+  "bonjour": "Bonjour",
+  "soldeTitre": "Solde",
+  "repasDuJour": "Ton repas du jour",
+  "aucunRepasDuJour": "Tu n'as rien commandé pour aujourd'hui",
+  "commanderRepas": "Commander un repas",
+  "menuDuJour": "Le menu du jour",
+  "voirLaSemaine": "Voir la semaine",
+  "semaineTitre": "Menu de la semaine",
+  "aujourdhui": "Aujourd'hui",
+  "demain": "Demain",
+  "aucunMenu": "Pas de menu publié ce jour",
+  "prixDuJour": "Repas du jour",
+  "partEnPlus": "Part en plus {prix}",
+  "@partEnPlus": {
+    "placeholders": {
+      "prix": {
+        "type": "String"
+      }
+    }
+  },
+  "allergeneAlerte": "Contient {allergene}, déclaré dans ton profil",
+  "@allergeneAlerte": {
+    "placeholders": {
+      "allergene": {
+        "type": "String"
+      }
+    }
+  },
+  "allergenes": "Allergènes",
+  "regimes": "Régimes",
+  "calories": "Calories",
+  "note": "Note",
+  "heureLimiteLe": "Commande avant {heure}",
+  "@heureLimiteLe": {
+    "placeholders": {
+      "heure": {
+        "type": "String"
+      }
+    }
+  },
+  "geleLaVeille": "Modifiable jusqu à la veille {heure}",
+  "@geleLaVeille": {
+    "placeholders": {
+      "heure": {
+        "type": "String"
+      }
+    }
+  },
+  "jourLundi": "lundi",
+  "jourMardi": "mardi",
+  "jourMercredi": "mercredi",
+  "jourJeudi": "jeudi",
+  "jourVendredi": "vendredi",
+  "jourSamedi": "samedi",
+  "jourDimanche": "dimanche",
+  "donneesDemo": "Données de démonstration"
 }

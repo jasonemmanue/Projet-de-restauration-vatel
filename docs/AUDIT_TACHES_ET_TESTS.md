@@ -289,3 +289,33 @@ un code à 6 chiffres pour le téléphone et de 5 caractères pour l'e-mail. Les
 
 **Reste à faire.** Le PIN, Google, Apple et la connexion par QR restent pour APP suivants. Côté API, le code
 `verification_requise` après cinq jours d'inactivité est écrit au contrat mais pas encore implémenté.
+
+---
+
+## APP-05, accueil et menu, et volume des images
+
+**Fait.** Accueil du convive (salutation, solde sur surface de contraste, repas du jour ou bouton
+« Commander un repas », menu du jour), menu de la semaine avec sélecteur de jour, prix du jour pour le profil
+et plats groupés par service, cartes de plat à photo en bord perdu avec alerte rouge si le plat porte un
+allergène déclaré, et fiche du plat. Un volume Railway de 5 Go est créé et monté sur `/app/medias` du service
+API, avec `STOCKAGE_DOSSIER`, `STOCKAGE_URL_PUBLIQUE` et `STOCKAGE_TAILLE_MAX_MO`. Le contrat gagne
+`POST` et `DELETE /admin/plats/{id}/image` et `GET /medias/{fichier}`.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `railway volume list` montre
+`projet-de-restauration-vatel-volume`, attaché au service `Projet-de-restauration-vatel`, chemin
+`/app/medias`, état Ready. Les trois variables sont relues sur le service. `GET /menus/semaine` n'existe pas
+encore côté API : l'écran retombe sur une semaine de démonstration, et basculera seul dès que A4 livrera la
+route.
+
+**À tester par vous.**
+1. Sur Android, ouvrir l'accueil puis l'onglet Menu, en clair et en sombre : les photos des plats sont à bord
+   perdu, aucun texte n'est coupé, le prix du jour s'affiche.
+2. Sur ordinateur, élargir la fenêtre : le contenu reste centré à 1200 px et les cartes gardent leur photo.
+3. Toucher une carte : la fiche du plat s'ouvre avec allergènes, régimes, calories et note.
+
+**Résultat.**
+
+**Reste à faire.** Les 13 photos envoyées ne sont pas arrivées sur le disque : à déposer dans
+`app/assets/plats/` pour remplacer les cinq photos de la maquette. Le jeu de démonstration
+(`features/menus/donnees/jeu_demo.dart`) disparaît dès que A4 est en ligne. Le solde reste un tiret tant que
+A5 n'a pas livré `/porte-monnaie`.

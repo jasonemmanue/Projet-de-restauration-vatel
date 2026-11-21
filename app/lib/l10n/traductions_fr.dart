@@ -328,4 +328,96 @@ class TraductionsFr extends Traductions {
 
   @override
   String get motDePasseChange => 'Mot de passe changé. Connecte-toi.';
+
+  @override
+  String get bonjour => 'Bonjour';
+
+  @override
+  String get soldeTitre => 'Solde';
+
+  @override
+  String get repasDuJour => 'Ton repas du jour';
+
+  @override
+  String get aucunRepasDuJour => 'Tu n\'as rien commandé pour aujourd\'hui';
+
+  @override
+  String get commanderRepas => 'Commander un repas';
+
+  @override
+  String get menuDuJour => 'Le menu du jour';
+
+  @override
+  String get voirLaSemaine => 'Voir la semaine';
+
+  @override
+  String get semaineTitre => 'Menu de la semaine';
+
+  @override
+  String get aujourdhui => 'Aujourd\'hui';
+
+  @override
+  String get demain => 'Demain';
+
+  @override
+  String get aucunMenu => 'Pas de menu publié ce jour';
+
+  @override
+  String get prixDuJour => 'Repas du jour';
+
+  @override
+  String partEnPlus(String prix) {
+    return 'Part en plus $prix';
+  }
+
+  @override
+  String allergeneAlerte(String allergene) {
+    return 'Contient $allergene, déclaré dans ton profil';
+  }
+
+  @override
+  String get allergenes => 'Allergènes';
+
+  @override
+  String get regimes => 'Régimes';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String heureLimiteLe(String heure) {
+    return 'Commande avant $heure';
+  }
+
+  @override
+  String geleLaVeille(String heure) {
+    return 'Modifiable jusqu à la veille $heure';
+  }
+
+  @override
+  String get jourLundi => 'lundi';
+
+  @override
+  String get jourMardi => 'mardi';
+
+  @override
+  String get jourMercredi => 'mercredi';
+
+  @override
+  String get jourJeudi => 'jeudi';
+
+  @override
+  String get jourVendredi => 'vendredi';
+
+  @override
+  String get jourSamedi => 'samedi';
+
+  @override
+  String get jourDimanche => 'dimanche';
+
+  @override
+  String get donneesDemo => 'Données de démonstration';
 }

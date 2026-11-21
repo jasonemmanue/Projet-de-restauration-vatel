@@ -162,6 +162,11 @@ porte donc sur un jour précis et ne refuse que celui-là, par `commande_gelee` 
 être supprimé, sans remboursement. Avant son gel, modification et annulation remboursent intégralement. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
 rendre un obligatoire ; il est vide par défaut.
 
+Où vivent les images : sur un volume Railway monté sur `/app/medias`, pas dans l image du conteneur. Un
+déploiement ne les écrase donc jamais. L API lit `STOCKAGE_DOSSIER` (ou `RAILWAY_VOLUME_MOUNT_PATH`), écrit
+les fichiers sous ce chemin et les sert sur `/medias`. `STOCKAGE_URL_PUBLIQUE` donne le préfixe rendu dans
+`image_url`, et `STOCKAGE_TAILLE_MAX_MO` la taille acceptée.
+
 Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.
 
 Le webhook vérifie la signature, écrit le paiement et le mouvement dans une seule transaction, puis envoie la
@@ -236,6 +241,9 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | --- | --- | --- | --- |
 | GET POST /admin/plats | plat complet, deux langues | liste ou plat créé | `validation`, `conflit` 409 |
 | PATCH DELETE /admin/plats/{id} | champs modifiés | plat mis à jour ou désactivé | `introuvable` 404, `plat_utilise` 409 |
+| POST /admin/plats/{id}/image | fichier multipart, 5 Mo au plus, jpeg ou png | `{"image_url"}` | `fichier_invalide` 422, `trop_lourd` 413 |
+| DELETE /admin/plats/{id}/image | aucun | `{"image_url": null}`, le plat retombe sur son aplat de secours | `introuvable` 404 |
+| GET /medias/{fichier} | public | aucun | le fichier image, servi depuis le volume | `introuvable` 404 |
 | GET POST /admin/tarifs | `{"profil", "prix_xof", "actif_du", "menu_id"}` ; `menu_id` absent vaut le tarif courant du profil | tarifs | `validation`, `chevauchement` 409 |
 | GET POST /admin/ingredients | ingrédient | liste ou créé | `validation` |
 | POST /admin/stocks/mouvement | `{"ingredient_id", "sens", "quantite", "commentaire"}` | mouvement et quantité après | `stock_insuffisant` 409 |

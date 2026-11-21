@@ -327,4 +327,96 @@ class TraductionsEn extends Traductions {
 
   @override
   String get motDePasseChange => 'Password changed. Sign in.';
+
+  @override
+  String get bonjour => 'Hello';
+
+  @override
+  String get soldeTitre => 'Balance';
+
+  @override
+  String get repasDuJour => 'Your meal today';
+
+  @override
+  String get aucunRepasDuJour => 'You have not ordered anything for today';
+
+  @override
+  String get commanderRepas => 'Order a meal';
+
+  @override
+  String get menuDuJour => 'Today\'s menu';
+
+  @override
+  String get voirLaSemaine => 'See the week';
+
+  @override
+  String get semaineTitre => 'Menu of the week';
+
+  @override
+  String get aujourdhui => 'Today';
+
+  @override
+  String get demain => 'Tomorrow';
+
+  @override
+  String get aucunMenu => 'No menu published that day';
+
+  @override
+  String get prixDuJour => 'Meal of the day';
+
+  @override
+  String partEnPlus(String prix) {
+    return 'Extra portion $prix';
+  }
+
+  @override
+  String allergeneAlerte(String allergene) {
+    return 'Contains $allergene, listed in your profile';
+  }
+
+  @override
+  String get allergenes => 'Allergens';
+
+  @override
+  String get regimes => 'Diets';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get note => 'Rating';
+
+  @override
+  String heureLimiteLe(String heure) {
+    return 'Order before $heure';
+  }
+
+  @override
+  String geleLaVeille(String heure) {
+    return 'Editable until the day before $heure';
+  }
+
+  @override
+  String get jourLundi => 'Monday';
+
+  @override
+  String get jourMardi => 'Tuesday';
+
+  @override
+  String get jourMercredi => 'Wednesday';
+
+  @override
+  String get jourJeudi => 'Thursday';
+
+  @override
+  String get jourVendredi => 'Friday';
+
+  @override
+  String get jourSamedi => 'Saturday';
+
+  @override
+  String get jourDimanche => 'Sunday';
+
+  @override
+  String get donneesDemo => 'Demonstration data';
 }
