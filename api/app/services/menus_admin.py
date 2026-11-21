@@ -12,9 +12,10 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.erreurs import ErreurApi
-from app.models import Menu, MenuPlat, Plat, Reservation
+from app.models import Menu, MenuPlat, Plat, Reservation, Utilisateur
 from app.schemas.menus import PlatDuMenuEntree
 from app.services.journal import ecrire_journal
+from app.services.notifications import notifier
 
 
 async def menu_par_id(session: AsyncSession, menu_id: uuid.UUID) -> Menu:
@@ -105,6 +106,18 @@ async def publier_menu(
     menu.publie_le = datetime.now(UTC)
     menu.publie_par = admin_id
     ecrire_journal(session, admin_id, "publication_menu", "menu", menu.id, avant, _etat(menu), ip)
+    convives = await session.scalars(
+        select(Utilisateur.id).where(
+            Utilisateur.role == "convive", Utilisateur.actif.is_(True), Utilisateur.supprime_le.is_(None)
+        )
+    )
+    await notifier(
+        session,
+        convives.all(),
+        "menu_publie",
+        {"date": menu.date_service.strftime("%d/%m")},
+        {"date_service": menu.date_service.isoformat()},
+    )
     return menu
 
 

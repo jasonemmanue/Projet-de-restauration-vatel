@@ -87,7 +87,7 @@ fichier.
 | A3c | à faire | | api/ | | Profil complet, avatars, export des données, signalements |
 | A5 | à faire | | api/ | | Ticket QR signé, scan de l'agent, file hors ligne, liaison parent |
 | A6 | en cours | api / compte courant | api/app (geniuspay, paiements, liens_paiement, regles_frais), alembic 0007 et 0008 | API-12 et API-13 écrits : recharge, webhooks signés, mode réel protégé (mot de passe des actions, journal, refus sans clés), liens de paiement publics « Prénom I. », estimation des frais selon la grille (lignes arrondies puis additionnées) ; clés lues sous les noms Railway GENIUSPAY_API_KEY, GENIUSPAY_SECRET_KEY, GENIUSPAY_WEBHOOK_SECRET et LIVE_ | Vérifier en ligne : GET /admin/mode-paiement, une recharge test de 500 XOF, le webhook ; puis API-14 notifications |
-| A7 | à faire | | api/ | | Appareils, notifications ciblées et centre de notifications |
+| A7 | fait | api / compte courant | api/app (fcm, notifications, routes/notifications), session.py | Appareils, centre de notifications, envoi ciblé de l'admin, push FCM v1 (android, apns, webpush) après validation de la transaction ; déclencheurs : recharge reçue, repas servi, menu publié, solde bas | Vérifier en ligne qu'une notification de test arrive sur un téléphone enregistré |
 | A8 | à faire | | api/ | | Stocks, rapports CSV et PDF, utilisateurs, journal des actions |
 | A9 | à faire | | api/ | | Appréciations avec modération et réponse, suggestions |
 | A10 | à faire | | api/ | | Jeu de démonstration complet et remise à zéro protégée |

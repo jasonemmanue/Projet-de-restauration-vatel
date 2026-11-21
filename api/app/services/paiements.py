@@ -20,6 +20,7 @@ from app.core.config import Configuration
 from app.core.erreurs import ErreurApi
 from app.models import LienPaiement, Paiement, Utilisateur
 from app.services import geniuspay, liaison, porte_monnaie
+from app.services.notifications import notifier
 from app.services.parametres import lire_parametres
 
 journal = logging.getLogger("vatel.paiements")
@@ -179,6 +180,13 @@ async def traiter_webhook(session: AsyncSession, mode: str, charge: dict[str, An
             f"paiement:{paiement.id}",
             "paiement",
             paiement.id,
+        )
+        await notifier(
+            session,
+            [paiement.beneficiaire_id, *([paiement.payeur_id] if paiement.payeur_id else [])],
+            "paiement_recu",
+            {"montant": paiement.montant_xof},
+            {"paiement_id": str(paiement.id)},
         )
         if paiement.lien_paiement_id is not None:
             lien = await session.get(LienPaiement, paiement.lien_paiement_id, with_for_update=True)

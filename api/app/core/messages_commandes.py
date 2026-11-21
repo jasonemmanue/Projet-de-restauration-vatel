@@ -89,4 +89,8 @@ MESSAGES_COMMANDES: dict[str, dict[str, str]] = {
         "fr": "Opérateur non pris en charge.",
         "en": "Unsupported operator.",
     },
+    "cible_vide": {
+        "fr": "Choisissez au moins un destinataire.",
+        "en": "Choose at least one recipient.",
+    },
 }

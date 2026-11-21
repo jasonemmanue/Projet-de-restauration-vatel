@@ -143,6 +143,10 @@ class Configuration(BaseSettings):
         validation_alias=AliasChoices("GENIUSPAY_LIVE_WEBHOOK_SECRET", "GENIUSPAY_SECRET_WEBHOOK_REEL"),
     )
     site_url_publique: str | None = Field(default=None, validation_alias="SITE_URL_PUBLIQUE")
+    # Firebase Cloud Messaging : compte de service en JSON encodé en base64, posé dans Railway.
+    firebase_compte_service: str | None = Field(default=None, validation_alias="FIREBASE_COMPTE_SERVICE")
+    firebase_projet_id: str | None = Field(default=None, validation_alias="FIREBASE_PROJET_ID")
+    fcm_actif: bool = Field(default=False, validation_alias="FCM_ACTIF")
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
     admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")

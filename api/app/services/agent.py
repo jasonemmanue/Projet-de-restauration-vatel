@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.hachage import egal_en_temps_constant, hmac_hex
 from app.models import FileScan, LigneReservation, Plat, Reservation, Utilisateur
 from app.services.menus_lecture import ETATS_QUI_COMPTENT
+from app.services.notifications import notifier
 
 LONGUEUR_SIGNATURE = 16
 
@@ -84,6 +85,13 @@ async def scanner(
         reservation.servie_le = scanne_le
         reservation.servie_par = agent_id
         resultat, detail = "accepte", ""
+        await notifier(
+            session,
+            [reservation.convive_id],
+            "repas_servi",
+            {"date": reservation.date_service.strftime("%d/%m")},
+            {"reservation_id": str(reservation.id)},
+        )
     if reservation is not None:
         convive = await session.get(Utilisateur, reservation.convive_id)
         reponse |= {

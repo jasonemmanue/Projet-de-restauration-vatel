@@ -17,6 +17,7 @@ from app.models import LigneReservation, LotReservation, Menu, MenuPlat, Plat, R
 from app.schemas.commandes import CommandeEntree
 from app.services import porte_monnaie
 from app.services.menus_lecture import ETATS_QUI_COMPTENT, tarifs_du_profil
+from app.services.notifications import alerter_solde_bas
 from app.services.parametres import lire_parametres
 from app.services.regles_commandes import LigneCommandee, fin_de_periode, supplements
 from app.services.regles_menus import lire_heure, moment_du_gel, prix_du_jour
@@ -133,6 +134,10 @@ async def commander(
             "lot_reservation",
             lot.id,
         )
+        seuil = int(
+            (await lire_parametres(session, "seuil_alerte_solde_defaut"))["seuil_alerte_solde_defaut"]
+        )
+        await alerter_solde_bas(session, convive, seuil)
     return lot.id
 
 
