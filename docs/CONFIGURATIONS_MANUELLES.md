@@ -16,6 +16,8 @@ Mis à jour le 21 novembre 2026.
 | 5 | API Gmail (envoi réel des codes) | à faire |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | à faire |
 | 7 | Fiches des boutiques (Play, App Store) | à faire |
+| 8 | Clé web push FCM (notifications sur le site) | à faire |
+| 9 | Compte développeur Google Play (25 USD, une fois) | à faire |
 
 Rappels permanents :
 - Projet Google Cloud et Firebase : `vatel-project`, numéro `814642268084`, propriétaire
@@ -242,3 +244,33 @@ Seulement si le temps le permet. Les visuels sont prêts dans `docs/marque/expor
 
 Valeurs récoltées :
 - Nom retenu dans les boutiques : _(à remplir)_
+
+---
+
+## 8. Clé web push FCM — à faire
+
+Sans cette clé, les notifications ne marchent pas sur la version web, même si tout le reste est
+posé. Deux minutes.
+1. Ouvrir `https://console.firebase.google.com/project/vatel-project/settings/cloudmessaging`.
+2. Section **Configuration Web** → *Certificats web push* → **Générer une paire de clés**.
+3. Copier la clé publique affichée (c'est une valeur publique, elle part dans le JavaScript).
+4. La poser dans Railway sous `FCM_CLE_WEB_PUSH`, et me la recopier pour le fichier.
+
+Valeurs récoltées :
+- Clé publique web push : _(à remplir)_
+
+---
+
+## 9. Compte développeur Google Play — à faire
+
+Nécessaire seulement pour publier l'application dans le Play Store, pas pour l'installer en APK
+ni pour la version web. 25 USD une seule fois, validation du compte de quelques heures à 48 h :
+à lancer tôt si la publication est visée aujourd'hui.
+1. `https://play.google.com/console/signup` avec le compte Google choisi pour la publication.
+2. Type de compte : *Organisation* si la cantine a un numéro d'entreprise, sinon *Particulier*.
+3. Payer les 25 USD, puis fournir les pièces d'identité demandées.
+4. Me dire « compte Play créé » ou « compte Play en attente de validation ».
+
+Valeurs récoltées :
+- Compte Play utilisé : _(à remplir)_
+- État de la validation : _(à remplir)_
