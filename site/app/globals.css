@@ -1,0 +1,74 @@
+/* Role du fichier : les jetons de couleur de docs/CHARTE.md, en clair et en sombre.
+   Aucune couleur n est ecrite ailleurs dans le site. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #2f6bff;
+  --accent-doux: #e8efff;
+  --sur-accent: #ffffff;
+  --fond: #f4f6fb;
+  --surface: #ffffff;
+  --muet: #eef1f8;
+  --filet: #e2e8f0;
+  --texte: #0f172a;
+  --texte-secondaire: #64748b;
+  --succes: #0d9488;
+  --danger: #ef4444;
+  --alerte: #f59e0b;
+  --contraste: #0f172a;
+  --sur-contraste: #ffffff;
+}
+
+[data-theme='dark'] {
+  --accent: #60a5fa;
+  --accent-doux: #1e293b;
+  --sur-accent: #0f172a;
+  --fond: #0b1220;
+  --surface: #111827;
+  --muet: #1f2937;
+  --filet: #334155;
+  --texte: #f8fafc;
+  --texte-secondaire: #94a3b8;
+  --contraste: #020617;
+  --sur-contraste: #f8fafc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --accent: #60a5fa;
+    --accent-doux: #1e293b;
+    --sur-accent: #0f172a;
+    --fond: #0b1220;
+    --surface: #111827;
+    --muet: #1f2937;
+    --filet: #334155;
+    --texte: #f8fafc;
+    --texte-secondaire: #94a3b8;
+    --contraste: #020617;
+    --sur-contraste: #f8fafc;
+  }
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/polices/plus-jakarta-sans-latin-500-normal.woff') format('woff');
+}
+
+body {
+  background: var(--fond);
+  color: var(--texte);
+  /* La charte interdit les ombres : la profondeur vient des aplats et des filets. */
+  --tw-shadow: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
