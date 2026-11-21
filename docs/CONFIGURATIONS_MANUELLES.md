@@ -43,6 +43,9 @@ Procédure (PowerShell, dans n'importe quel dossier) :
 Valeurs récoltées :
 - Compte de service Admin SDK : `firebase-adminsdk-fbsvc@vatel-project.iam.gserviceaccount.com`
 - Compte gcloud actif : `emmanudev2@gmail.com`, projet `vatel-project` (c'était `prepaxia-project` avant)
+- Suite : la session API a généré la clé de ce compte de service et l'a posée dans Railway
+  (`FIREBASE_COMPTE_SERVICE` en base64, `FIREBASE_PROJET_ID`, `FCM_ACTIF`). Le JSON reste hors dépôt.
+  Rien de plus à faire sur cette tâche.
 
 ---
 
