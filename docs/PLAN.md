@@ -86,7 +86,7 @@ fichier.
 | A3b | à faire | | api/ | | Connexion par QR code, Google et Apple |
 | A3c | à faire | | api/ | | Profil complet, avatars, export des données, signalements |
 | A5 | à faire | | api/ | | Ticket QR signé, scan de l'agent, file hors ligne, liaison parent |
-| A6 | en cours | api / compte courant | api/app (geniuspay, paiements, routes/paiements), alembic 0007, tests/test_paiements.py | API-12 écrit : recharge GeniusPay en mode test, webhooks signés /api/v1/paiements/webhook/test et /reel (HMAC horodatage.corps, 5 min, environnement sandbox/live), crédit unique, frais et net gardés ; ruff propre, tests test_paiements.py lancés mais résultat non relu | Relancer `pytest tests/test_paiements.py`, corriger, pousser ; l'exploitant pose dans Railway GENIUSPAY_CLE_PUBLIQUE_TEST, GENIUSPAY_CLE_SECRETE_TEST, GENIUSPAY_SECRET_WEBHOOK_TEST ; puis API-13 (mode réel protégé, liens de paiement) |
+| A6 | en cours | api / compte courant | api/app (geniuspay, paiements, liens_paiement, regles_frais), alembic 0007 et 0008 | API-12 et API-13 écrits : recharge, webhooks signés, mode réel protégé (mot de passe des actions, journal, refus sans clés), liens de paiement publics « Prénom I. », estimation des frais selon la grille (lignes arrondies puis additionnées) ; clés lues sous les noms Railway GENIUSPAY_API_KEY, GENIUSPAY_SECRET_KEY, GENIUSPAY_WEBHOOK_SECRET et LIVE_ | Vérifier en ligne : GET /admin/mode-paiement, une recharge test de 500 XOF, le webhook ; puis API-14 notifications |
 | A7 | à faire | | api/ | | Appareils, notifications ciblées et centre de notifications |
 | A8 | à faire | | api/ | | Stocks, rapports CSV et PDF, utilisateurs, journal des actions |
 | A9 | à faire | | api/ | | Appréciations avec modération et réponse, suggestions |

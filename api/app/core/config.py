@@ -115,16 +115,22 @@ class Configuration(BaseSettings):
         default="https://geniuspay.ci/api/v1/merchant", validation_alias="GENIUSPAY_URL_BASE"
     )
     geniuspay_cle_publique_test: str | None = Field(
-        default=None, validation_alias="GENIUSPAY_CLE_PUBLIQUE_TEST"
+        default=None, validation_alias=AliasChoices("GENIUSPAY_API_KEY", "GENIUSPAY_CLE_PUBLIQUE_TEST")
     )
     geniuspay_cle_secrete_test: str | None = Field(
-        default=None, validation_alias=AliasChoices("GENIUSPAY_CLE_SECRETE_TEST", "GENIUSPAY_CLE_TEST")
+        default=None,
+        validation_alias=AliasChoices(
+            "GENIUSPAY_SECRET_KEY", "GENIUSPAY_CLE_SECRETE_TEST", "GENIUSPAY_CLE_TEST"
+        ),
     )
     geniuspay_cle_publique_reelle: str | None = Field(
-        default=None, validation_alias="GENIUSPAY_CLE_PUBLIQUE_REELLE"
+        default=None, validation_alias=AliasChoices("GENIUSPAY_LIVE_API_KEY", "GENIUSPAY_CLE_PUBLIQUE_REELLE")
     )
     geniuspay_cle_secrete_reelle: str | None = Field(
-        default=None, validation_alias=AliasChoices("GENIUSPAY_CLE_SECRETE_REELLE", "GENIUSPAY_CLE_REELLE")
+        default=None,
+        validation_alias=AliasChoices(
+            "GENIUSPAY_LIVE_SECRET_KEY", "GENIUSPAY_CLE_SECRETE_REELLE", "GENIUSPAY_CLE_REELLE"
+        ),
     )
     geniuspay_secret_webhook_test: str | None = Field(
         default=None,
@@ -136,6 +142,7 @@ class Configuration(BaseSettings):
         default=None,
         validation_alias=AliasChoices("GENIUSPAY_LIVE_WEBHOOK_SECRET", "GENIUSPAY_SECRET_WEBHOOK_REEL"),
     )
+    site_url_publique: str | None = Field(default=None, validation_alias="SITE_URL_PUBLIQUE")
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
     admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")

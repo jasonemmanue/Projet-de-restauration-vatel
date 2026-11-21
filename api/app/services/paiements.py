@@ -18,7 +18,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Configuration
 from app.core.erreurs import ErreurApi
-from app.models import Paiement, Utilisateur
+from app.models import LienPaiement, Paiement, Utilisateur
 from app.services import geniuspay, liaison, porte_monnaie
 from app.services.parametres import lire_parametres
 
@@ -68,26 +68,43 @@ async def demander_recharge(
             raise ErreurApi("conflit", 409)
         return deja
     beneficiaire = await _beneficiaire(session, payeur, beneficiaire_id)
-    reglages = await lire_parametres(session, "mode_paiement", "recharge_min_xof", "recharge_max_xof")
-    if not int(reglages["recharge_min_xof"]) <= montant <= int(reglages["recharge_max_xof"]):
-        raise ErreurApi("montant_invalide", 422)
-    mode = str(reglages["mode_paiement"])
-    if mode != "test":
-        # Le mode réel arrive avec son garde-fou (API-13) : d'ici là, aucun argent réel ne circule.
-        raise ErreurApi("mode_paiement_invalide", 409)
-    cle_publique, cle_secrete = cles_du_mode(config, mode)
-    if not cle_publique or not cle_secrete:
-        raise ErreurApi("cles_absentes", 409)
+    await controler_montant(session, montant)
     paiement = Paiement(
         payeur_id=payeur.id,
         beneficiaire_id=beneficiaire.id,
         montant_xof=montant,
         operateur=operateur,
         telephone_payeur=telephone,
-        mode=mode,
+        mode=await mode_courant(session, config),
         etat="initie",
         cle_geste=cle_geste,
     )
+    return await initier_chez_geniuspay(session, config, client, paiement)
+
+
+async def controler_montant(session: AsyncSession, montant: int) -> None:
+    """Refuse en 422 un montant hors des bornes réglées au back office."""
+    reglages = await lire_parametres(session, "recharge_min_xof", "recharge_max_xof")
+    if not int(reglages["recharge_min_xof"]) <= montant <= int(reglages["recharge_max_xof"]):
+        raise ErreurApi("montant_invalide", 422)
+
+
+async def mode_courant(session: AsyncSession, config: Configuration) -> str:
+    """Mode de paiement en vigueur ; 409 si ses clés manquent : aucun paiement ne part sans elles."""
+    mode = str((await lire_parametres(session, "mode_paiement"))["mode_paiement"])
+    cle_publique, cle_secrete = cles_du_mode(config, mode)
+    if mode not in ("test", "reel"):
+        raise ErreurApi("mode_paiement_invalide", 409)
+    if not cle_publique or not cle_secrete:
+        raise ErreurApi("cles_absentes", 409)
+    return mode
+
+
+async def initier_chez_geniuspay(
+    session: AsyncSession, config: Configuration, client: httpx.AsyncClient, paiement: Paiement
+) -> Paiement:
+    """Écrit et valide le paiement, puis le demande à GeniusPay ; chaque paiement garde son mode."""
+    cle_publique, cle_secrete = cles_du_mode(config, paiement.mode)
     session.add(paiement)
     await session.commit()
     retour = f"{config.api_url_publique}/api/v1/paiements/retour?paiement={paiement.id}"
@@ -95,12 +112,12 @@ async def demander_recharge(
         initie = await geniuspay.initier(
             client,
             config.geniuspay_url_base,
-            cle_publique,
-            cle_secrete,
-            montant,
-            operateur,
-            telephone,
-            f"Recharge CANTINE VATEL {montant} XOF",
+            cle_publique or "",
+            cle_secrete or "",
+            paiement.montant_xof,
+            paiement.operateur,
+            paiement.telephone_payeur,
+            f"Recharge CANTINE VATEL {paiement.montant_xof} XOF",
             retour,
             {"paiement_id": str(paiement.id)},
         )
@@ -163,6 +180,11 @@ async def traiter_webhook(session: AsyncSession, mode: str, charge: dict[str, An
             "paiement",
             paiement.id,
         )
+        if paiement.lien_paiement_id is not None:
+            lien = await session.get(LienPaiement, paiement.lien_paiement_id, with_for_update=True)
+            if lien is not None:
+                lien.etat = "paye"
+                lien.paiement_id = paiement.id
     elif evenement == "payment.expired":
         paiement.etat = "expire"
     elif evenement in ("payment.failed", "payment.cancelled"):

@@ -1,0 +1,2 @@
+Place du build web, rempli par :
+flutter build web --release --base-href /app/ ... puis copie de app/build/web ici.

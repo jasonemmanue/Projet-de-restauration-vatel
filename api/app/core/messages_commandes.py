@@ -77,4 +77,16 @@ MESSAGES_COMMANDES: dict[str, dict[str, str]] = {
         "fr": "Signature refusée.",
         "en": "Signature rejected.",
     },
+    "deja_paye": {
+        "fr": "Ce lien a déjà été payé.",
+        "en": "This link has already been paid.",
+    },
+    "lien_expire": {
+        "fr": "Ce lien de paiement n'est plus valable.",
+        "en": "This payment link is no longer valid.",
+    },
+    "operateur_inconnu": {
+        "fr": "Opérateur non pris en charge.",
+        "en": "Unsupported operator.",
+    },
 }

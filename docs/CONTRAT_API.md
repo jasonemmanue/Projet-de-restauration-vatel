@@ -147,6 +147,7 @@ jamais l'existence d'un compte ni un détail technique.
 | POST /paiements/webhook/test | public, signé | charge utile GeniusPay de test | `{"recu": true}` | `signature_invalide` 401 |
 | POST /paiements/webhook/reel | public, signé | charge utile GeniusPay réelle | `{"recu": true}` | `signature_invalide` 401 |
 | GET /paiements/retour | public | `?reference=` | page de retour, redirige vers l'application | `introuvable` 404 |
+| GET /paiements-estimation | convive, parent, admin | `?montant=&operateur=` | `{"montant_xof", "passerelle_xof", "geniuspay_xof", "retrait_xof", "total_frais_xof", "net_xof"}` selon la grille de `parametres`, chaque ligne arrondie puis additionnée | `operateur_inconnu` 422 |
 
 Services au choix, prix du menu : un convive prend les services qu'il veut, au moins un par jour, et paie le
 prix du menu de ce jour pour son profil. Prendre seulement la résistance coûte autant que prendre les trois :

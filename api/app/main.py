@@ -8,9 +8,11 @@ erreur inattendue porte les en-têtes de sécurité.
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from slowapi.middleware import SlowAPIASGIMiddleware
 
 from app import __version__
@@ -27,6 +29,7 @@ from app.routes import (
     admin_utilisateurs,
     agent,
     auth,
+    liens_paiement,
     medias,
     menus,
     moi,
@@ -85,6 +88,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         reservations,
         parent,
         paiements,
+        liens_paiement,
         admin_utilisateurs,
         admin_catalogue,
         admin_menus,
@@ -92,6 +96,16 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         agent,
     ):
         application.include_router(module.routeur)
+
+    # L'application web Flutter est servie par ce même service, sous /app, pour que tout vive
+    # derrière une seule adresse. Le dossier est produit au build et peut manquer en local.
+    dossier_web = Path(__file__).resolve().parents[1] / "web_app"
+    if dossier_web.is_dir():
+        application.mount(
+            "/app",
+            StaticFiles(directory=dossier_web, html=True),
+            name="application_web",
+        )
 
     # add_middleware empile vers l'extérieur : la dernière ajoutée est la plus externe.
     application.add_middleware(SlowAPIASGIMiddleware)
