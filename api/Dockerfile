@@ -23,8 +23,6 @@ COPY --chown=vatel:vatel alembic.ini ./
 COPY --chown=vatel:vatel alembic ./alembic
 COPY --chown=vatel:vatel app ./app
 COPY --chown=vatel:vatel demo ./demo
-# L'application web compilée, servie sous /app par le même service.
-COPY --chown=vatel:vatel web_app ./web_app
 RUN mkdir -p /app/medias && chown vatel:vatel /app/medias
 EXPOSE 8000
 

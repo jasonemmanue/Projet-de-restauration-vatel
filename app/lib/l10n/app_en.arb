@@ -221,5 +221,20 @@
   "attendus": "Expected",
   "servis": "Served",
   "restants": "Remaining",
-  "toucherPourContinuer": "Tap to continue"
+  "toucherPourContinuer": "Tap to continue",
+  "carrouselTitre1": "Order your meal without queueing",
+  "carrouselDetail1": "Attiéké, rice, palm nut sauce: choose the day before, walk to the counter.",
+  "carrouselTitre2": "One QR ticket, and you are served",
+  "carrouselDetail2": "The staff scans it, your meal is handed over. Nothing to take out.",
+  "carrouselTitre3": "The kitchen knows what to cook",
+  "carrouselDetail3": "Every portion is ordered and paid: no waste at the end of service.",
+  "carrouselTitre4": "Parents top up with Mobile Money",
+  "carrouselDetail4": "Orange, MTN, Moov, Wave. Or a link sent to a relative.",
+  "modeVisiteur": "Explore without an account",
+  "visiteurBandeau": "Visitor mode: you can look, not order.",
+  "pays": "Country",
+  "indicatifCi": "Ivory Coast",
+  "aideNumeroCi": "Without the code: 10 digits, starting 01, 05, 07, 21, 25 or 27.",
+  "finaliserProfil": "Complete your profile",
+  "finaliserExplication": "Google and Apple only give your name. Your number, role and price profile are still needed to order."
 }

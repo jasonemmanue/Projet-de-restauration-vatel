@@ -301,5 +301,20 @@
   "attendus": "Attendus",
   "servis": "Servis",
   "restants": "Restants",
-  "toucherPourContinuer": "Touche pour continuer"
+  "toucherPourContinuer": "Touche pour continuer",
+  "carrouselTitre1": "Commande ton repas sans faire la queue",
+  "carrouselDetail1": "Attiéké, riz, sauce graine : tu choisis la veille, tu passes au comptoir.",
+  "carrouselTitre2": "Un ticket QR, et tu es servi",
+  "carrouselDetail2": "L'agent scanne, ton repas t'est remis. Rien à sortir de ta poche.",
+  "carrouselTitre3": "La cuisine sait quoi préparer",
+  "carrouselDetail3": "Chaque part est commandée et payée : plus de gâchis en fin de service.",
+  "carrouselTitre4": "Les parents rechargent en Mobile Money",
+  "carrouselDetail4": "Orange, MTN, Moov, Wave. Ou un lien envoyé à un proche.",
+  "modeVisiteur": "Explorer sans compte",
+  "visiteurBandeau": "Mode visiteur : tu regardes, tu ne commandes pas.",
+  "pays": "Pays",
+  "indicatifCi": "Côte d’Ivoire",
+  "aideNumeroCi": "Sans l'indicatif : 10 chiffres, commence par 01, 05, 07, 21, 25 ou 27.",
+  "finaliserProfil": "Compléter ton profil",
+  "finaliserExplication": "Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander."
 }

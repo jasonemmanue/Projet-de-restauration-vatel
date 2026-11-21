@@ -1,5 +1,6 @@
-// Role du fichier : la connexion par numéro ou par e-mail.
-// Un compte encore à vérifier est renvoyé vers l écran du code, pas laissé sur un message.
+// Role du fichier : la connexion par numero ou par e-mail.
+// Meme mise en page que l inscription : images a gauche sur grand ecran, en haut sur telephone.
+// Un compte encore a verifier part vers l ecran du code, il n est pas laisse sur un message.
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +20,12 @@ import 'donnees/service_auth.dart';
 import 'ecran_code.dart';
 import 'widgets/bascule_identifiant.dart';
 import 'widgets/champ_mot_de_passe.dart';
+import 'widgets/mise_en_page_auth.dart';
+import 'widgets/selecteur_pays.dart';
 
-/// L écran de connexion.
+/// L ecran de connexion.
 class EcranConnexion extends ConsumerStatefulWidget {
-  /// Construit l écran de connexion.
+  /// Construit l ecran de connexion.
   const EcranConnexion({super.key});
 
   @override
@@ -33,6 +36,7 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
   final TextEditingController _identifiant = TextEditingController();
   final TextEditingController _motDePasse = TextEditingController();
   CanalIdentifiant _canal = CanalIdentifiant.telephone;
+  Pays _pays = paysParDefaut;
   bool _enCours = false;
   String? _erreur;
 
@@ -44,7 +48,7 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
   }
 
   String get _identifiantComplet => _canal == CanalIdentifiant.telephone
-      ? '+225${_identifiant.text.replaceAll(RegExp('[^0-9]'), '')}'
+      ? '${_pays.indicatif}${_identifiant.text.replaceAll(RegExp('[^0-9]'), '')}'
       : _identifiant.text.trim();
 
   Future<void> _connecter() async {
@@ -72,7 +76,7 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
         return;
       }
       if (echec.code == 'compte_a_verifier' || echec.code == 'verification_requise') {
-        // Compte non vérifié, ou session laissée dormir plus de cinq jours : on repasse par le code.
+        // Compte non verifie, ou session laissee dormir plus de cinq jours : on repasse par le code.
         final CodeEnvoye envoi = await service.envoyerCode(
           identifiant: _identifiantComplet,
           canal: _canal,
@@ -90,8 +94,10 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
         return;
       }
       Haptique.refus();
-      setState(() => _erreur =
-          echec.message.isEmpty ? Traductions.of(context).erreurReseau : echec.message);
+      setState(
+        () => _erreur =
+            echec.message.isEmpty ? Traductions.of(context).erreurReseau : echec.message,
+      );
     } finally {
       if (mounted) {
         setState(() => _enCours = false);
@@ -106,76 +112,79 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
     final bool parNumero = _canal == CanalIdentifiant.telephone;
     final bool pret = _identifiant.text.trim().isNotEmpty && _motDePasse.text.isNotEmpty;
 
-    return Scaffold(
-      backgroundColor: couleurs.fond,
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(Chemins.bienvenue)),
+    return MiseEnPageAuth(
+      barre: AppBar(
+        leading: BackButton(onPressed: () => contexte.go(Chemins.bienvenue)),
         title: TexteAdapte(mots.seConnecter, style: Theme.of(contexte).textTheme.headlineMedium),
       ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: Mesures.marge),
-              children: <Widget>[
-                BasculeIdentifiant(
-                  canal: _canal,
-                  onChange: (CanalIdentifiant canal) => setState(() {
-                    _canal = canal;
-                    _identifiant.clear();
-                  }),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _identifiant,
-                  keyboardType: parNumero ? TextInputType.phone : TextInputType.emailAddress,
-                  inputFormatters: parNumero
-                      ? <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10),
-                        ]
-                      : null,
-                  decoration: InputDecoration(
-                    labelText: parNumero ? mots.champNumero : mots.champEmail,
-                    prefixText: parNumero ? '+225 ' : null,
-                  ),
-                  onChanged: (_) => setState(() {}),
-                ),
-                const SizedBox(height: 14),
-                ChampMotDePasse(
-                  controleur: _motDePasse,
-                  montrerRegles: false,
-                  onChange: (_) => setState(() {}),
-                ),
-                if (_erreur != null) ...<Widget>[
-                  const SizedBox(height: 12),
-                  TexteAdapte(
-                    _erreur!,
-                    maxLignes: 3,
-                    alignement: TextAlign.center,
-                    style: Theme.of(contexte).textTheme.bodyMedium?.copyWith(color: couleurs.danger),
-                  ),
-                ],
-                const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () => context.go(Chemins.motDePasseOublie),
-                  child: Text(mots.motDePasseOublie),
-                ),
-                TextButton(
-                  onPressed: () => context.go(Chemins.inscription),
-                  child: Text(mots.creerCompte),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: BoutonPrincipal(
+      basDePage: BoutonPrincipal(
         libelle: mots.seConnecter,
         enCours: _enCours,
         onPressed: pret ? _connecter : null,
+      ),
+      enfant: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: Mesures.marge),
+        shrinkWrap: true,
+        children: <Widget>[
+          const SizedBox(height: 14),
+          BasculeIdentifiant(
+            canal: _canal,
+            onChange: (CanalIdentifiant canal) => setState(() {
+              _canal = canal;
+              _identifiant.clear();
+            }),
+          ),
+          const SizedBox(height: 14),
+          if (parNumero) ...<Widget>[
+            SelecteurPays(pays: _pays, onChange: (Pays pays) => setState(() => _pays = pays)),
+            const SizedBox(height: 10),
+          ],
+          TextFormField(
+            controller: _identifiant,
+            keyboardType: parNumero ? TextInputType.phone : TextInputType.emailAddress,
+            inputFormatters: parNumero
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(_pays.longueur),
+                  ]
+                : null,
+            decoration: InputDecoration(
+              labelText: parNumero ? mots.champNumero : mots.champEmail,
+              prefixIcon: Icon(parNumero ? Icons.phone_outlined : Icons.alternate_email),
+              prefixText: parNumero ? '${_pays.indicatif} ' : null,
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: 14),
+          ChampMotDePasse(
+            controleur: _motDePasse,
+            montrerRegles: false,
+            onChange: (String _) => setState(() {}),
+          ),
+          if (_erreur != null) ...<Widget>[
+            const SizedBox(height: 12),
+            TexteAdapte(
+              _erreur!,
+              maxLignes: 3,
+              alignement: TextAlign.center,
+              style: Theme.of(contexte).textTheme.bodyMedium?.copyWith(color: couleurs.danger),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton(
+              onPressed: () => contexte.go(Chemins.motDePasseOublie),
+              child: Text(mots.motDePasseOublie),
+            ),
+          ),
+          Center(
+            child: TextButton(
+              onPressed: () => contexte.go(Chemins.inscription),
+              child: Text(mots.creerCompte),
+            ),
+          ),
+          const SizedBox(height: 18),
+        ],
       ),
     );
   }

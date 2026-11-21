@@ -98,8 +98,11 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         application.include_router(module.routeur)
 
     # L'application web Flutter est servie par ce même service, sous /app, pour que tout vive
-    # derrière une seule adresse. Le dossier est produit au build et peut manquer en local.
-    dossier_web = Path(__file__).resolve().parents[1] / "web_app"
+    # derrière une seule adresse. Elle vit dans le volume, jamais dans le dépôt : son bundle porte
+    # les identifiants Firebase, et le dépôt est public. Elle survit donc aussi aux déploiements.
+    dossier_web = Path(config.stockage_dossier) / "web_app"
+    if not dossier_web.is_dir():
+        dossier_web = Path(__file__).resolve().parents[1] / "web_app"
     if dossier_web.is_dir():
         application.mount(
             "/app",

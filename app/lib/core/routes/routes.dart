@@ -14,12 +14,14 @@ import '../../features/admin/ecran_tableau_bord.dart';
 import '../../features/auth/ecran_bienvenue.dart';
 import '../../features/auth/ecran_code.dart';
 import '../../features/auth/ecran_connexion.dart';
+import '../../features/auth/ecran_finaliser_profil.dart';
 import '../../features/auth/ecran_inscription.dart';
 import '../../features/auth/ecran_mot_de_passe_oublie.dart';
 import '../../features/menus/ecran_accueil.dart';
 import '../../features/menus/donnees/modeles_menu.dart';
 import '../../features/menus/ecran_fiche_plat.dart';
 import '../../features/menus/ecran_menu.dart';
+import '../../features/menus/ecran_visiteur.dart';
 import '../../features/notifications/ecran_notifications.dart';
 import '../../features/parent/ecran_famille.dart';
 import '../../features/parent/ecran_messages.dart';
@@ -59,6 +61,12 @@ class Chemins {
   /// Mot de passe oublie et reinitialisation.
   static const String motDePasseOublie = '/mot-de-passe-oublie';
 
+  /// Completer son profil apres Google ou Apple.
+  static const String finaliserProfil = '/profil/finaliser';
+
+  /// Vitrine sans compte.
+  static const String visiteur = '/visiteur';
+
   /// Fiche detaillee d un plat.
   static const String fichePlat = '/convive/menu/plat';
 
@@ -69,6 +77,7 @@ class Chemins {
     connexion,
     code,
     motDePasseOublie,
+    visiteur,
   ];
 
   /// Racine de l espace convive.
@@ -123,6 +132,9 @@ final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
       if (ouverte == null) {
         return Chemins.publics.contains(chemin) ? null : Chemins.bienvenue;
       }
+      if (!ouverte.profilComplet && chemin != Chemins.finaliserProfil) {
+        return Chemins.finaliserProfil;
+      }
       final String racine = Chemins.racine(ouverte.role);
       if (!chemin.startsWith(racine)) {
         return Chemins.accueil(ouverte.role);
@@ -134,6 +146,14 @@ final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
       GoRoute(
         path: Chemins.bienvenue,
         builder: (BuildContext contexte, GoRouterState etat) => const EcranBienvenue(),
+      ),
+      GoRoute(
+        path: Chemins.finaliserProfil,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranFinaliserProfil(),
+      ),
+      GoRoute(
+        path: Chemins.visiteur,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranVisiteur(),
       ),
       GoRoute(
         path: Chemins.inscription,

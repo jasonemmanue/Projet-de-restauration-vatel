@@ -684,4 +684,55 @@ class TraductionsEn extends Traductions {
 
   @override
   String get toucherPourContinuer => 'Tap to continue';
+
+  @override
+  String get carrouselTitre1 => 'Order your meal without queueing';
+
+  @override
+  String get carrouselDetail1 =>
+      'Attiéké, rice, palm nut sauce: choose the day before, walk to the counter.';
+
+  @override
+  String get carrouselTitre2 => 'One QR ticket, and you are served';
+
+  @override
+  String get carrouselDetail2 =>
+      'The staff scans it, your meal is handed over. Nothing to take out.';
+
+  @override
+  String get carrouselTitre3 => 'The kitchen knows what to cook';
+
+  @override
+  String get carrouselDetail3 =>
+      'Every portion is ordered and paid: no waste at the end of service.';
+
+  @override
+  String get carrouselTitre4 => 'Parents top up with Mobile Money';
+
+  @override
+  String get carrouselDetail4 =>
+      'Orange, MTN, Moov, Wave. Or a link sent to a relative.';
+
+  @override
+  String get modeVisiteur => 'Explore without an account';
+
+  @override
+  String get visiteurBandeau => 'Visitor mode: you can look, not order.';
+
+  @override
+  String get pays => 'Country';
+
+  @override
+  String get indicatifCi => 'Ivory Coast';
+
+  @override
+  String get aideNumeroCi =>
+      'Without the code: 10 digits, starting 01, 05, 07, 21, 25 or 27.';
+
+  @override
+  String get finaliserProfil => 'Complete your profile';
+
+  @override
+  String get finaliserExplication =>
+      'Google and Apple only give your name. Your number, role and price profile are still needed to order.';
 }

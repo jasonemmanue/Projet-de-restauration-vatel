@@ -36,6 +36,7 @@ class Session {
     required this.utilisateurId,
     required this.nomComplet,
     this.statutConvive,
+    this.profilComplet = true,
   });
 
   /// Relit une session ecrite sur l appareil.
@@ -46,6 +47,7 @@ class Session {
         utilisateurId: json['utilisateur_id'] as String? ?? '',
         nomComplet: json['nom_complet'] as String? ?? '',
         statutConvive: json['statut_convive'] as String?,
+        profilComplet: json['profil_complet'] as bool? ?? true,
       );
 
   /// Jeton envoye a chaque requete.
@@ -66,6 +68,9 @@ class Session {
   /// Profil tarifaire du convive : eleve, etudiant, employe ou autre.
   final String? statutConvive;
 
+  /// Faux apres une connexion Google ou Apple tant que le profil n est pas complete.
+  final bool profilComplet;
+
   /// Rend une copie avec de nouveaux jetons.
   Session avecJetons({required String acces, required String rafraichissement}) => Session(
         jetonAcces: acces,
@@ -74,6 +79,7 @@ class Session {
         utilisateurId: utilisateurId,
         nomComplet: nomComplet,
         statutConvive: statutConvive,
+        profilComplet: profilComplet,
       );
 
   /// Rend la session sous une forme ecrivable sur l appareil.
@@ -84,6 +90,7 @@ class Session {
         'utilisateur_id': utilisateurId,
         'nom_complet': nomComplet,
         'statut_convive': statutConvive,
+        'profil_complet': profilComplet,
       };
 }
 

@@ -1387,6 +1387,96 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Touche pour continuer'**
   String get toucherPourContinuer;
+
+  /// No description provided for @carrouselTitre1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande ton repas sans faire la queue'**
+  String get carrouselTitre1;
+
+  /// No description provided for @carrouselDetail1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attiéké, riz, sauce graine : tu choisis la veille, tu passes au comptoir.'**
+  String get carrouselDetail1;
+
+  /// No description provided for @carrouselTitre2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un ticket QR, et tu es servi'**
+  String get carrouselTitre2;
+
+  /// No description provided for @carrouselDetail2.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'agent scanne, ton repas t\'est remis. Rien à sortir de ta poche.'**
+  String get carrouselDetail2;
+
+  /// No description provided for @carrouselTitre3.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cuisine sait quoi préparer'**
+  String get carrouselTitre3;
+
+  /// No description provided for @carrouselDetail3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque part est commandée et payée : plus de gâchis en fin de service.'**
+  String get carrouselDetail3;
+
+  /// No description provided for @carrouselTitre4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les parents rechargent en Mobile Money'**
+  String get carrouselTitre4;
+
+  /// No description provided for @carrouselDetail4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Orange, MTN, Moov, Wave. Ou un lien envoyé à un proche.'**
+  String get carrouselDetail4;
+
+  /// No description provided for @modeVisiteur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Explorer sans compte'**
+  String get modeVisiteur;
+
+  /// No description provided for @visiteurBandeau.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode visiteur : tu regardes, tu ne commandes pas.'**
+  String get visiteurBandeau;
+
+  /// No description provided for @pays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays'**
+  String get pays;
+
+  /// No description provided for @indicatifCi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Côte d’Ivoire'**
+  String get indicatifCi;
+
+  /// No description provided for @aideNumeroCi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans l\'indicatif : 10 chiffres, commence par 01, 05, 07, 21, 25 ou 27.'**
+  String get aideNumeroCi;
+
+  /// No description provided for @finaliserProfil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter ton profil'**
+  String get finaliserProfil;
+
+  /// No description provided for @finaliserExplication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander.'**
+  String get finaliserExplication;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

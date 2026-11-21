@@ -686,4 +686,56 @@ class TraductionsFr extends Traductions {
 
   @override
   String get toucherPourContinuer => 'Touche pour continuer';
+
+  @override
+  String get carrouselTitre1 => 'Commande ton repas sans faire la queue';
+
+  @override
+  String get carrouselDetail1 =>
+      'Attiéké, riz, sauce graine : tu choisis la veille, tu passes au comptoir.';
+
+  @override
+  String get carrouselTitre2 => 'Un ticket QR, et tu es servi';
+
+  @override
+  String get carrouselDetail2 =>
+      'L\'agent scanne, ton repas t\'est remis. Rien à sortir de ta poche.';
+
+  @override
+  String get carrouselTitre3 => 'La cuisine sait quoi préparer';
+
+  @override
+  String get carrouselDetail3 =>
+      'Chaque part est commandée et payée : plus de gâchis en fin de service.';
+
+  @override
+  String get carrouselTitre4 => 'Les parents rechargent en Mobile Money';
+
+  @override
+  String get carrouselDetail4 =>
+      'Orange, MTN, Moov, Wave. Ou un lien envoyé à un proche.';
+
+  @override
+  String get modeVisiteur => 'Explorer sans compte';
+
+  @override
+  String get visiteurBandeau =>
+      'Mode visiteur : tu regardes, tu ne commandes pas.';
+
+  @override
+  String get pays => 'Pays';
+
+  @override
+  String get indicatifCi => 'Côte d’Ivoire';
+
+  @override
+  String get aideNumeroCi =>
+      'Sans l\'indicatif : 10 chiffres, commence par 01, 05, 07, 21, 25 ou 27.';
+
+  @override
+  String get finaliserProfil => 'Compléter ton profil';
+
+  @override
+  String get finaliserExplication =>
+      'Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander.';
 }
