@@ -29,6 +29,7 @@ from app.routes import (
     medias,
     menus,
     moi,
+    parent,
     reservations,
     sante,
 )
@@ -77,6 +78,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         moi,
         menus,
         reservations,
+        parent,
         admin_utilisateurs,
         admin_catalogue,
         admin_menus,

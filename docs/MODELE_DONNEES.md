@@ -42,6 +42,8 @@ Propriétaire : A3.
 | allergies | text[] | not null default tableau vide |
 | seuil_alerte_solde | integer | null, >= 0 |
 | conditions_acceptees_le | timestamptz | null, date d'acceptation des conditions à l'inscription (migration 0002) |
+| code_liaison_hache | text | unique, null ; code de liaison parent haché (migration 0006) |
+| code_liaison_expire_le | timestamptz | null ; validité du code, `liaison_code_jours` (7) |
 | actif | boolean | not null default true |
 | supprime_le | timestamptz | null |
 

@@ -62,6 +62,9 @@ class Utilisateur(AvecModification, Base):
         ARRAY(Text), nullable=False, server_default=text("'{}'::text[]")
     )
     seuil_alerte_solde: Mapped[int | None] = mapped_column(Integer)
+    # Code de liaison parent, haché comme un mot de passe : il ouvre l'accès aux repas et au solde.
+    code_liaison_hache: Mapped[str | None] = mapped_column(Text, unique=True)
+    code_liaison_expire_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     actif: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
     supprime_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 

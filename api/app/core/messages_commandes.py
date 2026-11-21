@@ -45,4 +45,12 @@ MESSAGES_COMMANDES: dict[str, dict[str, str]] = {
         "fr": "Ce repas a déjà été servi.",
         "en": "This meal has already been served.",
     },
+    "deja_lie": {
+        "fr": "Ce compte est déjà lié au vôtre.",
+        "en": "This account is already linked to yours.",
+    },
+    "role_invalide": {
+        "fr": "Ce compte n'a pas de code de liaison.",
+        "en": "This account has no link code.",
+    },
 }

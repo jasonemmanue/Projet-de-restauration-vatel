@@ -187,10 +187,11 @@ notification après la validation. Un second appel avec la même référence ne 
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /parent/liaison | parent | `{"code_liaison"}` | `{"enfant": {...}, "etat": "actif"}` | `code_invalide` 400, `deja_lie` 409 |
+| GET /moi/code-liaison | convive | aucun | `{"code_liaison", "expire_le"}` : nouveau code de 8 caractères à donner au parent, l'ancien cesse de servir ; plusieurs parents peuvent l'utiliser tant qu'il vaut | `role_invalide` 409 |
+| POST /parent/liaison | parent | `{"code_liaison"}` ; lu sans casse ni espaces | `{"enfant": {...}, "etat": "actif"}` | `code_invalide` 400, `deja_lie` 409, `trop_essais` 429 |
 | GET /parent/enfants | parent | aucun | enfants liés avec solde, allergies, seuil | 401 |
 | DELETE /parent/enfants/{id} | parent | aucun | `{"delie": true}` | `introuvable` 404 |
-| GET /parent/enfants/{id}/repas | parent | `?du=&au=` | repas réservés et servis | `acces_refuse` 403 |
+| GET /parent/enfants/{id}/repas | parent | `?du=&au=` | repas commandés et servis, sans le code du ticket | `introuvable` 404 pour un enfant non lié |
 | PUT /parent/enfants/{id}/seuil | parent | `{"seuil_alerte_solde"}` | seuil enregistré | `validation` |
 | PUT /parent/enfants/{id}/allergies | parent | `{"allergies": []}` | allergies enregistrées | `validation` |
 
