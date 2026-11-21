@@ -11,7 +11,7 @@ Mis à jour le 21 novembre 2026.
 |---|-------|------|
 | 1 | Connecter gcloud au projet Firebase | fait |
 | 2 | Restreindre les trois clés API Firebase | fait |
-| 3 | Connexions Google et Apple + clients OAuth | en cours |
+| 3 | Clients OAuth Google (hors Firebase Auth) | en cours |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
 | 5 | API Gmail (envoi réel des codes) | à faire |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | à faire |
@@ -101,32 +101,39 @@ Valeurs récoltées :
 
 ---
 
-## 3. Connexions Google et Apple + clients OAuth — en cours
+## 3. Clients OAuth Google — en cours
 
-Constat du 21/11 : aucun client OAuth n'existe encore. `app/android/app/google-services.json`
-n'a pas de bloc `oauth_client` et `GoogleService-Info.plist` n'a pas de `CLIENT_ID`. Activer
-Google dans la console Firebase crée automatiquement les clients Web, Android et iOS ; il faudra
-ensuite retélécharger les deux fichiers de configuration pour que la connexion Google marche
-dans l'application.
+Décision du 21/11 : **l'authentification ne passe pas par Firebase Authentication.** Le client
+obtient un jeton d'identité Google, l'envoie à notre API (`POST /auth/google`, champ
+`jeton_google`), et c'est l'API qui le vérifie auprès de Google puis délivre nos propres jetons.
+Firebase ne sert plus qu'aux notifications push. Il n'y a donc rien à activer dans Firebase
+Authentication ; tout se passe dans Google Cloud, écran de consentement puis clients OAuth.
 
-Procédure, côté Firebase d'abord :
-1. Ouvrir `https://console.firebase.google.com/project/vatel-project/authentication/providers`.
-2. **Google** → activer, courriel d'assistance `emmanudev2@gmail.com`, enregistrer.
-3. **Apple** → activer (les champs Services ID et clé viennent de la tâche 4 ; laisser vide si
-   pas de compte Apple payant).
-4. Onglet **Settings** → *Authorized domains* → ajouter le domaine du site et celui de
-   l'application web.
+Il faut trois clients, parce que Google exige un client par plateforme, et les trois identifiants
+sont publics (ils sont livrés dans l'application).
 
-Puis côté Google Cloud, `https://console.cloud.google.com/apis/credentials?project=vatel-project` :
-5. **Créer des identifiants** → *ID client OAuth* → type **Application Web** : origines autorisées
-   l'adresse de l'application web plus `http://localhost:3000`, URI de redirection
-   `https://vatel-project.firebaseapp.com/__/auth/handler`.
-6. **Créer des identifiants** → *ID client OAuth* → type **Android** : paquet `com.vatel.cantine`,
-   empreinte SHA-1 ci-dessus.
-7. **Créer des identifiants** → *ID client OAuth* → type **iOS** : bundle `com.vatel.cantine`.
+Procédure :
+1. `https://console.cloud.google.com/auth/overview?project=vatel-project` → *Commencer* :
+   nom « Cantine Vatel », courriel d'assistance `emmanudev2@gmail.com`, audience **Externe**,
+   coordonnées, accepter. Écran de consentement créé.
+2. Onglet **Données d'accès** (Data access) → ajouter les portées `openid`, `.../auth/userinfo.email`,
+   `.../auth/userinfo.profile`. Rien de plus : ce sont des portées non sensibles, aucune
+   vérification Google à subir.
+3. `https://console.cloud.google.com/auth/clients?project=vatel-project` → *Créer un client* →
+   **Application Web**, nom « Cantine Vatel Web ». Origines JavaScript autorisées : l'adresse du
+   site, `http://localhost:3000`, `http://localhost:8080`. URI de redirection : seulement si le
+   site fait l'échange côté serveur.
+4. *Créer un client* → **Android**, nom « Cantine Vatel Android », paquet `com.vatel.cantine`,
+   empreinte SHA-1 de débogage. À refaire plus tard avec l'empreinte de publication.
+5. *Créer un client* → **iOS**, nom « Cantine Vatel iOS », bundle `com.vatel.cantine`.
+6. Recopier les trois identifiants, qui finissent par `.apps.googleusercontent.com`.
 
-À reporter : les trois identifiants de client, qui finissent par `.apps.googleusercontent.com`
-(publics, ils figurent déjà dans les fichiers de configuration livrés avec l'application).
+Pour la session API : les trois identifiants doivent être acceptés comme audiences valides à la
+vérification du jeton, et c'est **l'identifiant du client Web** que l'application Flutter passe en
+`serverClientId` à `google_sign_in` sur Android. Variables Railway attendues :
+`GOOGLE_CLIENT_ID_WEB`, `GOOGLE_CLIENT_ID_ANDROID`, `GOOGLE_CLIENT_ID_IOS`. Le secret du client
+Web (`GOOGLE_CLIENT_SECRET`) n'est nécessaire que si le site échange un code côté serveur : il va
+dans Railway, jamais dans le dépôt.
 
 Valeurs récoltées :
 - Client Web : _(à remplir)_
