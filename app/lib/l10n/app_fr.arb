@@ -185,5 +185,29 @@
   "jourVendredi": "vendredi",
   "jourSamedi": "samedi",
   "jourDimanche": "dimanche",
-  "donneesDemo": "Données de démonstration"
+  "donneesDemo": "Données de démonstration",
+  "commandeTitre": "Commander",
+  "choisirPortee": "Pour quelle période ?",
+  "totalApayer": "Total",
+  "soldeApres": "Solde après",
+  "confirmerCommande": "Confirmer la commande",
+  "soldeInsuffisant": "Solde insuffisant pour cette commande",
+  "commandeEnregistree": "Commande enregistrée",
+  "mesCommandes": "Mes commandes",
+  "aVenir": "À venir",
+  "passees": "Passées",
+  "annulerCommande": "Annuler",
+  "supprimerSansRemboursement": "Supprimer, sans remboursement",
+  "aucuneCommande": "Aucune commande pour le moment",
+  "mouvementsTitre": "Mouvements",
+  "joursChoisis": "{jours} jour(s) choisi(s)",
+  "@joursChoisis": {
+    "placeholders": {
+      "jours": {
+        "type": "int"
+      }
+    }
+  },
+  "rienChoisiCeJour": "Rien choisi ce jour",
+  "commandeGeleeInfo": "Figée depuis la veille, modification impossible"
 }

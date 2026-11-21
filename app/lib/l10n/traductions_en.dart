@@ -419,4 +419,58 @@ class TraductionsEn extends Traductions {
 
   @override
   String get donneesDemo => 'Demonstration data';
+
+  @override
+  String get commandeTitre => 'Order';
+
+  @override
+  String get choisirPortee => 'For which period?';
+
+  @override
+  String get totalApayer => 'Total';
+
+  @override
+  String get soldeApres => 'Balance after';
+
+  @override
+  String get confirmerCommande => 'Confirm the order';
+
+  @override
+  String get soldeInsuffisant => 'Balance too low for this order';
+
+  @override
+  String get commandeEnregistree => 'Order saved';
+
+  @override
+  String get mesCommandes => 'My orders';
+
+  @override
+  String get aVenir => 'Upcoming';
+
+  @override
+  String get passees => 'Past';
+
+  @override
+  String get annulerCommande => 'Cancel';
+
+  @override
+  String get supprimerSansRemboursement => 'Delete, no refund';
+
+  @override
+  String get aucuneCommande => 'No order yet';
+
+  @override
+  String get mouvementsTitre => 'Transactions';
+
+  @override
+  String joursChoisis(int jours) {
+    return '$jours day(s) selected';
+  }
+
+  @override
+  String get rienChoisiCeJour => 'Nothing selected that day';
+
+  @override
+  String get commandeGeleeInfo =>
+      'Frozen since the day before, cannot be changed';
 }

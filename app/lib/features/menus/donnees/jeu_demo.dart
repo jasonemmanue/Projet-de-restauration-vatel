@@ -15,8 +15,11 @@ const Map<String, int> prixDemoParProfil = <String, int>{
 /// Rend une semaine de démonstration qui commence au lundi de la semaine demandée.
 SemaineMenu semaineDemo({DateTime? depuis, int prixXof = 1500}) {
   final DateTime reference = depuis ?? DateTime.now();
-  final DateTime lundi = DateTime(reference.year, reference.month, reference.day)
-      .subtract(Duration(days: reference.weekday - 1));
+  final DateTime jour = DateTime(reference.year, reference.month, reference.day);
+  // Le week-end, la semaine en cours est finie : on montre celle qui vient.
+  final DateTime lundi = reference.weekday >= DateTime.saturday
+      ? jour.add(Duration(days: 8 - reference.weekday))
+      : jour.subtract(Duration(days: reference.weekday - 1));
 
   final List<MenuDuJour> jours = <MenuDuJour>[];
   for (int index = 0; index < 5; index++) {

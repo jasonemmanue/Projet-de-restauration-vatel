@@ -25,6 +25,8 @@ import '../../features/parent/ecran_recharge.dart';
 import '../../features/porte_monnaie/ecran_lien_paiement.dart';
 import '../../features/porte_monnaie/ecran_porte_monnaie.dart';
 import '../../features/profil/ecran_compte.dart';
+import '../../features/reservations/ecran_commande.dart';
+import '../../features/reservations/ecran_mes_commandes.dart';
 import '../../features/reservations/ecran_ticket.dart';
 import '../../features/service/ecran_collecte.dart';
 import '../../features/service/ecran_manifeste.dart';
@@ -208,6 +210,10 @@ StatefulShellRoute _coquilleConvive() {
             builder: (BuildContext contexte, GoRouterState etat) => const EcranMenu(),
             routes: <RouteBase>[
               GoRoute(
+                path: 'commander',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranCommande(),
+              ),
+              GoRoute(
                 path: 'plat',
                 builder: (BuildContext contexte, GoRouterState etat) {
                   final Object? plat = etat.extra;
@@ -226,7 +232,13 @@ StatefulShellRoute _coquilleConvive() {
         routes: <RouteBase>[
           GoRoute(
             path: '${Chemins.convive}/ticket',
-            builder: (BuildContext contexte, GoRouterState etat) => const EcranTicket(),
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranMesCommandes(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'billet',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranTicket(),
+              ),
+            ],
           ),
         ],
       ),

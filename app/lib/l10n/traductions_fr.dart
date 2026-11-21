@@ -420,4 +420,58 @@ class TraductionsFr extends Traductions {
 
   @override
   String get donneesDemo => 'Données de démonstration';
+
+  @override
+  String get commandeTitre => 'Commander';
+
+  @override
+  String get choisirPortee => 'Pour quelle période ?';
+
+  @override
+  String get totalApayer => 'Total';
+
+  @override
+  String get soldeApres => 'Solde après';
+
+  @override
+  String get confirmerCommande => 'Confirmer la commande';
+
+  @override
+  String get soldeInsuffisant => 'Solde insuffisant pour cette commande';
+
+  @override
+  String get commandeEnregistree => 'Commande enregistrée';
+
+  @override
+  String get mesCommandes => 'Mes commandes';
+
+  @override
+  String get aVenir => 'À venir';
+
+  @override
+  String get passees => 'Passées';
+
+  @override
+  String get annulerCommande => 'Annuler';
+
+  @override
+  String get supprimerSansRemboursement => 'Supprimer, sans remboursement';
+
+  @override
+  String get aucuneCommande => 'Aucune commande pour le moment';
+
+  @override
+  String get mouvementsTitre => 'Mouvements';
+
+  @override
+  String joursChoisis(int jours) {
+    return '$jours jour(s) choisi(s)';
+  }
+
+  @override
+  String get rienChoisiCeJour => 'Rien choisi ce jour';
+
+  @override
+  String get commandeGeleeInfo =>
+      'Figée depuis la veille, modification impossible';
 }

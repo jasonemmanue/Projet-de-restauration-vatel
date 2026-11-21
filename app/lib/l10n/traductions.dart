@@ -877,6 +877,108 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Données de démonstration'**
   String get donneesDemo;
+
+  /// No description provided for @commandeTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander'**
+  String get commandeTitre;
+
+  /// No description provided for @choisirPortee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour quelle période ?'**
+  String get choisirPortee;
+
+  /// No description provided for @totalApayer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get totalApayer;
+
+  /// No description provided for @soldeApres.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde après'**
+  String get soldeApres;
+
+  /// No description provided for @confirmerCommande.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer la commande'**
+  String get confirmerCommande;
+
+  /// No description provided for @soldeInsuffisant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde insuffisant pour cette commande'**
+  String get soldeInsuffisant;
+
+  /// No description provided for @commandeEnregistree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande enregistrée'**
+  String get commandeEnregistree;
+
+  /// No description provided for @mesCommandes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes commandes'**
+  String get mesCommandes;
+
+  /// No description provided for @aVenir.
+  ///
+  /// In fr, this message translates to:
+  /// **'À venir'**
+  String get aVenir;
+
+  /// No description provided for @passees.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passées'**
+  String get passees;
+
+  /// No description provided for @annulerCommande.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get annulerCommande;
+
+  /// No description provided for @supprimerSansRemboursement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer, sans remboursement'**
+  String get supprimerSansRemboursement;
+
+  /// No description provided for @aucuneCommande.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande pour le moment'**
+  String get aucuneCommande;
+
+  /// No description provided for @mouvementsTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouvements'**
+  String get mouvementsTitre;
+
+  /// No description provided for @joursChoisis.
+  ///
+  /// In fr, this message translates to:
+  /// **'{jours} jour(s) choisi(s)'**
+  String joursChoisis(int jours);
+
+  /// No description provided for @rienChoisiCeJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien choisi ce jour'**
+  String get rienChoisiCeJour;
+
+  /// No description provided for @commandeGeleeInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Figée depuis la veille, modification impossible'**
+  String get commandeGeleeInfo;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

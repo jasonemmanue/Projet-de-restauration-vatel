@@ -319,3 +319,30 @@ route.
 `app/assets/plats/` pour remplacer les cinq photos de la maquette. Le jeu de démonstration
 (`features/menus/donnees/jeu_demo.dart`) disparaît dès que A4 est en ligne. Le solde reste un tiret tant que
 A5 n'a pas livré `/porte-monnaie`.
+
+---
+
+## APP-06, commande et porte-monnaie
+
+**Fait.** Écran de commande : choix de la portée (journée, semaine, mois), un plat par service et par jour,
+récapitulatif collé en bas avec le total et le solde après, confirmation qui porte une clé de geste. Le
+bouton se grise avec sa raison quand le solde ne suffit pas. Mes commandes : à venir et passées, avec
+« Annuler » avant le gel et « Supprimer, sans remboursement » après. Porte-monnaie : solde sur surface de
+contraste et liste des mouvements. Plus aucun créneau nulle part.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `flutter test` : 5 tests verts, dont
+« une commande acceptée est annoncée » et « un refus de l'API est montré tel quel », service réseau remplacé.
+Les routes `/reservations` et `/porte-monnaie` n'existent pas encore côté API : les écrans tournent sur la
+semaine de démonstration et le solde reste un tiret. Le parcours réel contre l'API est donc à refaire quand
+A5 sera en ligne.
+
+**À tester par vous.**
+1. Sur Android, onglet Menu, bouton Commander : choisir la semaine, cocher un plat par jour, vérifier le
+   total et le solde après.
+2. Mettre un solde plus bas que le total : le bouton se grise et dit pourquoi.
+3. En mode sombre, vérifier que le récapitulatif reste lisible et qu'aucun texte n'est coupé.
+
+**Résultat.**
+
+**Reste à faire.** Ticket QR et recharge (lots suivants). Brancher sur l'API dès A5 : le jeu de
+démonstration disparaît alors.

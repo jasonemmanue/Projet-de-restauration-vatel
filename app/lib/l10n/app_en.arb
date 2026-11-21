@@ -136,5 +136,22 @@
   "jourVendredi": "Friday",
   "jourSamedi": "Saturday",
   "jourDimanche": "Sunday",
-  "donneesDemo": "Demonstration data"
+  "donneesDemo": "Demonstration data",
+  "commandeTitre": "Order",
+  "choisirPortee": "For which period?",
+  "totalApayer": "Total",
+  "soldeApres": "Balance after",
+  "confirmerCommande": "Confirm the order",
+  "soldeInsuffisant": "Balance too low for this order",
+  "commandeEnregistree": "Order saved",
+  "mesCommandes": "My orders",
+  "aVenir": "Upcoming",
+  "passees": "Past",
+  "annulerCommande": "Cancel",
+  "supprimerSansRemboursement": "Delete, no refund",
+  "aucuneCommande": "No order yet",
+  "mouvementsTitre": "Transactions",
+  "joursChoisis": "{jours} day(s) selected",
+  "rienChoisiCeJour": "Nothing selected that day",
+  "commandeGeleeInfo": "Frozen since the day before, cannot be changed"
 }
