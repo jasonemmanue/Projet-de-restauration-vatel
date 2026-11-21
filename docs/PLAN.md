@@ -104,8 +104,8 @@ fichier.
 | F5 | à faire | | app/ | | Back office en vue globale |
 | F6 | à faire | | app/ | | Écran de l'agent et scan hors ligne |
 | F7 | à faire | | app/ | | Notifications sur les trois plateformes |
-| F8 | à faire | | app/ | | Publier l'application web par la branche `web` |
-| F9 | à faire | | app/ | | Déclencher les branches de build Android et iOS |
+| F8 | fait | déploiement / compte courant | app/Dockerfile, app/deploiement, site/Dockerfile, docs/DEPLOIEMENT.md | app-web, back-office et site-web en ligne sur Railway, photos du volume, animation d'ouverture | Rien. Redéployer avec les commandes de docs/DEPLOIEMENT.md |
+| F9 | en cours | déploiement / compte courant | .github/workflows/application.yml | La branche android/apk publie l'APK en Release GitHub | Vérifier la Release, puis les branches iOS |
 
 ## Phase 4, le site, le réel et la recette
 

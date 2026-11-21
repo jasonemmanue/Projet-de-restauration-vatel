@@ -13,7 +13,7 @@ les menus, voit les commandes du jour, gère les stocks et lit son tableau de bo
 | Back office (administrateur) | https://back-office-production-f9e362fb.up.railway.app |
 | Site public | https://site-web-production-dc1229af.up.railway.app |
 | API | https://projet-de-restauration-vatel-production.up.railway.app (`GET /health`) |
-| APK Android | https://site-web-production-dc1229af.up.railway.app/cantine-vatel.apk |
+| APK Android | https://github.com/jasonemmanue/Projet-de-restauration-vatel/releases/latest/download/cantine-vatel.apk |
 
 Le back office est la même application Flutter, construite pour s'ouvrir sur la connexion : un compte
 administrateur y arrive sur le tableau de bord. Les droits sont contrôlés par l'API à chaque appel, quelle que
@@ -57,6 +57,13 @@ Détails : [docs/CAHIER.md](docs/CAHIER.md), [docs/CONTRAT_API.md](docs/CONTRAT_
 [docs/MODELE_DONNEES.md](docs/MODELE_DONNEES.md), [docs/CHARTE.md](docs/CHARTE.md),
 [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md).
 
+## Comptes de démonstration et administrateur
+
+- Administrateur initial : adresse et mot de passe dans les variables `ADMIN_INITIAL_EMAIL` et
+  `ADMIN_INITIAL_MOT_DE_PASSE` du service `API` sur Railway (`railway variables --service API`).
+- Jeu de démonstration (admin, élève, employé, menus, plats avec photos) : `railway ssh -s API -- python -m
+  demo.peupler`. Les mots de passe des comptes créés s'affichent une seule fois dans le terminal.
+
 ## Lancer en local
 
 API (Python 3.12) :
@@ -79,6 +86,17 @@ cd app
 flutter pub get
 flutter run --dart-define=API_URL=http://localhost:8000/api/v1
 ```
+
+Compiler l'APK sur son poste (Android SDK et Java 17 ou plus), en visant l'API en ligne :
+
+```bash
+cd app
+flutter build apk --release --dart-define=API_URL=https://projet-de-restauration-vatel-production.up.railway.app/api/v1
+# résultat : app/build/app/outputs/flutter-apk/app-release.apk
+```
+
+Compiler l'application web : `flutter build web --release --dart-define=API_URL=...` (résultat dans
+`app/build/web`). Ajouter `--dart-define=ENTREE=/connexion` pour la version back office.
 
 Site (Node 20) :
 

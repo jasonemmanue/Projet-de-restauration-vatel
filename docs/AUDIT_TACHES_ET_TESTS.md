@@ -513,3 +513,30 @@ Hosting dès que le secret `FIREBASE_SERVICE_ACCOUNT` est posé.
 **Reste à faire.** Deux secrets à poser dans GitHub pour que tout passe : `FIREBASE_SERVICE_ACCOUNT` pour la
 publication web, `FIREBASE_DEFINES` et `GOOGLE_SERVICES_JSON` pour les notifications dans l'APK. Sans eux la
 construction passe quand même, sans notifications poussées.
+
+---
+
+## Déploiement Railway des trois fronts, photos du volume et animation d'ouverture (21 novembre)
+
+**Fait.** Trois services Railway : `app-web`, `back-office` (même application, ouverte sur la connexion par
+`ENTREE=/connexion`) et `site-web` (Next 15.5.9, la 15.5.4 était refusée pour failles). CORS de l'API étendu
+aux trois adresses. Photos du carrousel et des plats lues sur le volume de l'API ; animation d'ouverture de
+la maquette ; APK publiée en Release GitHub depuis la branche `android/apk`.
+
+**Vérifié par Claude.** `flutter analyze` (2 avis de dépréciation déjà présents), `flutter test` 5/5,
+`npm run build` du site. Les trois adresses et `GET /health` répondent 200 ; une photo du volume répond 200
+avec l'en-tête CORS de l'application web. Recette en ligne non relancée dans cette session.
+
+**À tester par vous.**
+1. Ordinateur, mode clair : ouvrir https://app-web-production-34865097.up.railway.app, l'animation
+   d'ouverture passe, puis le carrousel montre les photos des repas.
+2. Ordinateur, mode sombre : ouvrir https://back-office-production-f9e362fb.up.railway.app, l'écran de
+   connexion s'affiche ; le compte admin arrive sur le tableau de bord.
+3. Téléphone Android : télécharger l'APK depuis la dernière Release GitHub, se connecter, voir le menu avec
+   ses photos.
+4. Téléphone, mode clair : ouvrir le site, le bouton web mène à l'application.
+
+**Résultat.**
+
+**Reste à faire.** L'APK construite sur le poste avant les correctifs n'affiche pas les photos : seule
+celle de la Release GitHub est à jour. Pitch deck à préparer.

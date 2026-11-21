@@ -45,10 +45,10 @@ flutter build apk --release \
   --dart-define-from-file=firebase.defines
 ```
 
-Le fichier `app/build/app/outputs/flutter-apk/app-release.apk` est copié dans `site/public/cantine-vatel.apk`
-(ignoré par git, `*.apk`), puis le site est redéployé avec `--no-gitignore` pour qu'il parte :
-il se télécharge alors depuis https://site-web-production-dc1229af.up.railway.app/cantine-vatel.apk.
-La construction GitHub Actions (`.github/workflows/application.yml`) produit la même APK en artefact.
+Publication sur GitHub : pousser l'état de `main` sur la branche `android/apk`
+(`git push origin main:android/apk`). Le flux `.github/workflows/application.yml` construit l'APK et la
+publie en Release `apk-<numéro>` ; la dernière se télécharge toujours à
+https://github.com/jasonemmanue/Projet-de-restauration-vatel/releases/latest/download/cantine-vatel.apk
 
 ## Vérifier
 
