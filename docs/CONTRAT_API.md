@@ -106,7 +106,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite, créneaux et places restantes, `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) | `validation` |
+| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite de commande, heure de gel, `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec leur `prix_supplement_xof` | `validation` |
 | GET /menus/{date} | convive, parent, agent | aucun | menu du jour détaillé | `introuvable` 404 |
 | GET /plats/{id} | tous sauf public | aucun | plat, allergènes, régimes, note moyenne, avis publiés | `introuvable` 404 |
 | GET /suggestions | convive | aucun | plats suggérés d'après l'historique et les allergies | 401 |
@@ -115,13 +115,14 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "creneau_id", "entree_id", "resistance_id", "sortie_id"}]}` ; les trois identifiants de plat sont facultatifs, au moins un par jour + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois, et une réservation par jour avec son `code_ticket` | `heure_limite_depassee` 409, `creneau_complet` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `service_inconnu` 422, `aucun_service` 422, `pin_requis` 428 |
+| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "plats": [{"plat_id", "quantite"}]}]}` ; au moins un plat par jour, aucune heure ni créneau à choisir + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois (menu du jour plus suppléments), et une commande par jour avec son `code_ticket` | `heure_limite_depassee` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `plat_hors_menu` 422, `aucun_service` 422, `pin_requis` 428 |
 | GET /reservations/lots | convive | `?du=&au=` pagination | ses lots, avec portée, période, total et état | 401 |
 | POST /reservations/lots/{id}/annuler | convive | `Cle-Geste` | `{"jours_annules": 4, "rembourse_xof": 6000}`, les jours déjà servis ou passés restent | `deja_servie` 409, `annulation_trop_tard` 409 |
 | GET /reservations | convive | `?du=&au=` pagination | liste des réservations | 401 |
 | GET /reservations/{id} | convive | aucun | réservation détaillée | `introuvable` 404, `acces_refuse` 403 |
-| GET /reservations/{id}/ticket | convive | aucun | `{"code_ticket", "date_service", "creneau", "services": {"entree", "resistance", "sortie"}, "etat"}` | `introuvable` 404 |
-| POST /reservations/{id}/annuler | convive | `Cle-Geste` | `{"annulee": true, "rembourse_xof": 1500}`, un jour seul du lot | `annulation_trop_tard` 409, `deja_servie` 409 |
+| GET /reservations/{id}/ticket | convive | aucun | `{"code_ticket", "date_service", "plats": [{"nom", "service", "quantite"}], "etat"}` | `introuvable` 404 |
+| PATCH /reservations/{id} | convive | `{"plats": [{"plat_id", "quantite"}]}` + `Cle-Geste` | commande modifiée, écart débité ou remboursé | `commande_gelee` 409, `deja_servie` 409, `plat_hors_menu` 422 |
+| POST /reservations/{id}/annuler | convive | `Cle-Geste` | avant le gel `{"annulee": true, "rembourse_xof": 1500}` ; après le gel `{"supprimee": true, "rembourse_xof": 0}` | `deja_servie` 409 |
 
 ## Porte-monnaie
 
@@ -144,7 +145,15 @@ jamais l'existence d'un compte ni un détail technique.
 
 Services au choix, prix du menu : un convive prend les services qu'il veut, au moins un par jour, et paie le
 prix du menu de ce jour pour son profil. Prendre seulement la résistance coûte autant que prendre les trois :
-le menu est vendu comme un tout. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
+le menu est vendu comme un tout. Une part en plus, une deuxième résistance par exemple, s'ajoute au prix du
+menu au tarif `prix_supplement_xof` du plat.
+
+Ni heure ni créneau : un convive qui a commandé pour un jour vient manger quand il veut ce jour-là, aux
+heures d'ouverture du réfectoire. Rien ne lui est imposé.
+
+Gel de la commande : à partir de `heure_gel_commandes` la veille du service, 18 h 00 par défaut, la commande
+du lendemain ne se modifie plus, parce que la cuisine achète sur cette base. Elle peut encore être supprimée,
+sans remboursement. Avant le gel, modification et annulation remboursent intégralement. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
 rendre un obligatoire ; il est vide par défaut.
 
 Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.
@@ -186,16 +195,16 @@ notification après la validation. Un second appel avec la même référence ne 
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /agent/service | agent | aucun | service en cours : créneau, attendus, servis, restants | `aucun_service` 404 |
-| POST /agent/scan | agent | `{"code_ticket", "scanne_le"}` + `Cle-Geste` | `{"resultat": "accepte", "convive", "plat", "creneau"}` | `ticket_inconnu` 404, `deja_servi` 409, `mauvais_jour` 409, `reservation_annulee` 409 |
+| GET /agent/service | agent | aucun | le service du jour : attendus, servis, restants, par service et par plat | `aucun_service` 404 |
+| POST /agent/scan | agent | `{"code_ticket", "scanne_le"}` + `Cle-Geste` | `{"resultat": "accepte", "convive", "plats": [{"nom", "service", "quantite"}]}` | `ticket_inconnu` 404, `deja_servi` 409, `mauvais_jour` 409, `reservation_annulee` 409 |
 | POST /agent/scan/file | agent | `[{"code_ticket", "scanne_le", "cle_unique"}]` | résultat par clé unique | `validation` |
-| GET /agent/service/jour | agent | `?date=` | liste des réservations du jour par créneau | `acces_refuse` 403 |
+| GET /agent/service/jour | agent | `?date=` | liste des commandes du jour, servies et non servies | `acces_refuse` 403 |
 
 ## Anti-gaspillage
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /anti-gaspillage | convive | aucun | portions restantes après le dernier créneau, prix réduit, quantité | `aucune_offre` 404 |
+| GET /anti-gaspillage | convive | aucun | portions restantes en fin de service, prix réduit, quantité | `aucune_offre` 404 |
 | POST /anti-gaspillage/{id}/prendre | convive | `Cle-Geste` + `X-Preuve-Pin` | réservation immédiate avec ticket | `offre_epuisee` 409, `solde_insuffisant` 402, `offre_fermee` 409 |
 | POST /admin/anti-gaspillage | admin | `{"menu_id", "plat_id", "quantite", "remise_pourcent", "ouvre_le", "ferme_le"}` | offre créée | `validation`, `service_en_cours` 409 |
 
@@ -217,8 +226,8 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
-| GET /admin/tableau-bord | `?du=&au=` | repas servis, taux de présence, recettes XOF, gaspillage évité, plats les mieux notés, courbe par jour | `validation` |
-| GET /admin/commandes-jour | `?date=` | commandes par service, par plat et par créneau, total à cuisiner | `validation` |
+| GET /admin/tableau-bord | `?du=&au=` | repas servis, taux de présence, recettes brutes XOF, frais GeniusPay supportés, net attendu après retrait, gaspillage évité, plats les mieux notés, courbe par jour | `validation` |
+| GET /admin/commandes-jour | `?date=` | commandes par service et par plat, total de parts à cuisiner, suppléments compris | `validation` |
 | GET /admin/previsions | `?du=&au=` | ce qui est déjà réservé pour les jours à venir : par jour, par service et par plat, le nombre de parts, en face de la quantité prévue au menu | `validation` |
 | GET /admin/rapports/csv | `?type=&du=&au=` | fichier CSV | `type_inconnu` 422 |
 | GET /admin/rapports/pdf | `?type=&du=&au=` | fichier PDF, préparé en tâche de fond | `type_inconnu` 422, `rapport_en_cours` 202 |
@@ -234,16 +243,16 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | POST /admin/stocks/mouvement | `{"ingredient_id", "sens", "quantite", "commentaire"}` | mouvement et quantité après | `stock_insuffisant` 409 |
 | GET /admin/stocks/alertes | aucun | ingrédients sous le seuil | 401 |
 
-### Menus et créneaux
+### Menus
 
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
-| GET POST /admin/menus | `{"date_service", "heure_limite", "plats": [], "creneaux": []}` | menu créé en brouillon | `menu_existant` 409, `validation` |
+| GET POST /admin/menus | `{"date_service", "heure_limite", "heure_gel", "plats": []}` | menu créé en brouillon | `menu_existant` 409, `validation` |
 | PATCH /admin/menus/{id} | champs modifiés | menu mis à jour | `menu_publie` 409 si une réservation existe |
 | POST /admin/menus/{id}/publier | aucun | `{"etat": "publie"}`, notification aux convives après validation | `menu_vide` 409 |
 | POST /admin/menus/{id}/annuler | `{"motif"}` | menu annulé, réservations remboursées | `deja_servi` 409 |
 | POST /admin/menus/{id}/dupliquer | `{"vers_date"}` | nouveau brouillon | `menu_existant` 409 |
-| GET POST PATCH /admin/creneaux | créneau | créneaux du menu | `chevauchement` 409 |
+| GET /admin/frais | `?du=&au=` | recettes brutes, frais GeniusPay retenus, frais de retrait estimés et net attendu, par jour et sur la période | `validation` |
 
 ### Utilisateurs
 

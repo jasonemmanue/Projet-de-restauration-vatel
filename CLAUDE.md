@@ -1,8 +1,9 @@
 # CANTINE VATEL
 
 Gestion de cantine scolaire et d'entreprise en Côte d'Ivoire. Monnaie XOF, indicatif +225.
-Chaque convive a un porte-monnaie et réserve ses repas avant l'heure limite, sur un créneau de passage, pour
-un jour, une semaine ou un mois. Un repas tient en trois services, entrée, résistance et sortie, tous au choix : au moins un, et le prix est
+Le flux est : commande, paiement, livraison au comptoir, sortie de stock. Chaque convive a un porte-monnaie
+et commande ses repas avant l'heure limite, pour un jour, une semaine ou un mois. Ni heure ni créneau : il
+vient manger quand il veut ce jour-là. Un repas tient en trois services, entrée, résistance et sortie, tous au choix : au moins un, et le prix est
 celui du menu du jour pour son profil, qu'il en prenne un ou trois. Il reçoit un
 ticket QR par jour, que l'agent scanne une fois au comptoir. Les parents rechargent par Mobile Money (GeniusPay) ou envoient un
 lien de paiement à un proche. L'admin planifie les menus, suit les commandes du jour, les stocks et un tableau
@@ -20,7 +21,8 @@ Lis ce fichier en entier avant toute action. Il prime sur tes habitudes.
 - parent : lié à un ou plusieurs enfants par un code de liaison. Recharge, lien de paiement, suivi des repas,
   seuil d'alerte de solde bas, allergies de l'enfant.
 - agent : scan des tickets et service en cours. Rien d'autre.
-- admin : back office complet (plats, tarifs par profil, menus, créneaux, commandes du jour, stocks, rapports
+- admin : back office complet (plats, tarifs par profil et par jour, menus, commandes du jour, stocks, frais
+  GeniusPay supportés, rapports
   CSV et PDF, utilisateurs, paiements et mode test ou réel, liens de paiement, notifications ciblées, réglages,
   journal des actions, remise à zéro des données de démo).
 

@@ -99,6 +99,7 @@ Propriétaire : A4.
 | allergenes | text[] | not null default tableau vide |
 | regimes | text[] | not null default tableau vide, valeurs sans_porc, sans_gluten, vegetarien, halal |
 | calories | integer | null, >= 0 |
+| prix_supplement_xof | integer | not null default 0, >= 0, prix d'une part en plus du menu |
 | actif | boolean | not null default true |
 | supprime_le | timestamptz | null |
 
@@ -153,19 +154,14 @@ Propriétaire : A4. Les plats proposés un jour donné, avec la quantité prévu
 
 Index : unique `(menu_id, plat_id)` ; index sur `menu_id`.
 
-## creneaux
-Propriétaire : A4. Les créneaux de passage d'un jour, avec leur capacité.
+## Pas de créneaux
 
-| Colonne | Type | Contraintes |
-| --- | --- | --- |
-| id | uuid | pk |
-| menu_id | uuid | fk menus, on delete cascade, not null |
-| debut | time | not null, UTC |
-| fin | time | not null, UTC, > debut |
-| capacite | integer | not null, >= 0 |
-| actif | boolean | not null default true |
+Il n'y a ni heure ni créneau de passage à réserver. Un convive qui a commandé pour un jour vient manger quand
+il veut ce jour-là, à 10 h comme à 19 h. Les heures d'ouverture du réfectoire sont un simple affichage, tenu
+par les réglages `heure_ouverture_service` et `heure_fermeture_service` de la table `parametres`.
 
-Index : unique `(menu_id, debut)` ; index sur `menu_id`.
+Le flux est : commande, paiement, livraison au comptoir, puis sortie de stock. Rien n'impose d'horaire au
+convive, et la cuisine se règle sur le nombre de parts commandées, pas sur une répartition dans la journée.
 
 ## lots_reservation
 Propriétaire : A5. Un geste de réservation qui couvre une période : un jour, une semaine ou un mois.
@@ -196,18 +192,23 @@ Propriétaire : A5. Une seule réservation vivante par convive et par jour, ratt
 | lot_id | uuid | fk lots_reservation, not null |
 | convive_id | uuid | fk utilisateurs, not null |
 | menu_id | uuid | fk menus, not null |
-| creneau_id | uuid | fk creneaux, not null |
 | date_service | date | not null |
 | total_xof | integer | not null, >= 0, prix du menu pour le profil, figé à la réservation |
-| etat | text | not null, check in (confirmee, servie, annulee, expiree) |
+| etat | text | not null, check in (confirmee, servie, annulee, supprimee, expiree) |
 | code_ticket | text | not null, unique, contenu du QR |
 | servie_le | timestamptz | null |
 | servie_par | uuid | fk utilisateurs, null |
 | annulee_le | timestamptz | null |
 
 Index : unique partiel `(convive_id, date_service)` sur les lignes `etat in (confirmee, servie)` ; unique sur
-`code_ticket` ; index sur `(date_service, creneau_id)`, sur `(menu_id, etat)` et sur `lot_id`.
-Un seul ticket par jour, qui vaut pour les trois services : l'agent scanne une fois.
+`code_ticket` ; index sur `(date_service, etat)`, sur `(menu_id, etat)` et sur `lot_id`.
+Un seul ticket par jour, qui vaut pour tout ce qui a été commandé : l'agent scanne une fois.
+
+Gel de la commande : à partir de l'heure de gel de la veille du service (`heure_gel_commandes`, 18 h 00 par
+défaut), la commande du lendemain ne se modifie plus, parce que la cuisine achète et prépare sur cette base.
+Elle peut encore être supprimée, mais sans remboursement : l'état passe à `supprimee`, `annulee_le` est
+renseigné, et aucun mouvement de crédit n'est écrit. Avant le gel, une annulation reste une `annulee` avec
+remboursement intégral.
 
 ## lignes_reservation
 Propriétaire : A5. Les trois services choisis pour un jour. Table en ajout seul.
@@ -218,13 +219,17 @@ Propriétaire : A5. Les trois services choisis pour un jour. Table en ajout seul
 | reservation_id | uuid | fk reservations, on delete cascade, not null |
 | plat_id | uuid | fk plats, not null |
 | service | text | not null, check in (entree, resistance, sortie) |
+| quantite | integer | not null default 1, > 0 |
+| supplement_xof | integer | not null default 0, >= 0, prix des parts au-delà du menu |
 
-Index : unique `(reservation_id, service)` ; index sur `plat_id` et sur `(plat_id, service)`.
+Index : unique `(reservation_id, plat_id)` ; index sur `plat_id` et sur `(plat_id, service)`.
 Les services sont au choix : un convive peut ne prendre que la résistance, ou l'entrée et la sortie, ou les
 trois. La seule règle est qu'une réservation porte au moins une ligne ; un jour sans aucun service n'est pas
 une réservation et est refusé. Un service peut aussi manquer parce que le menu du jour n'en propose pas.
-Ces lignes disent ce que le convive mange, pas ce qu'il paie : le prix est celui du menu du jour pour son
-profil, le même qu'il prenne un service ou les trois.
+Ces lignes disent ce que le convive mange. Le menu du jour, à son prix de profil, couvre une part par
+service. Tout ce qui dépasse, une deuxième résistance ou un deuxième dessert, est un supplément facturé au
+prix du plat (`plats.prix_supplement_xof`), inscrit dans `supplement_xof`. Prendre moins que le menu ne
+baisse jamais le prix.
 Les prévisions de la cuisine se comptent ici, par jour, par service et par plat.
 
 ## porte_monnaie
@@ -277,6 +282,8 @@ Propriétaire : A6. Recharges Mobile Money par GeniusPay.
 | etat | text | not null, check in (initie, en_attente, reussi, echoue, expire) |
 | reference_geniuspay | text | unique, null tant que non initié chez le prestataire |
 | cle_geste | text | not null, unique |
+| frais_xof | integer | not null default 0, >= 0, prélevé par GeniusPay sur ce paiement |
+| net_xof | integer | not null default 0, >= 0, ce qui reste à la cantine, montant moins frais |
 | charge_utile_webhook | jsonb | null |
 | motif_echec | text | null |
 | confirme_le | timestamptz | null |
@@ -285,6 +292,13 @@ Index : unique `cle_geste` ; unique `reference_geniuspay` ; index sur `(benefici
 `etat`, sur `mode`.
 Le crédit du porte-monnaie se fait dans la transaction qui passe le paiement à `reussi`, jamais avant. La
 notification part après la validation de cette transaction.
+
+Frais GeniusPay : le convive est crédité de `montant_xof` entier, c'est ce qu'il a payé. La cantine, elle,
+ne touche que `net_xof`, parce que GeniusPay retient `frais_xof` sur chaque encaissement, et un pourcentage
+de plus au moment du retrait. Les trois taux vivent dans `parametres` (`frais_geniuspay_pourcent`,
+`frais_geniuspay_fixe_xof`, `frais_retrait_pourcent`), parce qu'ils changent selon le contrat marchand. Le
+tableau de bord montre toujours les trois chiffres côte à côte, recettes brutes, frais supportés et net
+attendu après retrait, pour que l'exploitant fixe ses prix en connaissance de cause.
 
 ## liens_paiement
 Propriétaire : A6. Un parent ou un convive demande à un proche de payer.
@@ -407,7 +421,8 @@ Propriétaire : A1. Tout réglage modifiable du produit.
 | modifiable | boolean | not null default true |
 | modifie_par | uuid | fk utilisateurs, null |
 
-Clés prévues au départ : `heure_limite_defaut`, `delai_annulation_minutes`, `capacite_creneau_defaut`,
+Clés prévues au départ : `heure_limite_defaut`, `heure_gel_commandes`, `heure_ouverture_service`,
+`heure_fermeture_service`, `frais_geniuspay_pourcent`, `frais_geniuspay_fixe_xof`, `frais_retrait_pourcent`,
 `mode_paiement` (test ou reel), `livraison_verification_telephone` (demo ou reel),
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
 `seuil_alerte_solde_defaut`, `remise_anti_gaspillage_pourcent`, `langues_actives`,

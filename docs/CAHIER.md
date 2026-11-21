@@ -8,7 +8,8 @@ ni ce qu'il reste sur son compte.
 
 ## La réponse
 Chaque convive a un porte-monnaie électronique. Il choisit ses plats dans le menu de la semaine, un par
-service (entrée, résistance, sortie), et réserve avant l'heure limite du jour sur un créneau de passage.
+service (entrée, résistance, sortie), et commande avant l'heure limite du jour. Il n'y a ni heure ni créneau
+à choisir : il vient manger quand il veut ce jour-là.
 Les trois services sont au choix : il peut ne prendre que la résistance, mais le menu est vendu comme un
 tout, donc il paie le prix du jour dans les deux cas.
 Il réserve pour la période qu'il veut : un jour, une semaine entière, ou un mois. Le paiement part en une
@@ -24,7 +25,7 @@ commandes du jour avant de cuisiner, suit les stocks et lit ses chiffres sur un 
 | convive | menu de la semaine, réservation, ticket QR, solde et historique, notes des plats, suggestions, allergies |
 | parent | liaison à ses enfants par code, recharge, lien de paiement, suivi des repas, seuil d'alerte de solde bas |
 | agent | scan des tickets, service en cours. Rien d'autre |
-| admin | plats, tarifs, menus, créneaux, commandes, stocks, rapports, utilisateurs, paiements, réglages, journal |
+| admin | plats, tarifs, menus, commandes, stocks, frais GeniusPay, rapports, utilisateurs, paiements, réglages, journal |
 
 Le compte d'un convive porte un statut : `eleve`, `etudiant`, `employe` ou `autre`. Tout le monde peut payer
 pour soi, élève compris, par le même mécanisme Mobile Money : mêmes montants, mêmes opérateurs, même webhook
@@ -32,6 +33,20 @@ GeniusPay, même écriture au porte-monnaie. Un parent lié peut en plus recharg
 Un employé, un étudiant ou un compte « autre » n a besoin d aucune liaison. Et depuis n importe quel écran
 d'argent, un convive peut créer un lien de paiement pour se faire payer par un proche. Le statut sert au
 tarif et aux statistiques, jamais à interdire un paiement.
+
+## Le flux
+
+Commande, paiement, livraison, sortie de stock. Dans cet ordre, sans exception : rien n'est préparé qui n'ait
+été commandé et payé, et le stock ne bouge qu'au moment où le plat est remis au convive.
+
+La commande se gèle la veille du service à 18 h 00 (`heure_gel_commandes`), parce que la cuisine achète sur
+cette base. Avant le gel, le convive modifie ou annule et il est remboursé. Après, il ne peut plus que
+supprimer sa commande, et il n'est pas remboursé : les achats sont faits.
+
+Les frais de GeniusPay sont supportés par la cantine. Le convive est crédité de ce qu'il a payé, la cantine
+reçoit moins : des frais sont retenus à l'encaissement, et encore au retrait. Le tableau de bord montre les
+trois chiffres côte à côte, recettes brutes, frais supportés, net attendu, pour que les prix soient fixés en
+connaissance de cause.
 
 ## Rythme de la semaine
 
@@ -54,7 +69,7 @@ du back office (`jour_publication_menu`), au cas où la cantine change d'habitud
 Notation des plats, suggestions personnalisées, français et anglais, Mobile Money, notifications push Android
 iOS et web, mode hors ligne (ticket QR, scan de l'agent avec synchronisation au retour, menu, solde,
 appréciations en attente, back office en lecture), anti-gaspillage de fin de service (portions restantes à prix
-réduit après le dernier créneau), connexion avec Google, connexion avec Apple, connexion d'un ordinateur ou
+réduit en fin de service), connexion avec Google, connexion avec Apple, connexion d'un ordinateur ou
 d'une tablette par QR code scanné avec le téléphone déjà connecté.
 
 ## Pile technique

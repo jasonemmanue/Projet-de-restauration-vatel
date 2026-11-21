@@ -227,3 +227,34 @@ côté API ni côté écrans : A4, A5 et M3 restent à faire sur cette base.
 **Reste à faire.** A4 doit créer les plats avec les trois services, A5 le lot et ses lignes, M3 l'écran qui
 choisit un plat par service puis la portée. Le tarif par profil s'applique à chaque ligne, donc le total d'un
 jour est la somme de ses trois services.
+
+---
+
+## Flux de commande : ni heure ni créneau, gel la veille, frais GeniusPay
+
+**Fait.** Le flux est désormais commande, paiement, livraison, sortie de stock. La table `creneaux` disparaît
+et `reservations` n'a plus de `creneau_id` : un convive qui a commandé pour un jour vient manger quand il
+veut, les heures d'ouverture ne sont qu'un affichage (`heure_ouverture_service`, `heure_fermeture_service`).
+La commande se gèle la veille à 18 h 00 (`heure_gel_commandes`) : après, plus de modification, suppression
+possible sans remboursement, état `supprimee`. On peut commander plusieurs parts : `lignes_reservation`
+gagne `quantite` et `supplement_xof`, et `plats` gagne `prix_supplement_xof`. Les frais GeniusPay sont
+portés par `paiements.frais_xof` et `paiements.net_xof`, avec trois taux réglables, et le tableau de bord
+montre recettes brutes, frais supportés et net attendu.
+
+**Vérifié par Claude.** Les quatre documents sont relus et ne contiennent plus aucune mention de créneau
+réservable : `CLAUDE.md`, `docs/CAHIER.md`, `docs/MODELE_DONNEES.md`, `docs/CONTRAT_API.md`. Nouvelles
+routes au contrat : `PATCH /reservations/{id}` (refusée après le gel par `commande_gelee` 409) et
+`GET /admin/frais`. Rien n'est implémenté : A4, A5, A6 et A8 partent de cette base.
+
+**À tester par vous.**
+1. Sur ordinateur, relire la section « Le flux » de `docs/CAHIER.md` et confirmer l'heure de gel à 18 h 00 la
+   veille.
+2. Donner les trois taux réels de ton contrat GeniusPay : pourcentage à l'encaissement, part fixe par
+   transaction, pourcentage au retrait. Ils sont à zéro tant que tu ne les donnes pas.
+3. Dire si une part en plus se paie au prix du plat ou à un forfait, et donner ce prix pour les plats
+   concernés.
+
+**Résultat.**
+
+**Reste à faire.** La signature de la marque est « Créneau · Repas · QR », or les créneaux n'existent plus :
+elle est dans les SVG, les exports PNG et l'écran de bienvenue. À trancher avant la démonstration.
