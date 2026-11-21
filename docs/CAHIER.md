@@ -7,8 +7,11 @@ tarifs annoncés de bouche à oreille, caisse tenue à la main. Les parents ne s
 ni ce qu'il reste sur son compte.
 
 ## La réponse
-Chaque convive a un porte-monnaie électronique. Il choisit son repas dans le menu de la semaine, réserve avant
-l'heure limite du jour sur un créneau de passage, et reçoit un ticket QR. Au comptoir, l'agent scanne le
+Chaque convive a un porte-monnaie électronique. Il choisit ses plats dans le menu de la semaine, un par
+service (entrée, résistance, sortie), et réserve avant l'heure limite du jour sur un créneau de passage.
+Il réserve pour la période qu'il veut : un jour, une semaine entière, ou un mois. Le paiement part en une
+fois, et il reçoit un ticket QR par jour. La cuisine connaît donc à l'avance le nombre de parts de chaque
+plat, service par service. Au comptoir, l'agent scanne le
 ticket : le repas est servi, la réservation est consommée, le stock baisse. Les parents rechargent le compte
 par Mobile Money ou envoient un lien de paiement à un proche. L'administration planifie les menus, voit les
 commandes du jour avant de cuisiner, suit les stocks et lit ses chiffres sur un tableau de bord.

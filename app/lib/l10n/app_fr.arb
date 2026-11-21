@@ -56,5 +56,14 @@
   "ouvrirSurWebPc": "Ouvrir sur Web / PC",
   "disponibleSur": "Disponible sur",
   "telechargerDans": "Télécharger dans",
-  "lienPaiement": "Lien de paiement"
+  "lienPaiement": "Lien de paiement",
+  "serviceEntree": "Entrée",
+  "serviceResistance": "Résistance",
+  "serviceSortie": "Sortie",
+  "porteeJour": "La journée",
+  "porteeSemaine": "La semaine",
+  "porteeMois": "Le mois",
+  "reserverPeriode": "Réserver la période",
+  "totalPeriode": "Total de la période",
+  "choisirParService": "Choisis un plat par service"
 }

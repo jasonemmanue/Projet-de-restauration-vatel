@@ -56,5 +56,14 @@
   "ouvrirSurWebPc": "Open on Web / PC",
   "disponibleSur": "Available on",
   "telechargerDans": "Download on",
-  "lienPaiement": "Payment link"
+  "lienPaiement": "Payment link",
+  "serviceEntree": "Starter",
+  "serviceResistance": "Main course",
+  "serviceSortie": "Dessert",
+  "porteeJour": "The day",
+  "porteeSemaine": "The week",
+  "porteeMois": "The month",
+  "reserverPeriode": "Book the period",
+  "totalPeriode": "Period total",
+  "choisirParService": "Pick one dish per course"
 }

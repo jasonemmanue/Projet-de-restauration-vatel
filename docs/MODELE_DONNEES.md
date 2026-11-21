@@ -91,7 +91,7 @@ Propriétaire : A4.
 | nom_en | text | not null |
 | description_fr | text | not null default chaîne vide |
 | description_en | text | not null default chaîne vide |
-| categorie | text | not null, check in (entree, plat, accompagnement, dessert, boisson) |
+| categorie | text | not null, check in (entree, resistance, sortie) |
 | image_url | text | null |
 | allergenes | text[] | not null default tableau vide |
 | regimes | text[] | not null default tableau vide, valeurs sans_porc, sans_gluten, vegetarien, halal |
@@ -100,6 +100,9 @@ Propriétaire : A4.
 | supprime_le | timestamptz | null |
 
 Index : `categorie`, `actif`. Unique sur `lower(nom_fr)` parmi les lignes non supprimées.
+
+Un repas se compose de trois services : l'entrée, la résistance et la sortie. Un menu du jour propose
+plusieurs plats dans chaque service, et un convive en choisit un par service.
 
 ## tarifs
 Propriétaire : A4. Le prix dépend du plat et du profil du convive.
@@ -156,27 +159,62 @@ Propriétaire : A4. Les créneaux de passage d'un jour, avec leur capacité.
 
 Index : unique `(menu_id, debut)` ; index sur `menu_id`.
 
-## reservations
-Propriétaire : A5. Une seule réservation vivante par convive et par jour.
+## lots_reservation
+Propriétaire : A5. Un geste de réservation qui couvre une période : un jour, une semaine ou un mois.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
 | id | uuid | pk |
 | convive_id | uuid | fk utilisateurs, not null |
+| portee | text | not null, check in (jour, semaine, mois) |
+| debut | date | not null, premier jour couvert |
+| fin | date | not null, dernier jour couvert, >= debut |
+| jours_reserves | integer | not null, > 0 |
+| total_xof | integer | not null, >= 0, somme des lignes de tous les jours |
+| etat | text | not null, check in (confirme, partiellement_annule, annule) |
+| cle_unique | text | not null, unique, clé de geste envoyée par le client |
+
+Index : unique `cle_unique` ; index sur `(convive_id, debut desc)`.
+Le lot est écrit dans la même transaction que ses réservations et son unique débit : soit toute la période
+passe, soit rien. Un jour déjà réservé dans la période fait échouer le lot entier, avec la liste des jours en
+cause, plutôt que de réserver à moitié.
+
+## reservations
+Propriétaire : A5. Une seule réservation vivante par convive et par jour, rattachée à son lot.
+
+| Colonne | Type | Contraintes |
+| --- | --- | --- |
+| id | uuid | pk |
+| lot_id | uuid | fk lots_reservation, not null |
+| convive_id | uuid | fk utilisateurs, not null |
 | menu_id | uuid | fk menus, not null |
 | creneau_id | uuid | fk creneaux, not null |
-| plat_id | uuid | fk plats, not null |
 | date_service | date | not null |
-| prix_xof | integer | not null, >= 0, prix figé à la réservation |
+| total_xof | integer | not null, >= 0, somme des lignes, prix figé à la réservation |
 | etat | text | not null, check in (confirmee, servie, annulee, expiree) |
 | code_ticket | text | not null, unique, contenu du QR |
 | servie_le | timestamptz | null |
 | servie_par | uuid | fk utilisateurs, null |
 | annulee_le | timestamptz | null |
-| cle_unique | text | not null, unique, clé de geste envoyée par le client |
 
 Index : unique partiel `(convive_id, date_service)` sur les lignes `etat in (confirmee, servie)` ; unique sur
-`code_ticket` ; unique sur `cle_unique` ; index sur `(date_service, creneau_id)` et sur `(menu_id, etat)`.
+`code_ticket` ; index sur `(date_service, creneau_id)`, sur `(menu_id, etat)` et sur `lot_id`.
+Un seul ticket par jour, qui vaut pour les trois services : l'agent scanne une fois.
+
+## lignes_reservation
+Propriétaire : A5. Les trois services choisis pour un jour. Table en ajout seul.
+
+| Colonne | Type | Contraintes |
+| --- | --- | --- |
+| id | uuid | pk |
+| reservation_id | uuid | fk reservations, on delete cascade, not null |
+| plat_id | uuid | fk plats, not null |
+| service | text | not null, check in (entree, resistance, sortie) |
+| prix_xof | integer | not null, >= 0, prix du profil figé à la réservation |
+
+Index : unique `(reservation_id, service)` ; index sur `plat_id` et sur `(plat_id, service)`.
+Un service peut manquer si le menu du jour n'en propose pas : la contrainte porte sur l'unicité, pas sur la
+présence des trois. Les prévisions de la cuisine se comptent ici, par jour, par service et par plat.
 
 ## porte_monnaie
 Propriétaire : A5. Une ligne par utilisateur. Ne contient pas de solde modifiable.
@@ -362,7 +400,9 @@ Clés prévues au départ : `heure_limite_defaut`, `delai_annulation_minutes`, `
 `mode_paiement` (test ou reel), `livraison_verification_telephone` (demo ou reel),
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
 `seuil_alerte_solde_defaut`, `remise_anti_gaspillage_pourcent`, `langues_actives`,
-`jour_publication_menu` (jeudi par défaut) et `semaines_preparees_a_l_avance` (1 par défaut).
+`jour_publication_menu` (jeudi par défaut), `semaines_preparees_a_l_avance` (1 par défaut),
+`portees_reservation` (jour, semaine, mois) et `services_obligatoires` (aucun par défaut : un convive peut
+ne prendre que la résistance).
 
 Rythme réel de la cantine : le menu de toute la semaine est préparé et publié le jeudi pour la semaine
 suivante. Le back office propose donc la duplication d'une semaine entière, et l'écran des menus s'ouvre

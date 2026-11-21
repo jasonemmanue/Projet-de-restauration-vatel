@@ -194,3 +194,33 @@ Rien n'est vérifié côté API : ces règles sont à implémenter en A5 et A6.
 
 **Reste à faire.** A5 et A6 doivent appliquer la règle côté serveur : un bénéficiaire autre que soi-même ou
 un enfant lié rend `beneficiaire_interdit` 403.
+
+---
+
+## Réservation par période et repas en trois services
+
+**Fait.** Un repas se compose de l'entrée, de la résistance et de la sortie : `plats.categorie` ne connaît
+plus que ces trois valeurs. Un convive réserve pour la portée qu'il choisit, jour, semaine ou mois : nouvelle
+table `lots_reservation`, `reservations` rattachée à son lot avec un ticket par jour, et nouvelle table
+`lignes_reservation` qui porte le plat choisi par service. Les prévisions de la cuisine se comptent sur ces
+lignes, et `GET /admin/previsions` les rend par jour, par service et par plat.
+
+**Vérifié par Claude.** Documents mis à jour et relus : `CLAUDE.md`, `docs/CAHIER.md`,
+`docs/MODELE_DONNEES.md` (trois tables réécrites), `docs/CONTRAT_API.md` (réservation par période, lots,
+ticket à trois services, menu groupé par service, prévisions). Côté application, les mots des trois services
+et des trois portées sont dans les traductions fr et en ; `flutter analyze` propre. Rien n'est implémenté
+côté API ni côté écrans : A4, A5 et M3 restent à faire sur cette base.
+
+**À tester par vous.**
+1. Sur ordinateur, relire la section `lots_reservation` de `docs/MODELE_DONNEES.md` et confirmer la règle du
+   tout ou rien : un seul jour déjà réservé fait échouer toute la période.
+2. Dire si un convive doit pouvoir ne prendre que la résistance, ou si les trois services sont obligatoires.
+   Le réglage `services_obligatoires` est prévu, il est vide par défaut.
+3. Dire si l'annulation d'un lot entier doit être possible après le premier jour servi, ou seulement jour par
+   jour.
+
+**Résultat.**
+
+**Reste à faire.** A4 doit créer les plats avec les trois services, A5 le lot et ses lignes, M3 l'écran qui
+choisit un plat par service puis la portée. Le tarif par profil s'applique à chaque ligne, donc le total d'un
+jour est la somme de ses trois services.

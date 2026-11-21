@@ -164,4 +164,31 @@ class TraductionsEn extends Traductions {
 
   @override
   String get lienPaiement => 'Payment link';
+
+  @override
+  String get serviceEntree => 'Starter';
+
+  @override
+  String get serviceResistance => 'Main course';
+
+  @override
+  String get serviceSortie => 'Dessert';
+
+  @override
+  String get porteeJour => 'The day';
+
+  @override
+  String get porteeSemaine => 'The week';
+
+  @override
+  String get porteeMois => 'The month';
+
+  @override
+  String get reserverPeriode => 'Book the period';
+
+  @override
+  String get totalPeriode => 'Period total';
+
+  @override
+  String get choisirParService => 'Pick one dish per course';
 }

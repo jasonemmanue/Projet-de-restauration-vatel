@@ -397,6 +397,60 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Lien de paiement'**
   String get lienPaiement;
+
+  /// No description provided for @serviceEntree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrée'**
+  String get serviceEntree;
+
+  /// No description provided for @serviceResistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Résistance'**
+  String get serviceResistance;
+
+  /// No description provided for @serviceSortie.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sortie'**
+  String get serviceSortie;
+
+  /// No description provided for @porteeJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'La journée'**
+  String get porteeJour;
+
+  /// No description provided for @porteeSemaine.
+  ///
+  /// In fr, this message translates to:
+  /// **'La semaine'**
+  String get porteeSemaine;
+
+  /// No description provided for @porteeMois.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le mois'**
+  String get porteeMois;
+
+  /// No description provided for @reserverPeriode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réserver la période'**
+  String get reserverPeriode;
+
+  /// No description provided for @totalPeriode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total de la période'**
+  String get totalPeriode;
+
+  /// No description provided for @choisirParService.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis un plat par service'**
+  String get choisirParService;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

@@ -103,7 +103,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite, plats avec prix du profil, créneaux et places restantes | `validation` |
+| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite, créneaux et places restantes, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec le prix du profil | `validation` |
 | GET /menus/{date} | convive, parent, agent | aucun | menu du jour détaillé | `introuvable` 404 |
 | GET /plats/{id} | tous sauf public | aucun | plat, allergènes, régimes, note moyenne, avis publiés | `introuvable` 404 |
 | GET /suggestions | convive | aucun | plats suggérés d'après l'historique et les allergies | 401 |
@@ -112,11 +112,13 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /reservations | convive | `{"date_service", "plat_id", "creneau_id"}` + `Cle-Geste` + `X-Preuve-Pin` | réservation avec `code_ticket` et prix débité | `heure_limite_depassee` 409, `creneau_complet` 409, `reservation_existante` 409, `solde_insuffisant` 402, `menu_non_publie` 409, `pin_requis` 428 |
+| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "creneau_id", "entree_id", "resistance_id", "sortie_id"}]}` + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois, et une réservation par jour avec son `code_ticket` | `heure_limite_depassee` 409, `creneau_complet` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `service_inconnu` 422, `pin_requis` 428 |
+| GET /reservations/lots | convive | `?du=&au=` pagination | ses lots, avec portée, période, total et état | 401 |
+| POST /reservations/lots/{id}/annuler | convive | `Cle-Geste` | `{"jours_annules": 4, "rembourse_xof": 6000}`, les jours déjà servis ou passés restent | `deja_servie` 409, `annulation_trop_tard` 409 |
 | GET /reservations | convive | `?du=&au=` pagination | liste des réservations | 401 |
 | GET /reservations/{id} | convive | aucun | réservation détaillée | `introuvable` 404, `acces_refuse` 403 |
-| GET /reservations/{id}/ticket | convive | aucun | `{"code_ticket", "date_service", "creneau", "plat", "etat"}` | `introuvable` 404 |
-| POST /reservations/{id}/annuler | convive | `Cle-Geste` | `{"annulee": true, "rembourse_xof": 1000}` | `annulation_trop_tard` 409, `deja_servie` 409 |
+| GET /reservations/{id}/ticket | convive | aucun | `{"code_ticket", "date_service", "creneau", "services": {"entree", "resistance", "sortie"}, "etat"}` | `introuvable` 404 |
+| POST /reservations/{id}/annuler | convive | `Cle-Geste` | `{"annulee": true, "rembourse_xof": 1500}`, un jour seul du lot | `annulation_trop_tard` 409, `deja_servie` 409 |
 
 ## Porte-monnaie
 
@@ -208,7 +210,8 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
 | GET /admin/tableau-bord | `?du=&au=` | repas servis, taux de présence, recettes XOF, gaspillage évité, plats les mieux notés, courbe par jour | `validation` |
-| GET /admin/commandes-jour | `?date=` | commandes par plat et par créneau, total à cuisiner | `validation` |
+| GET /admin/commandes-jour | `?date=` | commandes par service, par plat et par créneau, total à cuisiner | `validation` |
+| GET /admin/previsions | `?du=&au=` | ce qui est déjà réservé pour les jours à venir : par jour, par service et par plat, le nombre de parts, en face de la quantité prévue au menu | `validation` |
 | GET /admin/rapports/csv | `?type=&du=&au=` | fichier CSV | `type_inconnu` 422 |
 | GET /admin/rapports/pdf | `?type=&du=&au=` | fichier PDF, préparé en tâche de fond | `type_inconnu` 422, `rapport_en_cours` 202 |
 
