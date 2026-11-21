@@ -32,7 +32,9 @@ async def plats_du_menu(session: AsyncSession, menu_id: uuid.UUID) -> list[MenuP
 
 
 async def _a_des_commandes(session: AsyncSession, menu_id: uuid.UUID) -> bool:
-    return bool(await session.scalar(select(exists().where(Reservation.menu_id == menu_id))))
+    # Une commande annulée avant le gel ne retient plus le menu : sa part a été rendue.
+    condition = (Reservation.menu_id == menu_id, Reservation.etat != "annulee")
+    return bool(await session.scalar(select(exists().where(*condition))))
 
 
 async def _remplacer_plats(session: AsyncSession, menu: Menu, plats: list[PlatDuMenuEntree]) -> None:

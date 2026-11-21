@@ -5,11 +5,12 @@ Chaque étape qui crée un bloc ajoute son fichier dans ce dossier et sa ligne i
 
 from collections.abc import Callable
 
-from recette.blocs import auth, menus, sante
+from recette.blocs import auth, menus, mvp, sante
 from recette.executeur import Recette
 
 BLOCS: dict[str, Callable[[Recette], None]] = {
     "sante": sante.lancer,
     "auth": auth.lancer,
     "menus": menus.lancer,
+    "mvp": mvp.lancer,
 }

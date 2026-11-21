@@ -74,3 +74,16 @@ Pour relire ces réglages : `railway api 'query($s:String!,$e:String!){ serviceI
 environmentId:$e){ rootDirectory dockerfilePath watchPatterns healthcheckPath } }'` avec les identifiants donnés
 par `railway status`.
 
+## Jeu de démonstration
+
+```bash
+python -m demo.peupler                                              # en local, avec les variables de l'API
+railway ssh -s Projet-de-restauration-vatel -- python -m demo.peupler   # en production
+```
+
+Idempotent : un admin et deux convives vérifiés (`demo-admin@vatel.demo`, `demo-eleve@vatel.demo`,
+`demo-employe@vatel.demo`), 15 plats ivoiriens avec les photos de `demo/images` copiées sur le volume, menus
+publiés de cette semaine et de la suivante, 14 jours d'historique, 60 000 XOF crédités par convive. Les mots de
+passe sont tirés au hasard et affichés une seule fois dans le terminal : le dépôt est public, ils n'y sont
+jamais écrits.
+

@@ -78,11 +78,21 @@ async def test_commande_debitee_une_fois_puis_annulee(
     autre_geste = {**entete(jeton), "Cle-Geste": secrets.token_hex(8)}
     deuxieme = await client_base.post("/api/v1/reservations", headers=autre_geste, json=_commande(jour, plat))
     assert deuxieme.status_code == 409 and deuxieme.json()["code"] == "reservation_existante"
+    cuisine = (
+        await client_base.get(f"/api/v1/admin/commandes-jour?date={jour}", headers=entete(admin))
+    ).json()
+    assert cuisine["total_parts"] == 2 and cuisine["services"]["resistance"][0]["parts"] == 2
 
     reservation_id = premiere.json()["reservations"][0]["id"]
     annulee = await client_base.post(f"/api/v1/reservations/{reservation_id}/annuler", headers=geste)
     assert annulee.json() == {"etat": "annulee", "rembourse_xof": 2000}
     assert (await client_base.get("/api/v1/porte-monnaie", headers=entete(jeton))).json()["solde_xof"] == 5000
+    cuisine = await client_base.get(f"/api/v1/admin/commandes-jour?date={jour}", headers=entete(admin))
+    assert cuisine.status_code == 200 and cuisine.json()["total_parts"] == 0
+    tableau = await client_base.get(f"/api/v1/admin/tableau-bord?du={jour}&au={jour}", headers=entete(admin))
+    assert tableau.json()["annulees"] == 1 and tableau.json()["recettes_xof"] == 0
+    refus = await client_base.get("/api/v1/admin/tableau-bord", headers=entete(jeton))
+    assert refus.status_code == 403
     mouvements = (await client_base.get("/api/v1/porte-monnaie/mouvements", headers=entete(jeton))).json()
     assert [m["motif"] for m in mouvements["elements"]] == ["annulation", "reservation", "ajustement_admin"]
 

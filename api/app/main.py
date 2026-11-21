@@ -22,6 +22,7 @@ from app.db.moteur import creer_fabrique, creer_moteur
 from app.routes import (
     admin_catalogue,
     admin_menus,
+    admin_tableau,
     admin_utilisateurs,
     auth,
     medias,
@@ -78,6 +79,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         admin_utilisateurs,
         admin_catalogue,
         admin_menus,
+        admin_tableau,
     ):
         application.include_router(module.routeur)
 
