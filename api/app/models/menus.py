@@ -6,7 +6,18 @@ Il n'y a pas de créneau de passage : un convive vient manger quand il veut le j
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, CheckConstraint, Date, ForeignKey, Index, Integer, Text, func, text
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Date,
+    ForeignKey,
+    Index,
+    Integer,
+    LargeBinary,
+    Text,
+    func,
+    text,
+)
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import DateTime
@@ -17,6 +28,28 @@ from app.models.comptes import UTILISATEUR_FK
 TABLEAU_VIDE = text("'{}'::text[]")
 # Les trois services d'un repas, dans l'ordre du repas.
 SERVICES = ("entree", "resistance", "sortie")
+# Liste fermée des allergènes, la même pour les plats et pour les allergies des comptes.
+ALLERGENES = (
+    "arachide",
+    "poisson",
+    "crustaces",
+    "gluten",
+    "lait",
+    "oeuf",
+    "soja",
+    "sesame",
+    "fruits_a_coque",
+    "celeri",
+    "moutarde",
+)
+REGIMES = ("sans_porc", "sans_gluten", "vegetarien", "halal")
+TYPES_PHOTO = ("image/jpeg", "image/png", "image/webp")
+
+
+def dans_liste(colonne: str, valeurs: tuple[str, ...], nom: str) -> CheckConstraint:
+    """Contrainte qui limite un tableau de textes à une liste fermée."""
+    liste = ", ".join(f"'{v}'" for v in valeurs)
+    return CheckConstraint(f"{colonne} <@ array[{liste}]::text[]", name=nom)
 
 
 class Plat(AvecModification, Base):
@@ -25,9 +58,9 @@ class Plat(AvecModification, Base):
     __tablename__ = "plats"
     __table_args__ = (
         choix("categorie", *SERVICES),
-        CheckConstraint(
-            "regimes <@ array['sans_porc', 'sans_gluten', 'vegetarien', 'halal']::text[]", name="regimes"
-        ),
+        dans_liste("regimes", REGIMES, "regimes"),
+        dans_liste("allergenes", ALLERGENES, "allergenes"),
+        choix("photo_type", *TYPES_PHOTO),
         CheckConstraint("calories >= 0", name="calories_positives"),
         CheckConstraint("prix_supplement_xof >= 0", name="supplement_positif"),
         Index("ix_plats_categorie", "categorie"),
@@ -51,6 +84,9 @@ class Plat(AvecModification, Base):
     regimes: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, server_default=TABLEAU_VIDE)
     calories: Mapped[int | None] = mapped_column(Integer)
     prix_supplement_xof: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    # Photo rangée en base : colonne lourde, chargée seulement quand on sert l'image.
+    photo: Mapped[bytes | None] = mapped_column(LargeBinary, deferred=True)
+    photo_type: Mapped[str | None] = mapped_column(Text)
     actif: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
     supprime_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 

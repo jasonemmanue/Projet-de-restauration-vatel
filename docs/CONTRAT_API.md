@@ -113,6 +113,7 @@ jamais l'existence d'un compte ni un détail technique.
 | GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, moment du gel de ce jour (`gele_le`), `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec leur `prix_supplement_xof` | `validation` |
 | GET /menus/{date} | convive, parent, agent | aucun | menu du jour détaillé | `introuvable` 404 |
 | GET /plats/{id} | tous sauf public | aucun | plat, allergènes, régimes, note moyenne, avis publiés | `introuvable` 404 |
+| GET /plats/{id}/photo | public | aucun | image JPEG, PNG ou WebP, en cache une heure | `introuvable` 404 |
 | GET /suggestions | convive | aucun | plats suggérés d'après l'historique et les allergies | 401 |
 
 ## Réservations
@@ -241,6 +242,7 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | --- | --- | --- | --- |
 | GET POST /admin/plats | plat complet, deux langues | liste ou plat créé | `validation`, `conflit` 409 |
 | PATCH DELETE /admin/plats/{id} | champs modifiés | plat mis à jour ou désactivé | `introuvable` 404, `plat_utilise` 409 |
+| PUT /admin/plats/{id}/photo | multipart `photo` | plat avec `image_url` ; type vérifié par les premiers octets, taille bornée | `fichier_invalide` 422, `trop_lourd` 413, `introuvable` 404 |
 | POST /admin/plats/{id}/image | fichier multipart, 5 Mo au plus, jpeg ou png | `{"image_url"}` | `fichier_invalide` 422, `trop_lourd` 413 |
 | DELETE /admin/plats/{id}/image | aucun | `{"image_url": null}`, le plat retombe sur son aplat de secours | `introuvable` 404 |
 | GET /medias/{fichier} | public | aucun | le fichier image, servi depuis le volume | `introuvable` 404 |
@@ -254,6 +256,7 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
 | GET POST /admin/menus | `{"date_service", "plats": []}` ; le gel suit les réglages `gel_jours_avant_service` et `heure_gel_commandes` | menu créé en brouillon | `menu_existant` 409, `validation` |
+| POST /admin/menus/semaine/dupliquer | `{"de", "vers"}`, deux lundis | `{"crees": [], "ignores": []}` ; copie en brouillons, un jour déjà pris est laissé tel quel | `validation` 422 |
 | PATCH /admin/menus/{id} | champs modifiés | menu mis à jour | `menu_publie` 409 si une réservation existe |
 | POST /admin/menus/{id}/publier | aucun | `{"etat": "publie"}`, notification aux convives après validation | `menu_vide` 409 |
 | POST /admin/menus/{id}/annuler | `{"motif"}` | menu annulé, réservations remboursées | `deja_servi` 409 |

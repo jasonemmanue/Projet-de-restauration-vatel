@@ -12,8 +12,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import Configuration
 from app.core.erreurs import ErreurApi
 from app.core.hachage import mot_de_passe_inutilisable
-from app.models import JournalAdmin, Utilisateur
+from app.models import Utilisateur
 from app.services import comptes, sessions
+from app.services.journal import ecrire_journal
 
 
 def _etat(utilisateur: Utilisateur) -> dict[str, Any]:
@@ -34,18 +35,8 @@ def journaliser(
     avant: dict[str, Any] | None,
     ip: str | None,
 ) -> None:
-    """Ajoute une ligne au journal des actions de l'admin."""
-    session.add(
-        JournalAdmin(
-            admin_id=admin_id,
-            action=action,
-            cible_type="utilisateur",
-            cible_id=cible.id,
-            avant=avant,
-            apres=_etat(cible),
-            adresse_ip=ip,
-        )
-    )
+    """Ajoute au journal une action sur un compte."""
+    ecrire_journal(session, admin_id, action, "utilisateur", cible.id, avant, _etat(cible), ip)
 
 
 async def creer_par_admin(

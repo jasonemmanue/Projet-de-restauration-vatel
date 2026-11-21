@@ -5,6 +5,7 @@ Chaque bloc ajoute ici les codes qu'il crée, toujours dans les deux langues.
 """
 
 from app.core.messages_comptes import MESSAGES_COMPTES
+from app.core.messages_menus import MESSAGES_MENUS
 
 LANGUES = ("fr", "en")
 LANGUE_DEFAUT = "fr"
@@ -57,6 +58,7 @@ MESSAGES: dict[str, dict[str, str]] = {
 }
 
 MESSAGES.update(MESSAGES_COMPTES)
+MESSAGES.update(MESSAGES_MENUS)
 
 # Code générique associé à un statut HTTP quand aucune erreur métier n'est levée.
 CODE_PAR_STATUT: dict[int, str] = {

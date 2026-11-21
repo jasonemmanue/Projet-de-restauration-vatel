@@ -29,6 +29,11 @@ class Utilisateur(AvecModification, Base):
         CheckConstraint("(role = 'convive') = (statut_convive is not null)", name="statut_selon_role"),
         CheckConstraint("telephone ~ '^\\+[1-9][0-9]{7,14}$'", name="telephone_format"),
         CheckConstraint("seuil_alerte_solde >= 0", name="seuil_positif"),
+        CheckConstraint(
+            "allergies <@ array['arachide', 'poisson', 'crustaces', 'gluten', 'lait', 'oeuf', 'soja', "
+            "'sesame', 'fruits_a_coque', 'celeri', 'moutarde']::text[]",
+            name="allergies",
+        ),
         Index("uq_utilisateurs_email_minuscule", func.lower(text("email")), unique=True),
         Index("ix_utilisateurs_role", "role"),
         Index("ix_utilisateurs_statut_convive", "statut_convive"),
