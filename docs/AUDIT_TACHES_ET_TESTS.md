@@ -214,9 +214,11 @@ côté API ni côté écrans : A4, A5 et M3 restent à faire sur cette base.
 **À tester par vous.**
 1. Sur ordinateur, relire la section `lots_reservation` de `docs/MODELE_DONNEES.md` et confirmer la règle du
    tout ou rien : un seul jour déjà réservé fait échouer toute la période.
-2. Tranché le 21/11 : les services sont au choix. Un convive peut ne prendre que la résistance, et il paie
-   ce qu'il a choisi. Une réservation porte au moins une ligne ; un jour sans aucun service est refusé par
-   `aucun_service` 422. Le réglage `services_obligatoires` reste vide.
+2. Tranché le 21/11 : les services sont au choix, mais le prix ne bouge pas. Un convive peut ne prendre que
+   la résistance ; il paie le prix du menu de ce jour pour son profil, comme celui qui prend les trois. Une
+   réservation porte au moins une ligne ; un jour sans aucun service est refusé par `aucun_service` 422. Le
+   tarif porte donc sur le menu du jour et le profil, plus sur le plat. Le réglage `services_obligatoires`
+   reste vide.
 3. Dire si l'annulation d'un lot entier doit être possible après le premier jour servi, ou seulement jour par
    jour.
 

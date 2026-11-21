@@ -103,7 +103,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite, créneaux et places restantes, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec le prix du profil | `validation` |
+| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite, créneaux et places restantes, `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) | `validation` |
 | GET /menus/{date} | convive, parent, agent | aucun | menu du jour détaillé | `introuvable` 404 |
 | GET /plats/{id} | tous sauf public | aucun | plat, allergènes, régimes, note moyenne, avis publiés | `introuvable` 404 |
 | GET /suggestions | convive | aucun | plats suggérés d'après l'historique et les allergies | 401 |
@@ -139,9 +139,10 @@ jamais l'existence d'un compte ni un détail technique.
 | POST /paiements/webhook/reel | public, signé | charge utile GeniusPay réelle | `{"recu": true}` | `signature_invalide` 401 |
 | GET /paiements/retour | public | `?reference=` | page de retour, redirige vers l'application | `introuvable` 404 |
 
-Services au choix : un convive prend un plat par service, ou seulement ceux qu'il veut, au moins un par
-jour. Le prix du jour est la somme des services choisis. Le réglage `services_obligatoires` de la table
-`parametres` peut un jour en rendre un obligatoire ; il est vide par défaut.
+Services au choix, prix du menu : un convive prend les services qu'il veut, au moins un par jour, et paie le
+prix du menu de ce jour pour son profil. Prendre seulement la résistance coûte autant que prendre les trois :
+le menu est vendu comme un tout. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
+rendre un obligatoire ; il est vide par défaut.
 
 Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.
 
@@ -225,7 +226,7 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | --- | --- | --- | --- |
 | GET POST /admin/plats | plat complet, deux langues | liste ou plat créé | `validation`, `conflit` 409 |
 | PATCH DELETE /admin/plats/{id} | champs modifiés | plat mis à jour ou désactivé | `introuvable` 404, `plat_utilise` 409 |
-| GET POST /admin/tarifs | `{"plat_id", "profil", "prix_xof", "actif_du"}` | tarifs | `validation`, `chevauchement` 409 |
+| GET POST /admin/tarifs | `{"profil", "prix_xof", "actif_du", "menu_id"}` ; `menu_id` absent vaut le tarif courant du profil | tarifs | `validation`, `chevauchement` 409 |
 | GET POST /admin/ingredients | ingrédient | liste ou créé | `validation` |
 | POST /admin/stocks/mouvement | `{"ingredient_id", "sens", "quantite", "commentaire"}` | mouvement et quantité après | `stock_insuffisant` 409 |
 | GET /admin/stocks/alertes | aucun | ingrédients sous le seuil | 401 |

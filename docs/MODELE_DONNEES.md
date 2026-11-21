@@ -105,18 +105,23 @@ Un repas se compose de trois services : l'entrée, la résistance et la sortie. 
 plusieurs plats dans chaque service, et un convive en choisit un par service.
 
 ## tarifs
-Propriétaire : A4. Le prix dépend du plat et du profil du convive.
+Propriétaire : A4. Le prix est celui du repas du jour, pour un profil. Il ne dépend pas des plats choisis.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
 | id | uuid | pk |
-| plat_id | uuid | fk plats, not null |
 | profil | text | not null, check in (eleve, etudiant, employe, autre, visiteur) |
 | prix_xof | integer | not null, >= 0 |
+| menu_id | uuid | fk menus, null ; renseigné seulement pour un jour au tarif particulier |
 | actif_du | timestamptz | not null |
 | actif_au | timestamptz | null |
 
-Index : unique `(plat_id, profil, actif_du)` ; index sur `(plat_id, profil)`.
+Index : unique `(profil, menu_id, actif_du)` ; index sur `(profil, actif_du desc)`.
+
+Le prix d'un jour pour un convive se lit ainsi : le tarif du menu de ce jour s'il en existe un, sinon le
+tarif courant de son profil. Un convive qui ne prend que la résistance paie le même prix que celui qui prend
+les trois services : le menu est vendu comme un tout. Au départ, 1 500 XOF pour un élève et 2 500 XOF pour le
+personnel, modifiables dans le back office.
 
 ## menus
 Propriétaire : A4. Un menu par jour de service.
@@ -170,7 +175,7 @@ Propriétaire : A5. Un geste de réservation qui couvre une période : un jour, 
 | debut | date | not null, premier jour couvert |
 | fin | date | not null, dernier jour couvert, >= debut |
 | jours_reserves | integer | not null, > 0 |
-| total_xof | integer | not null, >= 0, somme des lignes de tous les jours |
+| total_xof | integer | not null, >= 0, somme des prix de chaque jour couvert |
 | etat | text | not null, check in (confirme, partiellement_annule, annule) |
 | cle_unique | text | not null, unique, clé de geste envoyée par le client |
 
@@ -190,7 +195,7 @@ Propriétaire : A5. Une seule réservation vivante par convive et par jour, ratt
 | menu_id | uuid | fk menus, not null |
 | creneau_id | uuid | fk creneaux, not null |
 | date_service | date | not null |
-| total_xof | integer | not null, >= 0, somme des lignes, prix figé à la réservation |
+| total_xof | integer | not null, >= 0, prix du menu pour le profil, figé à la réservation |
 | etat | text | not null, check in (confirmee, servie, annulee, expiree) |
 | code_ticket | text | not null, unique, contenu du QR |
 | servie_le | timestamptz | null |
@@ -210,13 +215,13 @@ Propriétaire : A5. Les trois services choisis pour un jour. Table en ajout seul
 | reservation_id | uuid | fk reservations, on delete cascade, not null |
 | plat_id | uuid | fk plats, not null |
 | service | text | not null, check in (entree, resistance, sortie) |
-| prix_xof | integer | not null, >= 0, prix du profil figé à la réservation |
 
 Index : unique `(reservation_id, service)` ; index sur `plat_id` et sur `(plat_id, service)`.
 Les services sont au choix : un convive peut ne prendre que la résistance, ou l'entrée et la sortie, ou les
 trois. La seule règle est qu'une réservation porte au moins une ligne ; un jour sans aucun service n'est pas
 une réservation et est refusé. Un service peut aussi manquer parce que le menu du jour n'en propose pas.
-Le total du jour est la somme des lignes choisies, jamais un prix de repas complet.
+Ces lignes disent ce que le convive mange, pas ce qu'il paie : le prix est celui du menu du jour pour son
+profil, le même qu'il prenne un service ou les trois.
 Les prévisions de la cuisine se comptent ici, par jour, par service et par plat.
 
 ## porte_monnaie
