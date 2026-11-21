@@ -46,8 +46,9 @@ est remboursé. Après, il ne peut plus que supprimer, sans remboursement : les 
 
 La commande engage le convive. Sa part est achetée, préparée et mise de côté à son nom : qu'il vienne ou
 non, elle est à lui et elle reste payée. Il n'y a donc pas de restes à brader en fin de service, et la
-cuisine ne prépare que ce qui a été commandé. Les repas non réclamés sont comptés au tableau de bord, pour
-que la cantine sache ce qu'elle a préparé pour rien.
+cuisine ne prépare que ce qui a été commandé. L'administration fixe une heure d'expiration du retrait : passé
+cette heure, la commande est marquée non réclamée et son code QR ne passe plus au comptoir. Les repas non
+réclamés sont comptés au tableau de bord, pour que la cantine sache ce qu'elle a préparé pour rien.
 
 Les frais de GeniusPay sont supportés par la cantine. Le convive est crédité de ce qu'il a payé, la cantine
 reçoit moins : des frais sont retenus à l'encaissement, et encore au retrait. Le tableau de bord montre les

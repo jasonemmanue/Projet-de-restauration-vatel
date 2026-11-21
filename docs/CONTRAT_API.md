@@ -154,7 +154,10 @@ le menu est vendu comme un tout. Une part en plus, une deuxième résistance par
 menu au tarif `prix_supplement_xof` du plat.
 
 Ni heure ni créneau : un convive qui a commandé pour un jour vient manger quand il veut ce jour-là, aux
-heures d'ouverture du réfectoire. Rien ne lui est imposé.
+heures d'ouverture du réfectoire. Rien ne lui est imposé, à une borne près : l'administration fixe une heure
+d'expiration du retrait. Passé cette heure, la commande passe à `non_reclamee`, le ticket ne passe plus, et
+le scan rend `ticket_expire`. C'est la seule contrainte horaire du convive, et elle est affichée sur son
+ticket.
 
 Gel de la commande, repas par repas : chaque jour se gèle `gel_jours_avant_service` jours avant son propre
 service (1, la veille, par défaut), à `heure_gel_commandes` (18 h 00 par défaut) ; l'admin règle les deux. Une commande posée pour la semaine ne gèle pas d'un bloc : seuls

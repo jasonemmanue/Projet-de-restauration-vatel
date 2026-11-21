@@ -1303,6 +1303,90 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Les deux mots de passe ne sont pas les mêmes'**
   String get motsDePasseDifferents;
+
+  /// No description provided for @scanAccepte.
+  ///
+  /// In fr, this message translates to:
+  /// **'Servi'**
+  String get scanAccepte;
+
+  /// No description provided for @scanDejaServi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà servi'**
+  String get scanDejaServi;
+
+  /// No description provided for @scanInconnu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ticket inconnu'**
+  String get scanInconnu;
+
+  /// No description provided for @scanMauvaisJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce n\'est pas pour aujourd\'hui'**
+  String get scanMauvaisJour;
+
+  /// No description provided for @scanAnnule.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande annulée'**
+  String get scanAnnule;
+
+  /// No description provided for @saisieManuelle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir le code à la main'**
+  String get saisieManuelle;
+
+  /// No description provided for @codeDuTicket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code du ticket'**
+  String get codeDuTicket;
+
+  /// No description provided for @modeComptoir.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode comptoir'**
+  String get modeComptoir;
+
+  /// No description provided for @serviceEnCours.
+  ///
+  /// In fr, this message translates to:
+  /// **'Service en cours'**
+  String get serviceEnCours;
+
+  /// No description provided for @scansAEnvoyer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne, {nombre} scan(s) à envoyer'**
+  String scansAEnvoyer(int nombre);
+
+  /// No description provided for @attendus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attendus'**
+  String get attendus;
+
+  /// No description provided for @servis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Servis'**
+  String get servis;
+
+  /// No description provided for @restants.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restants'**
+  String get restants;
+
+  /// No description provided for @toucherPourContinuer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour continuer'**
+  String get toucherPourContinuer;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

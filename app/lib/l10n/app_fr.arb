@@ -280,5 +280,26 @@
   "jaccepteLes": "J'accepte les",
   "conditionsUtilisation": "conditions d'utilisation",
   "confirmerMotDePasse": "Confirmer le mot de passe",
-  "motsDePasseDifferents": "Les deux mots de passe ne sont pas les mêmes"
+  "motsDePasseDifferents": "Les deux mots de passe ne sont pas les mêmes",
+  "scanAccepte": "Servi",
+  "scanDejaServi": "Déjà servi",
+  "scanInconnu": "Ticket inconnu",
+  "scanMauvaisJour": "Ce n'est pas pour aujourd'hui",
+  "scanAnnule": "Commande annulée",
+  "saisieManuelle": "Saisir le code à la main",
+  "codeDuTicket": "Code du ticket",
+  "modeComptoir": "Mode comptoir",
+  "serviceEnCours": "Service en cours",
+  "scansAEnvoyer": "Hors ligne, {nombre} scan(s) à envoyer",
+  "@scansAEnvoyer": {
+    "placeholders": {
+      "nombre": {
+        "type": "int"
+      }
+    }
+  },
+  "attendus": "Attendus",
+  "servis": "Servis",
+  "restants": "Restants",
+  "toucherPourContinuer": "Touche pour continuer"
 }

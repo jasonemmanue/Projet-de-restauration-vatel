@@ -640,4 +640,48 @@ class TraductionsEn extends Traductions {
 
   @override
   String get motsDePasseDifferents => 'The two passwords do not match';
+
+  @override
+  String get scanAccepte => 'Served';
+
+  @override
+  String get scanDejaServi => 'Already served';
+
+  @override
+  String get scanInconnu => 'Unknown ticket';
+
+  @override
+  String get scanMauvaisJour => 'Not for today';
+
+  @override
+  String get scanAnnule => 'Order cancelled';
+
+  @override
+  String get saisieManuelle => 'Enter the code by hand';
+
+  @override
+  String get codeDuTicket => 'Ticket code';
+
+  @override
+  String get modeComptoir => 'Counter mode';
+
+  @override
+  String get serviceEnCours => 'Service in progress';
+
+  @override
+  String scansAEnvoyer(int nombre) {
+    return 'Offline, $nombre scan(s) to send';
+  }
+
+  @override
+  String get attendus => 'Expected';
+
+  @override
+  String get servis => 'Served';
+
+  @override
+  String get restants => 'Remaining';
+
+  @override
+  String get toucherPourContinuer => 'Tap to continue';
 }

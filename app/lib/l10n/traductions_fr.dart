@@ -642,4 +642,48 @@ class TraductionsFr extends Traductions {
   @override
   String get motsDePasseDifferents =>
       'Les deux mots de passe ne sont pas les mêmes';
+
+  @override
+  String get scanAccepte => 'Servi';
+
+  @override
+  String get scanDejaServi => 'Déjà servi';
+
+  @override
+  String get scanInconnu => 'Ticket inconnu';
+
+  @override
+  String get scanMauvaisJour => 'Ce n\'est pas pour aujourd\'hui';
+
+  @override
+  String get scanAnnule => 'Commande annulée';
+
+  @override
+  String get saisieManuelle => 'Saisir le code à la main';
+
+  @override
+  String get codeDuTicket => 'Code du ticket';
+
+  @override
+  String get modeComptoir => 'Mode comptoir';
+
+  @override
+  String get serviceEnCours => 'Service en cours';
+
+  @override
+  String scansAEnvoyer(int nombre) {
+    return 'Hors ligne, $nombre scan(s) à envoyer';
+  }
+
+  @override
+  String get attendus => 'Attendus';
+
+  @override
+  String get servis => 'Servis';
+
+  @override
+  String get restants => 'Restants';
+
+  @override
+  String get toucherPourContinuer => 'Touche pour continuer';
 }

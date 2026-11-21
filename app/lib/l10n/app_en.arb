@@ -207,5 +207,19 @@
   "jaccepteLes": "I accept the",
   "conditionsUtilisation": "terms of use",
   "confirmerMotDePasse": "Confirm the password",
-  "motsDePasseDifferents": "The two passwords do not match"
+  "motsDePasseDifferents": "The two passwords do not match",
+  "scanAccepte": "Served",
+  "scanDejaServi": "Already served",
+  "scanInconnu": "Unknown ticket",
+  "scanMauvaisJour": "Not for today",
+  "scanAnnule": "Order cancelled",
+  "saisieManuelle": "Enter the code by hand",
+  "codeDuTicket": "Ticket code",
+  "modeComptoir": "Counter mode",
+  "serviceEnCours": "Service in progress",
+  "scansAEnvoyer": "Offline, {nombre} scan(s) to send",
+  "attendus": "Expected",
+  "servis": "Served",
+  "restants": "Remaining",
+  "toucherPourContinuer": "Tap to continue"
 }

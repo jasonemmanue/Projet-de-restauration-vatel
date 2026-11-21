@@ -214,8 +214,10 @@ Index : unique partiel `(convive_id, date_service)` sur les lignes `etat in (con
 Un seul ticket par jour, qui vaut pour tout ce qui a été commandé : l'agent scanne une fois.
 
 La commande engage. La part est achetée, préparée et mise de côté au nom du convive : qu'il vienne ou non,
-elle est à lui et elle est payée. Une commande que personne n'est venu chercher passe à `non_reclamee` à la
-fermeture du service, sans remboursement et sans remise en vente. Il n'y a donc pas de plats restants à
+elle est à lui et elle est payée. L'administration fixe une heure d'expiration du retrait
+(`menus.heure_expiration_retrait`, ou le délai par défaut `delai_retrait_minutes`). Passé cette heure, une
+commande non retirée passe à `non_reclamee` : le ticket QR ne passe plus au comptoir, le scan rend
+`ticket_expire`, et rien n'est remboursé ni remis en vente. Il n'y a donc pas de plats restants à
 écouler : la cuisine ne prépare que ce qui a été commandé et payé.
 
 Gel de la commande, repas par repas : chaque jour se gèle tout seul, la veille de son propre service, à
@@ -459,6 +461,7 @@ Clés prévues au départ : `gel_jours_avant_service` (1, la veille), `heure_gel
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
 `seuil_alerte_solde_defaut`, `langues_actives`,
 `jour_publication_menu` (jeudi par défaut), `semaines_preparees_a_l_avance` (1 par défaut),
+`delai_retrait_minutes` (120 par défaut, utilisé quand un menu ne fixe pas son heure),
 `frais_passerelle_pourcent` (objet par opérateur : wave 1.5, orange_money 3.5, mtn_money 3.5, stripe 5,
 lien_tiers 5), `jours_inactivite_avant_verification` (5 par défaut), `portees_reservation` (jour, semaine, mois) et
 `services_obligatoires` (aucun par défaut : un convive peut
