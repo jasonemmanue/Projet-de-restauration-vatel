@@ -13,10 +13,10 @@ Mis à jour le 21 novembre 2026.
 | 2 | Restreindre les trois clés API Firebase | fait |
 | 3 | Clients OAuth Google (hors Firebase Auth) | fait |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire, compte payant confirmé |
-| 5 | API Gmail (envoi réel des codes) | en cours |
+| 5 | API Gmail (envoi réel des codes) | fait |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | fait |
 | 7 | Fiches des boutiques (Play, App Store) | à faire |
-| 8 | Clé web push FCM (notifications sur le site) | fait, valeur à reporter |
+| 8 | Clé web push FCM (notifications sur le site) | fait |
 | 9 | Compte développeur Google Play (25 USD, une fois) | à faire |
 
 Rappels permanents :
@@ -204,7 +204,7 @@ Valeurs récoltées :
 
 ---
 
-## 5. API Gmail — en cours
+## 5. API Gmail — fait
 
 Pourquoi : en fin de journée, le code de vérification à 5 caractères doit partir par un vrai
 courriel, pas rester en mode démo.
@@ -325,7 +325,7 @@ Valeurs récoltées :
 
 ---
 
-## 8. Clé web push FCM — fait, valeur à reporter
+## 8. Clé web push FCM — fait
 
 Sans cette clé, les notifications ne marchent pas sur la version web, même si tout le reste est
 posé. Deux minutes.
@@ -335,7 +335,9 @@ posé. Deux minutes.
 4. La poser dans Railway sous `FCM_CLE_WEB_PUSH`, et me la recopier pour le fichier.
 
 Valeurs récoltées :
-- Clé publique web push : _(à remplir)_
+- Clé publique web push :
+  `BKQM2sJU-5EnYOfMuvBwCtuJjU3syQSDc8KEGyak6A4GxZpjSeSKr6ik2eSVOFhOIGYaM7eTDHbtDs1KJZn3K-g`
+  Posée dans Railway sous `FCM_CLE_WEB_PUSH`. Valeur publique, elle part dans le JavaScript.
 
 ---
 
@@ -352,3 +354,31 @@ ni pour la version web. 25 USD une seule fois, validation du compte de quelques 
 Valeurs récoltées :
 - Compte Play utilisé : _(à remplir)_
 - État de la validation : _(à remplir)_
+
+---
+
+## 10. Variables posées dans Railway le 21/11 — noms à respecter
+
+Service Railway : **`api`** (et non « Projet-de-restauration-vatel »), projet HACKATON VATEL,
+environnement production. Toutes posées en ligne de commande avec l'accord de l'exploitant.
+
+| Variable | Nature |
+|----------|--------|
+| `GMAIL_CLIENT_ID` | publique |
+| `GMAIL_CLIENT_SECRET` | secrète |
+| `GMAIL_REFRESH_TOKEN` | secrète, expire dans 7 jours tant que l'écran de consentement reste en mode Test |
+| `GMAIL_EXPEDITEUR` | `emmanudev2@gmail.com` |
+| `GOOGLE_CLIENT_ID_WEB` | publique, audience du jeton et `serverClientId` Android |
+| `GOOGLE_CLIENT_ID_ANDROID` | publique |
+| `GOOGLE_CLIENT_ID_IOS` | publique |
+| `APPLE_CLIENT_ID` | `com.vatel.cantine`, audience du jeton d'identité Apple |
+| `APPLE_TEAM_ID` | `LD4W7KA5YG` |
+| `FCM_CLE_WEB_PUSH` | publique |
+| `GENIUSPAY_API_KEY`, `GENIUSPAY_SECRET_KEY`, `GENIUSPAY_WEBHOOK_SECRET` | mode test |
+| `GENIUSPAY_LIVE_API_KEY`, `GENIUSPAY_LIVE_SECRET_KEY`, `GENIUSPAY_LIVE_WEBHOOK_SECRET` | mode réel |
+| `FIREBASE_COMPTE_SERVICE`, `FIREBASE_PROJET_ID`, `FCM_ACTIF` | posées par la session API |
+
+Pas encore posées, faute d'URL du site : `APPLE_SERVICES_ID`, `APPLE_KEY_ID`,
+`APPLE_CLE_PRIVEE`. Elles ne servent qu'au bouton Apple **sur le web**. Dans l'application iOS,
+le bouton Apple fonctionne avec `APPLE_CLIENT_ID` seul, l'API vérifiant le jeton d'identité
+auprès des clés publiques d'Apple.

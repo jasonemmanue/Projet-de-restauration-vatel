@@ -28,6 +28,8 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          # La version du poste : le pubspec demande un SDK Dart que la stable de CI n a pas encore.
+          flutter-version: 3.38.4
           channel: stable
           cache: true
 
@@ -94,6 +96,8 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          # La version du poste : le pubspec demande un SDK Dart que la stable de CI n a pas encore.
+          flutter-version: 3.38.4
           channel: stable
           cache: true
 
