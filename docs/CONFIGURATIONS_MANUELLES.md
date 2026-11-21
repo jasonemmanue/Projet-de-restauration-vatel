@@ -10,8 +10,8 @@ Mis à jour le 21 novembre 2026.
 | # | Tâche | État |
 |---|-------|------|
 | 1 | Connecter gcloud au projet Firebase | fait |
-| 2 | Restreindre les trois clés API Firebase | en cours |
-| 3 | Connexions Google et Apple + clients OAuth | à faire |
+| 2 | Restreindre les trois clés API Firebase | fait |
+| 3 | Connexions Google et Apple + clients OAuth | en cours |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
 | 5 | API Gmail (envoi réel des codes) | à faire |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | à faire |
@@ -49,7 +49,7 @@ Valeurs récoltées :
 
 ---
 
-## 2. Restreindre les trois clés API Firebase — en cours
+## 2. Restreindre les trois clés API Firebase — fait
 
 Pourquoi : ces trois clés ne sont pas des mots de passe. Elles identifient le projet et sont
 livrées dans l'application Android, dans l'application iOS et dans le code de la page web :
@@ -75,12 +75,39 @@ Procédure :
 
 À reporter : « clés restreintes » plus la liste des domaines mis sur la clé web.
 
+Posé le 21/11 en ligne de commande avec l'accord de l'exploitant, plus rapide que la console :
+```
+gcloud services api-keys update <uid> --project vatel-project   --allowed-application=sha1_fingerprint=<SHA1>,package_name=com.vatel.cantine   # Android
+gcloud services api-keys update <uid> --project vatel-project   --allowed-bundle-ids=com.vatel.cantine                                          # iOS
+gcloud services api-keys update <uid> --project vatel-project   --allowed-referrers="<liste des domaines>"                                      # Navigateur
+```
+Vérification : `gcloud services api-keys list --project vatel-project` montre les trois
+restrictions appliquées.
+
 Valeurs récoltées :
-- Domaines autorisés (clé web) : _(à remplir)_
+- Identifiants des clés (publics) : Android `391263db-a232-46cf-8c4f-3a637486f380`,
+  iOS `74e45620-4111-45fa-9ce0-b1b15f249512`, Navigateur `de38b51a-79a6-4615-8ed1-11ae7cb35783`.
+  Lien direct vers une clé :
+  `https://console.cloud.google.com/apis/credentials/key/<uid>?project=vatel-project`
+- Clé Android : paquet `com.vatel.cantine` + empreinte SHA-1 de débogage.
+- Clé iOS : bundle `com.vatel.cantine`.
+- Domaines autorisés (clé web) :
+  `https://projet-de-restauration-vatel-production.up.railway.app/*`,
+  `https://vatel-project.firebaseapp.com/*`, `https://vatel-project.web.app/*`,
+  `http://localhost:3000/*`, `http://localhost:8080/*`.
+  À compléter avec le vrai domaine du site Next.js dès qu'il existe.
+- Restrictions relatives aux API : volontairement laissées ouvertes pour ne pas casser
+  l'application en pleine journée. À resserrer en fin de hackathon.
 
 ---
 
-## 3. Connexions Google et Apple + clients OAuth — à faire
+## 3. Connexions Google et Apple + clients OAuth — en cours
+
+Constat du 21/11 : aucun client OAuth n'existe encore. `app/android/app/google-services.json`
+n'a pas de bloc `oauth_client` et `GoogleService-Info.plist` n'a pas de `CLIENT_ID`. Activer
+Google dans la console Firebase crée automatiquement les clients Web, Android et iOS ; il faudra
+ensuite retélécharger les deux fichiers de configuration pour que la connexion Google marche
+dans l'application.
 
 Procédure, côté Firebase d'abord :
 1. Ouvrir `https://console.firebase.google.com/project/vatel-project/authentication/providers`.
