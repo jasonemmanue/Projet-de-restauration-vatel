@@ -25,8 +25,8 @@ fichier.
 | --- | --- |
 | P00 | Cadrage : CLAUDE.md, cahier, modèle de données, contrat d'API, charte provisoire, plan, dépôt |
 | P01 | Charte et logo repris de la maquette : palettes des deux modes, SVG et exports dans `docs/marque/` |
-| A1 | Fondations de l'API : structure, configuration, base, erreurs uniformes, santé avec commit, module de recette |
-| A2 | Déploiement de l'API sur Railway et recette « sante » en ligne |
+| A1 | fait | api / compte courant | api/ (app, alembic, recette, tests, Dockerfile, railway.json, .env.example, README), docker-compose.yml | ruff propre, 40 tests verts, migration appliquée sur base vide, image Docker lancée, recette « sante » locale 13/13 | Rien. Suite en A2 : `railway link` puis déploiement et recette « sante » en ligne |
+| A2 | à faire | | api/, railway | | Créer le service Railway (dossier `/api`, variables DATABASE_URL, SECRET_KEY, ADMIN_ACTIONS_PASSWORD, CORS_ORIGINS), `railway link`, vérifier /health puis `python -m recette --url https://[URL_API] --bloc sante` |
 | A3 | Comptes, mot de passe, vérification par code, jetons, rôles, sessions |
 | A3b | Connexion par QR code, Google et Apple |
 | A3c | Profil complet, avatars, assistance et signalements |

@@ -1,0 +1,28 @@
+# Lancement local de PostgreSQL et de l'API, documenté dans le README. Jamais utilisé en production.
+# Les valeurs ci-dessous ne servent qu'à une base jetable sur le poste ; les secrets de l'API viennent
+# du fichier api/.env, non suivi par git.
+services:
+  base:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vatel
+      POSTGRES_PASSWORD: vatel_local
+      POSTGRES_DB: vatel
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vatel -d vatel"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: ./api
+    env_file: ./api/.env
+    environment:
+      DATABASE_URL: postgresql://vatel:vatel_local@base:5432/vatel
+      PORT: "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      base:
+        condition: service_healthy

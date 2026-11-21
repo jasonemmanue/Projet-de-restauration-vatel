@@ -69,3 +69,37 @@ recette en ligne : il n'y a pas encore d'API.
 **Reste à faire.** Reporter les valeurs de `docs/CHARTE.md` dans le thème Flutter à l'étape F1. Trancher les
 paires de contraste signalées. Copier la maquette dans `docs/maquette/` pour que les chemins cités par
 `CLAUDE.md` existent.
+
+---
+
+## A1, fondations de l'API
+
+**Fait.** Structure FastAPI dans `api/` (configuration qui refuse de démarrer sans variable obligatoire ou avec
+une valeur d'exemple, erreurs uniformes `{"code", "message"}` en fr et en, CORS en liste exacte, en-têtes de
+sécurité, taille et débit limités), les 26 tables du modèle et la migration `0001` avec 91 index et 11
+paramètres de départ, `GET /health` (aussi `/api/v1/sante`), module `python -m recette` avec le bloc « sante »,
+Dockerfile non root, `railway.json`, `docker-compose.yml`.
+
+**Vérifié par Claude.** `ruff check .` propre ; `pytest` : 40 tests verts sur un PostgreSQL 16 local (santé,
+format d'erreur sur 404, 405, 413, 422, 429 et 500 sans trace, CORS refusé, écriture relue après validation,
+annulation sur erreur, base migrée identique aux modèles). Image Docker lancée sur une base vide : migration
+appliquée, utilisateur `vatel`, recette « sante » 13 contrôles, 0 échec, avec `--commit`. Recette en ligne pas
+encore lancée : aucun service Railway n'est relié (étape A2).
+
+**À tester par vous.**
+1. Sur ordinateur, dans un terminal à la racine, lancer `railway link` et choisir le projet de l'API : la
+   commande `railway status` doit ensuite nommer le projet.
+2. Sur ordinateur, dans Railway, vérifier que le service API a pour dossier racine `/api` et porte les
+   variables `DATABASE_URL`, `SECRET_KEY`, `ADMIN_ACTIONS_PASSWORD` et `CORS_ORIGINS` : le déploiement doit
+   passer le contrôle `/health`.
+3. Sur téléphone, mode clair puis mode sombre du navigateur, ouvrir `https://[URL_API]/health` : un JSON avec
+   `"etat": "ok"` et un commit de 7 caractères s'affiche.
+4. Sur ordinateur, ouvrir `https://[URL_API]/docs` : la page Swagger s'affiche ; avec `DOCS_ENABLED=false`
+   dans Railway, la même adresse doit répondre 404 au format `{"code", "message"}`.
+
+**Résultat.**
+
+**Reste à faire.** A2 : déploiement Railway et recette « sante » en ligne. Le `.env.example` de la racine
+emploie encore `JWT_SECRET`, `CORS_ORIGINES` et `APP_COMMIT` : l'API les accepte en alias, mais les noms de
+référence sont ceux de `api/.env.example`.
+

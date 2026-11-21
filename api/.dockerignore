@@ -1,0 +1,12 @@
+# Fichiers exclus de l'image : environnement local, caches, tests, recette et secrets.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+tests/
+recette/
+requirements-dev.txt

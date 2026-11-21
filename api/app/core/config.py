@@ -75,7 +75,10 @@ def lire_origines(valeur: str | list[str]) -> list[str]:
 class Configuration(BaseSettings):
     """Ensemble des variables d'environnement lues au démarrage de l'API."""
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
+    # hide_input_in_errors : une erreur de démarrage ne doit jamais recopier un secret dans les journaux.
+    model_config = SettingsConfigDict(
+        env_file=".env", extra="ignore", case_sensitive=False, hide_input_in_errors=True
+    )
 
     # Obligatoires : aucun défaut, le démarrage échoue sans elles.
     database_url: str = Field(validation_alias="DATABASE_URL")
