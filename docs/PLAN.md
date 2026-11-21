@@ -133,3 +133,11 @@ Ce qui reste à reprendre pendant le codage :
 | Profil et paramètres complets ajoutés tard à la maquette (photo, informations, formule, statistiques, préférences, sécurité, appareils, suppression) | F2c côté application, A3 et A3c côté API |
 | Moov remplacé par Stripe dans le dernier build de la maquette, alors que le cahier parle de Mobile Money | À trancher avant A6 : la liste des opérateurs de `paiements` suit la décision prise |
 | La maquette n'est pas encore dans `docs/maquette/`, chemin que CLAUDE.md et tous les prompts citent | À copier sans `node_modules` ni `dist` par la session App, avant F1 |
+
+## Décisions de l'exploitant, 21 novembre
+
+| Décision | Conséquence à appliquer |
+| --- | --- |
+| Une commande engage : le convive paie ce qu'il a commandé, qu'il vienne manger ou non. Un repas non retiré n'est ni remboursé ni reporté. | Une réservation non servie à la fin du jour passe à `expiree`, sans mouvement de crédit (M2, A5). |
+| Plus de plats restants : tout est commandé à l'avance, la cuisine prépare ce qui est commandé. | L'anti-gaspillage de fin de service est abandonné : retirer de `docs/CAHIER.md`, `docs/CONTRAT_API.md` (routes `/anti-gaspillage`), `docs/MODELE_DONNEES.md` (motif `anti_gaspillage`, notification `anti_gaspillage`, paramètre `remise_anti_gaspillage_pourcent`) et de la base par une migration de A4 ; ne pas le coder. |
+
