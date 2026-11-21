@@ -39,9 +39,10 @@ tarif et aux statistiques, jamais à interdire un paiement.
 Commande, paiement, livraison, sortie de stock. Dans cet ordre, sans exception : rien n'est préparé qui n'ait
 été commandé et payé, et le stock ne bouge qu'au moment où le plat est remis au convive.
 
-La commande se gèle la veille du service à 18 h 00 (`heure_gel_commandes`), parce que la cuisine achète sur
-cette base. Avant le gel, le convive modifie ou annule et il est remboursé. Après, il ne peut plus que
-supprimer sa commande, et il n'est pas remboursé : les achats sont faits.
+Chaque repas se gèle tout seul, la veille de son propre service à 18 h 00 (`heure_gel_commandes`), parce que
+la cuisine achète sur cette base. Commander la semaine entière ne fige pas la semaine : mardi soir, le repas
+de mercredi est figé, celui de vendredi reste modifiable. Avant son gel, le convive modifie ou annule et il
+est remboursé. Après, il ne peut plus que supprimer, sans remboursement : les achats sont faits.
 
 La commande engage le convive. Sa part est achetée, préparée et mise de côté à son nom : qu'il vienne ou
 non, elle est à lui et elle reste payée. Il n'y a donc pas de restes à brader en fin de service, et la

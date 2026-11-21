@@ -154,9 +154,11 @@ menu au tarif `prix_supplement_xof` du plat.
 Ni heure ni créneau : un convive qui a commandé pour un jour vient manger quand il veut ce jour-là, aux
 heures d'ouverture du réfectoire. Rien ne lui est imposé.
 
-Gel de la commande : à partir de `heure_gel_commandes` la veille du service, 18 h 00 par défaut, la commande
-du lendemain ne se modifie plus, parce que la cuisine achète sur cette base. Elle peut encore être supprimée,
-sans remboursement. Avant le gel, modification et annulation remboursent intégralement. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
+Gel de la commande, repas par repas : chaque jour se gèle la veille de son propre service, à
+`heure_gel_commandes`, 18 h 00 par défaut. Une commande posée pour la semaine ne gèle pas d'un bloc : seuls
+les jours dont la veille est passée sont figés, les autres restent modifiables. `PATCH /reservations/{id}`
+porte donc sur un jour précis et ne refuse que celui-là, par `commande_gelee` 409. Un jour gelé peut encore
+être supprimé, sans remboursement. Avant son gel, modification et annulation remboursent intégralement. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
 rendre un obligatoire ; il est vide par défaut.
 
 Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.

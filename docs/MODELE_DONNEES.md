@@ -213,8 +213,11 @@ elle est à lui et elle est payée. Une commande que personne n'est venu cherche
 fermeture du service, sans remboursement et sans remise en vente. Il n'y a donc pas de plats restants à
 écouler : la cuisine ne prépare que ce qui a été commandé et payé.
 
-Gel de la commande : à partir de l'heure de gel de la veille du service (`heure_gel_commandes`, 18 h 00 par
-défaut), la commande du lendemain ne se modifie plus, parce que la cuisine achète et prépare sur cette base.
+Gel de la commande, repas par repas : chaque jour se gèle tout seul, la veille de son propre service, à
+`heure_gel_commandes` (18 h 00 par défaut). Réserver la semaine ne gèle pas la semaine : lundi soir, le repas
+de mardi se fige, celui de jeudi reste modifiable jusqu'à mercredi soir. Le gel se calcule donc sur
+`date_service` de chaque réservation, jamais sur le lot. Un jour gelé ne se modifie plus, parce que la cuisine
+achète et prépare sur cette base.
 Elle peut encore être supprimée, mais sans remboursement : l'état passe à `supprimee`, `annulee_le` est
 renseigné, et aucun mouvement de crédit n'est écrit. Avant le gel, une annulation reste une `annulee` avec
 remboursement intégral.
