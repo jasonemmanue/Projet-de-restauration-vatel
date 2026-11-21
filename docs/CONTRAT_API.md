@@ -112,7 +112,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "creneau_id", "entree_id", "resistance_id", "sortie_id"}]}` + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois, et une réservation par jour avec son `code_ticket` | `heure_limite_depassee` 409, `creneau_complet` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `service_inconnu` 422, `pin_requis` 428 |
+| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "creneau_id", "entree_id", "resistance_id", "sortie_id"}]}` ; les trois identifiants de plat sont facultatifs, au moins un par jour + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois, et une réservation par jour avec son `code_ticket` | `heure_limite_depassee` 409, `creneau_complet` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `service_inconnu` 422, `aucun_service` 422, `pin_requis` 428 |
 | GET /reservations/lots | convive | `?du=&au=` pagination | ses lots, avec portée, période, total et état | 401 |
 | POST /reservations/lots/{id}/annuler | convive | `Cle-Geste` | `{"jours_annules": 4, "rembourse_xof": 6000}`, les jours déjà servis ou passés restent | `deja_servie` 409, `annulation_trop_tard` 409 |
 | GET /reservations | convive | `?du=&au=` pagination | liste des réservations | 401 |
@@ -138,6 +138,10 @@ jamais l'existence d'un compte ni un détail technique.
 | POST /paiements/webhook/test | public, signé | charge utile GeniusPay de test | `{"recu": true}` | `signature_invalide` 401 |
 | POST /paiements/webhook/reel | public, signé | charge utile GeniusPay réelle | `{"recu": true}` | `signature_invalide` 401 |
 | GET /paiements/retour | public | `?reference=` | page de retour, redirige vers l'application | `introuvable` 404 |
+
+Services au choix : un convive prend un plat par service, ou seulement ceux qu'il veut, au moins un par
+jour. Le prix du jour est la somme des services choisis. Le réglage `services_obligatoires` de la table
+`parametres` peut un jour en rendre un obligatoire ; il est vide par défaut.
 
 Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.
 

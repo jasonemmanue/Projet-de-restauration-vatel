@@ -2,7 +2,8 @@
 
 Gestion de cantine scolaire et d'entreprise en Côte d'Ivoire. Monnaie XOF, indicatif +225.
 Chaque convive a un porte-monnaie et réserve ses repas avant l'heure limite, sur un créneau de passage, pour
-un jour, une semaine ou un mois. Un repas tient en trois services : entrée, résistance, sortie. Il reçoit un
+un jour, une semaine ou un mois. Un repas tient en trois services, entrée, résistance et sortie, tous au choix : au moins un, et il paie ce
+qu'il a choisi. Il reçoit un
 ticket QR par jour, que l'agent scanne une fois au comptoir. Les parents rechargent par Mobile Money (GeniusPay) ou envoient un
 lien de paiement à un proche. L'admin planifie les menus, suit les commandes du jour, les stocks et un tableau
 de bord.

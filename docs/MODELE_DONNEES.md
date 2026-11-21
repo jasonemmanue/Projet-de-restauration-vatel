@@ -213,8 +213,11 @@ Propriétaire : A5. Les trois services choisis pour un jour. Table en ajout seul
 | prix_xof | integer | not null, >= 0, prix du profil figé à la réservation |
 
 Index : unique `(reservation_id, service)` ; index sur `plat_id` et sur `(plat_id, service)`.
-Un service peut manquer si le menu du jour n'en propose pas : la contrainte porte sur l'unicité, pas sur la
-présence des trois. Les prévisions de la cuisine se comptent ici, par jour, par service et par plat.
+Les services sont au choix : un convive peut ne prendre que la résistance, ou l'entrée et la sortie, ou les
+trois. La seule règle est qu'une réservation porte au moins une ligne ; un jour sans aucun service n'est pas
+une réservation et est refusé. Un service peut aussi manquer parce que le menu du jour n'en propose pas.
+Le total du jour est la somme des lignes choisies, jamais un prix de repas complet.
+Les prévisions de la cuisine se comptent ici, par jour, par service et par plat.
 
 ## porte_monnaie
 Propriétaire : A5. Une ligne par utilisateur. Ne contient pas de solde modifiable.

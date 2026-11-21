@@ -9,6 +9,7 @@ ni ce qu'il reste sur son compte.
 ## La réponse
 Chaque convive a un porte-monnaie électronique. Il choisit ses plats dans le menu de la semaine, un par
 service (entrée, résistance, sortie), et réserve avant l'heure limite du jour sur un créneau de passage.
+Les trois services sont au choix : il peut ne prendre que la résistance, et il paie ce qu'il a choisi.
 Il réserve pour la période qu'il veut : un jour, une semaine entière, ou un mois. Le paiement part en une
 fois, et il reçoit un ticket QR par jour. La cuisine connaît donc à l'avance le nombre de parts de chaque
 plat, service par service. Au comptoir, l'agent scanne le
