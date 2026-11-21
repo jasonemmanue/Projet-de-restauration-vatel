@@ -43,6 +43,11 @@ La commande se gèle la veille du service à 18 h 00 (`heure_gel_commandes`), pa
 cette base. Avant le gel, le convive modifie ou annule et il est remboursé. Après, il ne peut plus que
 supprimer sa commande, et il n'est pas remboursé : les achats sont faits.
 
+La commande engage le convive. Sa part est achetée, préparée et mise de côté à son nom : qu'il vienne ou
+non, elle est à lui et elle reste payée. Il n'y a donc pas de restes à brader en fin de service, et la
+cuisine ne prépare que ce qui a été commandé. Les repas non réclamés sont comptés au tableau de bord, pour
+que la cantine sache ce qu'elle a préparé pour rien.
+
 Les frais de GeniusPay sont supportés par la cantine. Le convive est crédité de ce qu'il a payé, la cantine
 reçoit moins : des frais sont retenus à l'encaissement, et encore au retrait. Le tableau de bord montre les
 trois chiffres côte à côte, recettes brutes, frais supportés, net attendu, pour que les prix soient fixés en
@@ -68,8 +73,7 @@ du back office (`jour_publication_menu`), au cas où la cantine change d'habitud
 ## Bonus retenus, dans l'ordre
 Notation des plats, suggestions personnalisées, français et anglais, Mobile Money, notifications push Android
 iOS et web, mode hors ligne (ticket QR, scan de l'agent avec synchronisation au retour, menu, solde,
-appréciations en attente, back office en lecture), anti-gaspillage de fin de service (portions restantes à prix
-réduit en fin de service), connexion avec Google, connexion avec Apple, connexion d'un ordinateur ou
+appréciations en attente, back office en lecture), connexion avec Google, connexion avec Apple, connexion d'un ordinateur ou
 d'une tablette par QR code scanné avec le téléphone déjà connecté.
 
 ## Pile technique

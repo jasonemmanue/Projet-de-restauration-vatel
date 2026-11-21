@@ -258,3 +258,34 @@ routes au contrat : `PATCH /reservations/{id}` (refusée après le gel par `comm
 
 **Reste à faire.** La signature de la marque est « Créneau · Repas · QR », or les créneaux n'existent plus :
 elle est dans les SVG, les exports PNG et l'écran de bienvenue. À trancher avant la démonstration.
+
+---
+
+## APP-04, inscription, connexion et code de vérification
+
+**Fait.** Écrans d'inscription (bascule Numéro ou E-mail sur un seul champ, indicatif +225, prénom, nom,
+rôle, profil tarifaire, mot de passe avec ses trois règles cochées en direct, conditions), de connexion,
+du code (6 cases pour un numéro, 5 pour un e-mail, remplies seules et pastille « Mode démo » quand l'API
+renvoie `code_demo`, sinon vides avec le rappel des indésirables, renvoi rouvert après 60 secondes comptées
+sur l'appareil), et de mot de passe oublié en trois temps sur un seul écran. Déconnexion depuis l'espace
+compte. Un compte non vérifié, ou une session qui a dormi plus de cinq jours, renvoie vers l'écran du code au
+lieu d'un message d'erreur.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `flutter test` : 3 tests verts, dont les
+deux de l'écran du code, rempli en mode démo et vide en mode réel. Contre l'API de production : inscription
+par numéro et par e-mail réussies, et `POST /auth/verification/envoyer` rend bien `mode_livraison: demo` avec
+un code à 6 chiffres pour le téléphone et de 5 caractères pour l'e-mail. Les écrans sont calqués sur le
+`openapi.json` de l'API déployée, pas sur une supposition.
+
+**À tester par vous.**
+1. Sur Android, créer un compte par numéro : les 6 cases se remplissent seules, la pastille « Mode démo »
+   s'affiche, et le compte s'ouvre sur l'accueil de son rôle.
+2. Sur Android, créer un compte par e-mail : 5 cases, majuscules acceptées en minuscules aussi.
+3. Sur iPhone ou dans Chrome, mode sombre : les trois règles du mot de passe se cochent en direct et aucun
+   texte n'est coupé.
+4. Se déconnecter depuis l'onglet Compte, puis se reconnecter avec le même mot de passe.
+
+**Résultat.**
+
+**Reste à faire.** Le PIN, Google, Apple et la connexion par QR restent pour APP suivants. Côté API, le code
+`verification_requise` après cinq jours d'inactivité est écrit au contrat mais pas encore implémenté.

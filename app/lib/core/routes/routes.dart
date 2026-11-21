@@ -10,6 +10,10 @@ import '../../features/admin/ecran_menus_admin.dart';
 import '../../features/admin/ecran_reglages_admin.dart';
 import '../../features/admin/ecran_tableau_bord.dart';
 import '../../features/auth/ecran_bienvenue.dart';
+import '../../features/auth/ecran_code.dart';
+import '../../features/auth/ecran_connexion.dart';
+import '../../features/auth/ecran_inscription.dart';
+import '../../features/auth/ecran_mot_de_passe_oublie.dart';
 import '../../features/menus/ecran_accueil.dart';
 import '../../features/menus/ecran_menu.dart';
 import '../../features/notifications/ecran_notifications.dart';
@@ -35,6 +39,27 @@ class Chemins {
 
   /// Ecran montre tant que personne n est connecte.
   static const String bienvenue = '/bienvenue';
+
+  /// Creation d un compte.
+  static const String inscription = '/inscription';
+
+  /// Connexion a un compte existant.
+  static const String connexion = '/connexion';
+
+  /// Saisie du code de verification.
+  static const String code = '/code';
+
+  /// Mot de passe oublie et reinitialisation.
+  static const String motDePasseOublie = '/mot-de-passe-oublie';
+
+  /// Les ecrans qu on atteint sans session ouverte.
+  static const List<String> publics = <String>[
+    bienvenue,
+    inscription,
+    connexion,
+    code,
+    motDePasseOublie,
+  ];
 
   /// Racine de l espace convive.
   static const String convive = '/convive';
@@ -86,7 +111,7 @@ final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
       final Session? ouverte = session.value;
       final String chemin = etat.uri.path;
       if (ouverte == null) {
-        return chemin == Chemins.bienvenue ? null : Chemins.bienvenue;
+        return Chemins.publics.contains(chemin) ? null : Chemins.bienvenue;
       }
       final String racine = Chemins.racine(ouverte.role);
       if (!chemin.startsWith(racine)) {
@@ -99,6 +124,29 @@ final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
       GoRoute(
         path: Chemins.bienvenue,
         builder: (BuildContext contexte, GoRouterState etat) => const EcranBienvenue(),
+      ),
+      GoRoute(
+        path: Chemins.inscription,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranInscription(),
+      ),
+      GoRoute(
+        path: Chemins.connexion,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranConnexion(),
+      ),
+      GoRoute(
+        path: Chemins.motDePasseOublie,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranMotDePasseOublie(),
+      ),
+      GoRoute(
+        path: Chemins.code,
+        builder: (BuildContext contexte, GoRouterState etat) {
+          final Object? arguments = etat.extra;
+          if (arguments is! ArgumentsCode) {
+            // Sans argument, l ecran du code n a rien a verifier : on repart de l accueil.
+            return const EcranBienvenue();
+          }
+          return EcranCode(arguments: arguments);
+        },
       ),
       _coquilleConvive(),
       _coquilleParent(),

@@ -21,6 +21,9 @@ rien qui n'y figure pas. Une session qui a besoin d'un changement le signale dan
   vérification et la déconnexion répond 403 `a_verifier`.
 - Action sensible du back office : en-tête `X-Mot-De-Passe-Actions`, contrôlé après le rôle admin.
 
+Quand un code est demandé : à l'inscription, et à la connexion quand la session a dormi plus de cinq jours.
+Nulle part ailleurs. Dans les deux cas, l'application enchaîne seule sur l'écran du code.
+
 ### Format d'erreur unique
 
 ```json
@@ -42,7 +45,7 @@ jamais l'existence d'un compte ni un détail technique.
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
 | POST /auth/inscription | public | `{"type": "telephone"\|"email", "identifiant", "mot_de_passe", "prenom", "nom", "role": "convive"\|"parent", "statut_convive", "conditions_acceptees": true, "appareil": {"nom", "plateforme"}}` ; `statut_convive` (eleve, etudiant, employe, autre) obligatoire pour un convive, absent pour un parent ; `appareil` facultatif | 201 `{"utilisateur_id", "etat": "a_verifier", "canal", "jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` : le compte naît à vérifier et sa session s'ouvre | `compte_existe` 409, `identifiant_invalide` 422, `mot_de_passe_faible` 422, `conditions_requises` 422, `validation` 422 |
-| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` ; identifiant numéro ou e-mail, `appareil` facultatif | `{"jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` ; `utilisateur.verifie` dit si le compte est vérifié | `identifiants_invalides` 401 (message unique, compte existant ou non), `trop_de_tentatives` 429 (blocage par compte et par IP), `compte_desactive` 403 |
+| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` ; identifiant numéro ou e-mail, `appareil` facultatif | `{"jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` ; `utilisateur.verifie` dit si le compte est vérifié | `identifiants_invalides` 401 (message unique, compte existant ou non), `trop_de_tentatives` 429 (blocage par compte et par IP), `compte_desactive` 403, `verification_requise` 403 (session dormante depuis plus de cinq jours : l application enchaîne sur l écran du code) |
 | POST /auth/verification/envoyer | public | `{"identifiant", "canal", "usage": "verification_compte"}` | `{"mode_livraison": "demo", "code_demo": "123456", "expire_le"}` ; `code_demo` seulement en démo et pour un compte à vérifier : réponse identique sinon, sans `code_demo` | `trop_de_requetes` 429 (un code par minute, 5 par jour, limite par IP), `trop_essais` 429, `envoi_impossible` 502 (livraison `reel` avant E1) |
 | POST /auth/verification/confirmer | public | `{"identifiant", "canal", "usage": "verification_compte", "code"}` ; code lu sans casse ni espaces | `{"verifie": true}` ; la session ouverte à l'inscription reste valable | `code_invalide` 400, `code_expire` 410, `trop_essais` 429 (au sixième code faux, 15 min) |
 | POST /auth/mot-de-passe/oublie | public | `{"identifiant", "canal"}` | `{"mode_livraison", "expire_le", "code_demo"}` ; même réponse que le compte existe ou non, jamais de `code_demo` pour un compte inconnu | `trop_de_requetes` 429, `envoi_impossible` 502 |
@@ -200,14 +203,6 @@ notification après la validation. Un second appel avec la même référence ne 
 | POST /agent/scan/file | agent | `[{"code_ticket", "scanne_le", "cle_unique"}]` | résultat par clé unique | `validation` |
 | GET /agent/service/jour | agent | `?date=` | liste des commandes du jour, servies et non servies | `acces_refuse` 403 |
 
-## Anti-gaspillage
-
-| Route | Rôle | Corps | Réponse | Erreurs |
-| --- | --- | --- | --- | --- |
-| GET /anti-gaspillage | convive | aucun | portions restantes en fin de service, prix réduit, quantité | `aucune_offre` 404 |
-| POST /anti-gaspillage/{id}/prendre | convive | `Cle-Geste` + `X-Preuve-Pin` | réservation immédiate avec ticket | `offre_epuisee` 409, `solde_insuffisant` 402, `offre_fermee` 409 |
-| POST /admin/anti-gaspillage | admin | `{"menu_id", "plat_id", "quantite", "remise_pourcent", "ouvre_le", "ferme_le"}` | offre créée | `validation`, `service_en_cours` 409 |
-
 ## Notifications
 
 | Route | Rôle | Corps | Réponse | Erreurs |
@@ -226,7 +221,7 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
-| GET /admin/tableau-bord | `?du=&au=` | repas servis, taux de présence, recettes brutes XOF, frais GeniusPay supportés, net attendu après retrait, gaspillage évité, plats les mieux notés, courbe par jour | `validation` |
+| GET /admin/tableau-bord | `?du=&au=` | repas servis, repas commandés mais non réclamés, taux de présence, recettes brutes XOF, frais GeniusPay supportés, net attendu après retrait, plats les mieux notés, courbe par jour | `validation` |
 | GET /admin/commandes-jour | `?date=` | commandes par service et par plat, total de parts à cuisiner, suppléments compris | `validation` |
 | GET /admin/previsions | `?du=&au=` | ce qui est déjà réservé pour les jours à venir : par jour, par service et par plat, le nombre de parts, en face de la quantité prévue au menu | `validation` |
 | GET /admin/rapports/csv | `?type=&du=&au=` | fichier CSV | `type_inconnu` 422 |

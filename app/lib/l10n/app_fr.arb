@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "nomApplication": "Cantine Vatel",
-  "signatureMarque": "Créneau · Repas · QR",
+  "signatureMarque": "Commande · Repas · QR",
   "accrocheBienvenue": "Réserve ton repas, choisis ton créneau, montre ton QR au comptoir.",
   "continuerAvecIdentifiant": "Continuer avec mon numéro ou mon e-mail",
   "continuerAvecGoogle": "Continuer avec Google",
@@ -65,5 +65,69 @@
   "porteeMois": "Le mois",
   "reserverPeriode": "Réserver la période",
   "totalPeriode": "Total de la période",
-  "choisirParService": "Choisis un plat par service"
+  "choisirParService": "Choisis un plat par service",
+  "creerCompte": "Créer un compte",
+  "jaiUnCompte": "J'ai déjà un compte",
+  "seConnecter": "Se connecter",
+  "identifiantNumero": "Numéro",
+  "identifiantEmail": "E-mail",
+  "champNumero": "Numéro de téléphone",
+  "champEmail": "Adresse e-mail",
+  "prenom": "Prénom",
+  "nom": "Nom",
+  "motDePasse": "Mot de passe",
+  "nouveauMotDePasse": "Nouveau mot de passe",
+  "regleHuitCaracteres": "8 caractères au moins",
+  "regleUneLettre": "Une lettre",
+  "regleUnChiffre": "Un chiffre",
+  "jeSuis": "Je suis",
+  "roleConvive": "Un convive",
+  "roleParent": "Un parent",
+  "profilTarifaire": "Profil tarifaire",
+  "statutEleve": "Élève",
+  "statutEtudiant": "Étudiant",
+  "statutEmploye": "Employé",
+  "statutAutre": "Autre",
+  "accepterConditions": "J'accepte les conditions d'utilisation",
+  "continuer": "Continuer",
+  "valider": "Valider",
+  "retour": "Retour",
+  "titreCode": "Entre le code",
+  "sousTitreCodeTelephone": "Code à 6 chiffres envoyé au {identifiant}",
+  "@sousTitreCodeTelephone": {
+    "placeholders": {
+      "identifiant": {
+        "type": "String"
+      }
+    }
+  },
+  "sousTitreCodeEmail": "Code de 5 caractères envoyé à {identifiant}",
+  "@sousTitreCodeEmail": {
+    "placeholders": {
+      "identifiant": {
+        "type": "String"
+      }
+    }
+  },
+  "modeDemoCodeRempli": "Mode démo : code rempli automatiquement",
+  "penseAuxIndesirables": "Pense à regarder dans les indésirables si tu ne vois rien.",
+  "renvoyerDans": "Renvoyer le code dans {secondes} s",
+  "@renvoyerDans": {
+    "placeholders": {
+      "secondes": {
+        "type": "int"
+      }
+    }
+  },
+  "renvoyerLeCode": "Renvoyer le code",
+  "motDePasseOublie": "Mot de passe oublié",
+  "reinitialiserMotDePasse": "Réinitialiser le mot de passe",
+  "deconnexion": "Se déconnecter",
+  "champObligatoire": "À remplir",
+  "numeroInvalide": "Numéro ivoirien attendu, 10 chiffres après +225",
+  "emailInvalide": "Adresse e-mail attendue",
+  "conditionsRequises": "Accepte les conditions pour continuer",
+  "motDePasseFaible": "Mot de passe trop simple",
+  "compteCree": "Compte créé. Vérifie ton identifiant.",
+  "motDePasseChange": "Mot de passe changé. Connecte-toi."
 }

@@ -139,5 +139,5 @@ Ce qui reste à reprendre pendant le codage :
 | Décision | Conséquence à appliquer |
 | --- | --- |
 | Une commande engage : le convive paie ce qu'il a commandé, qu'il vienne manger ou non. Un repas non retiré n'est ni remboursé ni reporté. | Une réservation non servie à la fin du jour passe à `expiree`, sans mouvement de crédit (M2, A5). |
-| Plus de plats restants : tout est commandé à l'avance, la cuisine prépare ce qui est commandé. | L'anti-gaspillage de fin de service est abandonné : retirer de `docs/CAHIER.md`, `docs/CONTRAT_API.md` (routes `/anti-gaspillage`), `docs/MODELE_DONNEES.md` (motif `anti_gaspillage`, notification `anti_gaspillage`, paramètre `remise_anti_gaspillage_pourcent`) et de la base par une migration de A4 ; ne pas le coder. |
+| Plus de plats restants : tout est commandé à l'avance, la cuisine prépare ce qui est commandé. | Fait le 21/11 dans les documents : l'anti-gaspillage est retiré de `docs/CAHIER.md`, `docs/CONTRAT_API.md`, `docs/MODELE_DONNEES.md` et `docs/CHARTE.md`. Reste à ne pas le coder, et à ne pas créer ses colonnes en A4. La commande engage : l'état `non_reclamee` remplace la remise en vente. |
 

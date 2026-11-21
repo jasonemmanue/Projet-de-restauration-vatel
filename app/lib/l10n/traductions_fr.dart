@@ -12,7 +12,7 @@ class TraductionsFr extends Traductions {
   String get nomApplication => 'Cantine Vatel';
 
   @override
-  String get signatureMarque => 'Créneau · Repas · QR';
+  String get signatureMarque => 'Commande · Repas · QR';
 
   @override
   String get accrocheBienvenue =>
@@ -191,4 +191,141 @@ class TraductionsFr extends Traductions {
 
   @override
   String get choisirParService => 'Choisis un plat par service';
+
+  @override
+  String get creerCompte => 'Créer un compte';
+
+  @override
+  String get jaiUnCompte => 'J\'ai déjà un compte';
+
+  @override
+  String get seConnecter => 'Se connecter';
+
+  @override
+  String get identifiantNumero => 'Numéro';
+
+  @override
+  String get identifiantEmail => 'E-mail';
+
+  @override
+  String get champNumero => 'Numéro de téléphone';
+
+  @override
+  String get champEmail => 'Adresse e-mail';
+
+  @override
+  String get prenom => 'Prénom';
+
+  @override
+  String get nom => 'Nom';
+
+  @override
+  String get motDePasse => 'Mot de passe';
+
+  @override
+  String get nouveauMotDePasse => 'Nouveau mot de passe';
+
+  @override
+  String get regleHuitCaracteres => '8 caractères au moins';
+
+  @override
+  String get regleUneLettre => 'Une lettre';
+
+  @override
+  String get regleUnChiffre => 'Un chiffre';
+
+  @override
+  String get jeSuis => 'Je suis';
+
+  @override
+  String get roleConvive => 'Un convive';
+
+  @override
+  String get roleParent => 'Un parent';
+
+  @override
+  String get profilTarifaire => 'Profil tarifaire';
+
+  @override
+  String get statutEleve => 'Élève';
+
+  @override
+  String get statutEtudiant => 'Étudiant';
+
+  @override
+  String get statutEmploye => 'Employé';
+
+  @override
+  String get statutAutre => 'Autre';
+
+  @override
+  String get accepterConditions => 'J\'accepte les conditions d\'utilisation';
+
+  @override
+  String get continuer => 'Continuer';
+
+  @override
+  String get valider => 'Valider';
+
+  @override
+  String get retour => 'Retour';
+
+  @override
+  String get titreCode => 'Entre le code';
+
+  @override
+  String sousTitreCodeTelephone(String identifiant) {
+    return 'Code à 6 chiffres envoyé au $identifiant';
+  }
+
+  @override
+  String sousTitreCodeEmail(String identifiant) {
+    return 'Code de 5 caractères envoyé à $identifiant';
+  }
+
+  @override
+  String get modeDemoCodeRempli => 'Mode démo : code rempli automatiquement';
+
+  @override
+  String get penseAuxIndesirables =>
+      'Pense à regarder dans les indésirables si tu ne vois rien.';
+
+  @override
+  String renvoyerDans(int secondes) {
+    return 'Renvoyer le code dans $secondes s';
+  }
+
+  @override
+  String get renvoyerLeCode => 'Renvoyer le code';
+
+  @override
+  String get motDePasseOublie => 'Mot de passe oublié';
+
+  @override
+  String get reinitialiserMotDePasse => 'Réinitialiser le mot de passe';
+
+  @override
+  String get deconnexion => 'Se déconnecter';
+
+  @override
+  String get champObligatoire => 'À remplir';
+
+  @override
+  String get numeroInvalide =>
+      'Numéro ivoirien attendu, 10 chiffres après +225';
+
+  @override
+  String get emailInvalide => 'Adresse e-mail attendue';
+
+  @override
+  String get conditionsRequises => 'Accepte les conditions pour continuer';
+
+  @override
+  String get motDePasseFaible => 'Mot de passe trop simple';
+
+  @override
+  String get compteCree => 'Compte créé. Vérifie ton identifiant.';
+
+  @override
+  String get motDePasseChange => 'Mot de passe changé. Connecte-toi.';
 }

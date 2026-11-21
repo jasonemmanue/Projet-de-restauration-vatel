@@ -6,9 +6,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/outils/plateforme.dart';
 import '../../core/responsive/type_ecran.dart';
+import '../../core/routes/routes.dart';
 import '../../core/securite/session.dart';
 import '../../core/theme/couleurs.dart';
 import '../../l10n/traductions.dart';
@@ -96,8 +98,7 @@ class EcranBienvenue extends ConsumerWidget {
       ),
       bottomNavigationBar: BoutonPrincipal(
         libelle: mots.continuerAvecIdentifiant,
-        onPressed: null,
-        raisonIndisponible: mots.bientotDisponible,
+        onPressed: () => contexte.go(Chemins.inscription),
       ),
     );
   }

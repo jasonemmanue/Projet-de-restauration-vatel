@@ -23,7 +23,7 @@ Les valeurs vivent dans le thème de l'application. Aucun écran n'écrit une co
 | succès | `--success` | `#0d9488` | réservation confirmée, scan accepté, paiement reçu |
 | danger | `--danger` | `#ef4444` | échec de paiement, scan refusé, champ invalide |
 | alerte | `--warn` | `#f59e0b` | solde bas, stock faible, heure limite proche |
-| contraste | `--contrast` | `#0f172a` | surfaces toujours sombres : favoris, anti-gaspillage |
+| contraste | `--contrast` | `#0f172a` | surfaces toujours sombres : favoris, mises en avant |
 | sur contraste | `--on-contrast` | `#ffffff` | texte posé sur une surface de contraste |
 | sur contraste atténué | `--on-contrast-muted` | `#93c5fd` | texte secondaire sur une surface de contraste |
 | champ | `--field` | `#ffffff` | fond des champs de saisie |
@@ -157,4 +157,4 @@ d'interface :
 | sur fond sombre | `#f5f5f4` | `#6b93ff` | `#1c1c1c` |
 
 Nom « Cantine Vatel » en Plus Jakarta Sans graisse 700, interlettrage -0,045em. Signature
-« Créneau · Repas · QR » en graisse 600, interlettrage 0,08em, en majuscules.
+« Commande · Repas · QR » en graisse 600, interlettrage 0,08em, en majuscules.

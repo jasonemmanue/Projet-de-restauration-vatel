@@ -107,7 +107,7 @@ abstract class Traductions {
   /// No description provided for @signatureMarque.
   ///
   /// In fr, this message translates to:
-  /// **'Créneau · Repas · QR'**
+  /// **'Commande · Repas · QR'**
   String get signatureMarque;
 
   /// No description provided for @accrocheBienvenue.
@@ -451,6 +451,264 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Choisis un plat par service'**
   String get choisirParService;
+
+  /// No description provided for @creerCompte.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un compte'**
+  String get creerCompte;
+
+  /// No description provided for @jaiUnCompte.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai déjà un compte'**
+  String get jaiUnCompte;
+
+  /// No description provided for @seConnecter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get seConnecter;
+
+  /// No description provided for @identifiantNumero.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro'**
+  String get identifiantNumero;
+
+  /// No description provided for @identifiantEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail'**
+  String get identifiantEmail;
+
+  /// No description provided for @champNumero.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone'**
+  String get champNumero;
+
+  /// No description provided for @champEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse e-mail'**
+  String get champEmail;
+
+  /// No description provided for @prenom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prénom'**
+  String get prenom;
+
+  /// No description provided for @nom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get nom;
+
+  /// No description provided for @motDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get motDePasse;
+
+  /// No description provided for @nouveauMotDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get nouveauMotDePasse;
+
+  /// No description provided for @regleHuitCaracteres.
+  ///
+  /// In fr, this message translates to:
+  /// **'8 caractères au moins'**
+  String get regleHuitCaracteres;
+
+  /// No description provided for @regleUneLettre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une lettre'**
+  String get regleUneLettre;
+
+  /// No description provided for @regleUnChiffre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un chiffre'**
+  String get regleUnChiffre;
+
+  /// No description provided for @jeSuis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis'**
+  String get jeSuis;
+
+  /// No description provided for @roleConvive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un convive'**
+  String get roleConvive;
+
+  /// No description provided for @roleParent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un parent'**
+  String get roleParent;
+
+  /// No description provided for @profilTarifaire.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil tarifaire'**
+  String get profilTarifaire;
+
+  /// No description provided for @statutEleve.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élève'**
+  String get statutEleve;
+
+  /// No description provided for @statutEtudiant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étudiant'**
+  String get statutEtudiant;
+
+  /// No description provided for @statutEmploye.
+  ///
+  /// In fr, this message translates to:
+  /// **'Employé'**
+  String get statutEmploye;
+
+  /// No description provided for @statutAutre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get statutAutre;
+
+  /// No description provided for @accepterConditions.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'accepte les conditions d\'utilisation'**
+  String get accepterConditions;
+
+  /// No description provided for @continuer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get continuer;
+
+  /// No description provided for @valider.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get valider;
+
+  /// No description provided for @retour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour'**
+  String get retour;
+
+  /// No description provided for @titreCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre le code'**
+  String get titreCode;
+
+  /// No description provided for @sousTitreCodeTelephone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à 6 chiffres envoyé au {identifiant}'**
+  String sousTitreCodeTelephone(String identifiant);
+
+  /// No description provided for @sousTitreCodeEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de 5 caractères envoyé à {identifiant}'**
+  String sousTitreCodeEmail(String identifiant);
+
+  /// No description provided for @modeDemoCodeRempli.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode démo : code rempli automatiquement'**
+  String get modeDemoCodeRempli;
+
+  /// No description provided for @penseAuxIndesirables.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pense à regarder dans les indésirables si tu ne vois rien.'**
+  String get penseAuxIndesirables;
+
+  /// No description provided for @renvoyerDans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer le code dans {secondes} s'**
+  String renvoyerDans(int secondes);
+
+  /// No description provided for @renvoyerLeCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer le code'**
+  String get renvoyerLeCode;
+
+  /// No description provided for @motDePasseOublie.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié'**
+  String get motDePasseOublie;
+
+  /// No description provided for @reinitialiserMotDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser le mot de passe'**
+  String get reinitialiserMotDePasse;
+
+  /// No description provided for @deconnexion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se déconnecter'**
+  String get deconnexion;
+
+  /// No description provided for @champObligatoire.
+  ///
+  /// In fr, this message translates to:
+  /// **'À remplir'**
+  String get champObligatoire;
+
+  /// No description provided for @numeroInvalide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro ivoirien attendu, 10 chiffres après +225'**
+  String get numeroInvalide;
+
+  /// No description provided for @emailInvalide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse e-mail attendue'**
+  String get emailInvalide;
+
+  /// No description provided for @conditionsRequises.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepte les conditions pour continuer'**
+  String get conditionsRequises;
+
+  /// No description provided for @motDePasseFaible.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe trop simple'**
+  String get motDePasseFaible;
+
+  /// No description provided for @compteCree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte créé. Vérifie ton identifiant.'**
+  String get compteCree;
+
+  /// No description provided for @motDePasseChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe changé. Connecte-toi.'**
+  String get motDePasseChange;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

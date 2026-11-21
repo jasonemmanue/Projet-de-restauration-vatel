@@ -42,7 +42,7 @@ export default function Accueil() {
             <div className="flex flex-col leading-tight">
               <span className="text-[20px] font-extrabold tracking-tight">Cantine Vatel</span>
               <span className="text-[10px] uppercase tracking-[0.18em] text-texte-secondaire">
-                Créneau · Repas · QR
+                Commande · Repas · QR
               </span>
             </div>
           </div>

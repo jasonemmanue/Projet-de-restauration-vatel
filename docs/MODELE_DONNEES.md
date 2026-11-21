@@ -67,7 +67,11 @@ Propriétaire : A3. Une ligne par appareil connecté, pour la déconnexion à di
 | expire_le | timestamptz | not null |
 | revoquee_le | timestamptz | null |
 
-Index : `utilisateur_id`, `expire_le`.
+Index : `utilisateur_id`, `expire_le`, `derniere_activite`.
+
+Une session laissée dormir plus de cinq jours est expirée (`jours_inactivite_avant_verification`). Le mot de
+passe seul ne la rouvre pas : la connexion suivante repasse par un code de vérification, comme à
+l'inscription. C'est le seul autre moment où un code est demandé.
 
 ## liens_parent_enfant
 Propriétaire : A5.
@@ -194,7 +198,7 @@ Propriétaire : A5. Une seule réservation vivante par convive et par jour, ratt
 | menu_id | uuid | fk menus, not null |
 | date_service | date | not null |
 | total_xof | integer | not null, >= 0, prix du menu pour le profil, figé à la réservation |
-| etat | text | not null, check in (confirmee, servie, annulee, supprimee, expiree) |
+| etat | text | not null, check in (confirmee, servie, annulee, supprimee, non_reclamee) |
 | code_ticket | text | not null, unique, contenu du QR |
 | servie_le | timestamptz | null |
 | servie_par | uuid | fk utilisateurs, null |
@@ -203,6 +207,11 @@ Propriétaire : A5. Une seule réservation vivante par convive et par jour, ratt
 Index : unique partiel `(convive_id, date_service)` sur les lignes `etat in (confirmee, servie)` ; unique sur
 `code_ticket` ; index sur `(date_service, etat)`, sur `(menu_id, etat)` et sur `lot_id`.
 Un seul ticket par jour, qui vaut pour tout ce qui a été commandé : l'agent scanne une fois.
+
+La commande engage. La part est achetée, préparée et mise de côté au nom du convive : qu'il vienne ou non,
+elle est à lui et elle est payée. Une commande que personne n'est venu chercher passe à `non_reclamee` à la
+fermeture du service, sans remboursement et sans remise en vente. Il n'y a donc pas de plats restants à
+écouler : la cuisine ne prépare que ce qui a été commandé et payé.
 
 Gel de la commande : à partir de l'heure de gel de la veille du service (`heure_gel_commandes`, 18 h 00 par
 défaut), la commande du lendemain ne se modifie plus, parce que la cuisine achète et prépare sur cette base.
@@ -256,7 +265,7 @@ Propriétaire : A5. Le solde n'existe que par ces lignes. Table en ajout seul.
 | porte_monnaie_id | uuid | fk porte_monnaie, not null |
 | sens | text | not null, check in (credit, debit) |
 | montant_xof | integer | not null, > 0 |
-| motif | text | not null, check in (recharge, reservation, annulation, remboursement, ajustement_admin, anti_gaspillage) |
+| motif | text | not null, check in (recharge, reservation, supplement, annulation, remboursement, ajustement_admin) |
 | reference_type | text | null, check in (reservation, paiement, lien_paiement) |
 | reference_id | uuid | null |
 | solde_apres_xof | integer | not null, >= 0 |
@@ -397,7 +406,7 @@ Propriétaire : A7. Notification dans l'application, doublée ou non d'un envoi 
 | --- | --- | --- |
 | id | uuid | pk |
 | destinataire_id | uuid | fk utilisateurs, not null |
-| type | text | not null, check in (menu_publie, rappel_limite, solde_bas, paiement_recu, repas_servi, anti_gaspillage, message_admin) |
+| type | text | not null, check in (menu_publie, rappel_limite, rappel_gel, solde_bas, paiement_recu, repas_servi, message_admin) |
 | titre | text | not null |
 | corps | text | not null |
 | donnees | jsonb | not null default objet vide |
@@ -425,9 +434,10 @@ Clés prévues au départ : `heure_limite_defaut`, `heure_gel_commandes`, `heure
 `heure_fermeture_service`, `frais_geniuspay_pourcent`, `frais_geniuspay_fixe_xof`, `frais_retrait_pourcent`,
 `mode_paiement` (test ou reel), `livraison_verification_telephone` (demo ou reel),
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
-`seuil_alerte_solde_defaut`, `remise_anti_gaspillage_pourcent`, `langues_actives`,
+`seuil_alerte_solde_defaut`, `langues_actives`,
 `jour_publication_menu` (jeudi par défaut), `semaines_preparees_a_l_avance` (1 par défaut),
-`portees_reservation` (jour, semaine, mois) et `services_obligatoires` (aucun par défaut : un convive peut
+`jours_inactivite_avant_verification` (5 par défaut), `portees_reservation` (jour, semaine, mois) et
+`services_obligatoires` (aucun par défaut : un convive peut
 ne prendre que la résistance).
 
 Clés ajoutées par M1 (migration 0002) : `duree_code_email_minutes` (15), `intervalle_codes_secondes` (60),

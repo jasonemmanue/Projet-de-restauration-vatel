@@ -47,6 +47,8 @@ Lis ce fichier en entier avant toute action. Il prime sur tes habitudes.
 - Aucun secret dans le dépôt ni dans l'application livrée : tout en variable d'environnement, déclarée sans
   valeur dans `.env.example`.
 - Mot de passe, code PIN, secret biométrique et codes de vérification stockés hachés.
+- Un code de vérification est demandé à l'inscription, et à la connexion après cinq jours sans ouvrir
+  l'application. Jamais ailleurs.
 
 ## Qualité
 - Chaque fichier commence par un commentaire qui dit son rôle.

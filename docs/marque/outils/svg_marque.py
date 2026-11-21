@@ -19,7 +19,7 @@ TONS = {
 }
 
 NOM = "Cantine Vatel"
-SIGNATURE = "CRÉNEAU · REPAS · QR"
+SIGNATURE = "COMMANDE · REPAS · QR"
 
 # Rapports repris de Logo.tsx pour la taille 48, appliques ici a un symbole de 64.
 ECHELLE = 64 / 48
