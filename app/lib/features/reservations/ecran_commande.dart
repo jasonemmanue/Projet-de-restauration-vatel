@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/hors_ligne/etat_reseau.dart';
 import '../../core/outils/formats.dart';
 import '../../core/outils/haptique.dart';
 import '../../core/responsive/type_ecran.dart';
@@ -115,6 +116,7 @@ class _EtatEcranCommande extends ConsumerState<EcranCommande> {
     final Palette couleurs = contexte.couleurs;
     final AsyncValue<SemaineMenu> semaine = ref.watch(semaineProvider);
     final AsyncValue<int?> solde = ref.watch(soldeProvider);
+    final bool enLigne = ref.watch(etatReseauProvider);
 
     if (semaine.isLoading) {
       return ListView(
@@ -223,9 +225,12 @@ class _EtatEcranCommande extends ConsumerState<EcranCommande> {
             BoutonPrincipal(
               libelle: mots.confirmerCommande,
               enCours: _enCours,
-              onPressed:
-                  total > 0 && !insuffisant && !_reussi ? () => _confirmer(jours) : null,
-              raisonIndisponible: insuffisant ? mots.soldeInsuffisant : null,
+              onPressed: total > 0 && !insuffisant && !_reussi && enLigne
+                  ? () => _confirmer(jours)
+                  : null,
+              raisonIndisponible: !enLigne
+                  ? mots.actionImpossibleHorsLigne
+                  : (insuffisant ? mots.soldeInsuffisant : null),
             ),
           ],
         ),

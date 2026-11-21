@@ -460,3 +460,27 @@ que la session API annonce les blocs correspondants. Ne pas clore les lots conce
 | Dès A8 | Le tableau de bord montre de vrais chiffres, et les frais GeniusPay calculés aux taux réels (Wave 1,5 %, Orange et MTN 3,5 %, Stripe et lien tiers 5 %, GeniusPay 100 XOF plus 1 %, retrait 1 %) | APP-08 |
 | Dès A8 | Le budget et le calendrier budgétaire se remplissent tout seuls à partir des paiements et de leurs frais | Budget |
 | Dès A6 | Un paiement de test aboutit, crédite le porte-monnaie et écrit ses trois frais au budget | APP suivant |
+
+---
+
+## APP-10, ticket et hors ligne du convive
+
+**Fait.** Ticket QR réel, noir sur fond blanc dans les deux modes, avec le code en clair sous le carré. Un
+toucher passe en plein écran, un autre en sort, et l'application ne reste jamais en plein écran derrière soi.
+Un bouton Ticket sur chaque commande à venir. Hors ligne : le bandeau s'affiche, le menu, le ticket, le solde
+et les mouvements restent lisibles depuis le cache par sujet, et le bouton de commande se grise avec la
+raison, « Impossible hors ligne : réserver, recharger et payer demandent le réseau ».
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `flutter test` : 5 tests verts.
+
+**À tester par vous.**
+1. Sur Android, ouvrir un ticket, toucher le carré : il passe en plein écran, le fond reste blanc même en
+   mode sombre.
+2. Passer en mode avion, rouvrir l'application : le menu et le ticket s'affichent, le bandeau hors ligne
+   apparaît, le bouton de commande est grisé avec sa raison.
+3. Revenir en ligne : le bandeau disparaît tout seul.
+
+**Résultat.**
+
+**Reste à faire.** La luminosité ne passe pas au maximum à l'ouverture du ticket : cela demande un paquet qui
+n'est pas dans la liste imposée. À arbitrer, le plein écran suffit dans la plupart des cas.

@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/outils/formats.dart';
 import '../../core/responsive/type_ecran.dart';
@@ -12,6 +13,7 @@ import '../../l10n/traductions.dart';
 import '../../shared/widgets/etats.dart';
 import '../../shared/widgets/squelette.dart';
 import '../../shared/widgets/texte_adapte.dart';
+import '../../core/routes/routes.dart';
 import '../menus/ecran_menu.dart';
 import 'donnees/service_commandes.dart';
 
@@ -121,6 +123,18 @@ class _CarteCommande extends ConsumerWidget {
           ],
           if (commande.aVenir && commande.etat == 'confirmee') ...<Widget>[
             const SizedBox(height: 12),
+            SizedBox(
+              height: Mesures.cibleTactile,
+              child: FilledButton.icon(
+                onPressed: () => contexte.go(
+                  '${Chemins.convive}/ticket/billet',
+                  extra: commande,
+                ),
+                icon: const Icon(Icons.qr_code_2),
+                label: Text(mots.ongletTicket),
+              ),
+            ),
+            const SizedBox(height: 8),
             SizedBox(
               height: Mesures.cibleTactile,
               child: OutlinedButton(

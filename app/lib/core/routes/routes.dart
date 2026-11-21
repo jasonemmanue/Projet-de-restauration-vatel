@@ -27,6 +27,7 @@ import '../../features/parent/ecran_recharge.dart';
 import '../../features/porte_monnaie/ecran_lien_paiement.dart';
 import '../../features/porte_monnaie/ecran_porte_monnaie.dart';
 import '../../features/profil/ecran_compte.dart';
+import '../../features/reservations/donnees/service_commandes.dart';
 import '../../features/reservations/ecran_commande.dart';
 import '../../features/reservations/ecran_mes_commandes.dart';
 import '../../features/reservations/ecran_ticket.dart';
@@ -238,7 +239,10 @@ StatefulShellRoute _coquilleConvive() {
             routes: <RouteBase>[
               GoRoute(
                 path: 'billet',
-                builder: (BuildContext contexte, GoRouterState etat) => const EcranTicket(),
+                builder: (BuildContext contexte, GoRouterState etat) {
+                  final Object? commande = etat.extra;
+                  return EcranTicket(commande: commande is Commande ? commande : null);
+                },
               ),
             ],
           ),
