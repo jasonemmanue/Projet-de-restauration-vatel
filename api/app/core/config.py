@@ -103,6 +103,9 @@ class Configuration(BaseSettings):
     proxies_de_confiance: int = Field(default=1, ge=0, le=5, validation_alias="PROXIES_DE_CONFIANCE")
     jwt_duree_minutes: int = Field(default=15, ge=1, le=120, validation_alias="JWT_DUREE_MINUTES")
     # Coût bcrypt : 12 en production, abaissé seulement par les tests pour aller vite.
+    # Dossier des médias : le volume Railway en production, un dossier local sinon.
+    stockage_dossier: str = Field(default="medias", validation_alias="STOCKAGE_DOSSIER")
+    stockage_taille_max_mo: int = Field(default=1, ge=1, le=20, validation_alias="STOCKAGE_TAILLE_MAX_MO")
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
     admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")

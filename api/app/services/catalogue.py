@@ -3,6 +3,7 @@
 Chaque écriture passe par le journal de l'admin, dans la même transaction.
 """
 
+import secrets
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -14,20 +15,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.erreurs import ErreurApi
 from app.models import Plat, Tarif
 from app.schemas.catalogue import PlatEntree, PlatModification, TarifEntree
+from app.services import stockage
 from app.services.journal import ecrire_journal
 from app.services.regles_menus import type_de_photo
+from app.services.stockage import EXTENSIONS
 
 CHAMPS_JOURNAL = ("nom_fr", "categorie", "allergenes", "regimes", "prix_supplement_xof", "actif")
 
 
 def etat_plat(plat: Plat) -> dict[str, Any]:
     """État d'un plat pour le journal, sans la photo."""
-    return {champ: getattr(plat, champ) for champ in CHAMPS_JOURNAL} | {"photo": plat.photo_type is not None}
+    return {champ: getattr(plat, champ) for champ in CHAMPS_JOURNAL} | {"image_url": plat.image_url}
 
 
 def chemin_photo(plat: Plat) -> str | None:
-    """Adresse relative de la photo d'un plat ; le client la préfixe de l'adresse de l'API."""
-    return f"/api/v1/plats/{plat.id}/photo" if plat.photo_type else None
+    """Adresse relative de la photo d'un plat sur le volume ; le client la préfixe de l'adresse de l'API."""
+    return plat.image_url
 
 
 async def plat_vivant(session: AsyncSession, plat_id: uuid.UUID, verrou: bool = False) -> Plat:
@@ -91,10 +94,11 @@ async def ranger_photo(
     admin_id: uuid.UUID,
     plat_id: uuid.UUID,
     contenu: bytes,
+    dossier: str,
     taille_max: int,
     ip: str | None,
 ) -> Plat:
-    """Range la photo d'un plat après contrôle de sa taille et de son type réel."""
+    """Range la photo d'un plat sur le volume, après contrôle de sa taille et de son type réel."""
     if not contenu or len(contenu) > taille_max:
         raise ErreurApi("trop_lourd", 413)
     type_mime = type_de_photo(contenu)
@@ -102,22 +106,13 @@ async def ranger_photo(
         raise ErreurApi("fichier_invalide", 422)
     plat = await plat_vivant(session, plat_id, verrou=True)
     avant = etat_plat(plat)
-    plat.photo = contenu
+    # Un nom neuf à chaque envoi : le cache des téléphones ne garde jamais l'ancienne photo.
+    relatif = f"plats/{plat.id}-{secrets.token_hex(4)}.{EXTENSIONS[type_mime]}"
+    await stockage.ecrire(dossier, relatif, contenu)
+    plat.image_url = f"/medias/{relatif}"
     plat.photo_type = type_mime
     ecrire_journal(session, admin_id, "photo_plat", "plat", plat.id, avant, etat_plat(plat), ip)
     return plat
-
-
-async def lire_photo(session: AsyncSession, plat_id: uuid.UUID) -> tuple[bytes, str]:
-    """Rend la photo d'un plat et son type ; 404 si le plat n'en a pas."""
-    ligne = (
-        await session.execute(
-            select(Plat.photo, Plat.photo_type).where(Plat.id == plat_id, Plat.supprime_le.is_(None))
-        )
-    ).first()
-    if ligne is None or ligne.photo is None or ligne.photo_type is None:
-        raise ErreurApi("introuvable", 404)
-    return ligne.photo, ligne.photo_type
 
 
 async def lister_tarifs(session: AsyncSession) -> list[Tarif]:

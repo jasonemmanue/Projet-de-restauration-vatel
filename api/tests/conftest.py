@@ -8,6 +8,7 @@ import os
 import secrets
 import subprocess
 import sys
+import tempfile
 from collections.abc import AsyncIterator
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from app.core.config import Configuration
 from app.main import creer_application
 
 DOSSIER_API = Path(__file__).resolve().parent.parent
+# Médias des tests dans un dossier temporaire du système, jamais dans le dépôt.
+DOSSIER_MEDIAS_TEST = str(Path(tempfile.gettempdir()) / "vatel-medias-tests")
 ORIGINE_CONNUE = "https://app.vatel.test"
 URL_BASE_TEST = os.environ.get("TEST_DATABASE_URL", "")
 # Base injoignable : sert aux tests qui ne lisent pas la base.
@@ -37,6 +40,7 @@ def configuration_test(url_base: str = URL_SANS_BASE, **valeurs: object) -> Conf
         "RAILWAY_GIT_COMMIT_SHA": "abcdef1234567890",
         "LOG_NIVEAU": "warning",
         "BCRYPT_TOURS": 4,
+        "STOCKAGE_DOSSIER": DOSSIER_MEDIAS_TEST,
     }
     reglages.update(valeurs)
     return Configuration(_env_file=None, **reglages)  # type: ignore[arg-type]

@@ -116,7 +116,7 @@ async def test_photo_controlee_par_ses_octets(
     vrai = await client_base.put(
         f"/api/v1/admin/plats/{plat}/photo", headers=admin, files={"photo": ("a.jpg", PNG, "image/jpeg")}
     )
-    assert vrai.status_code == 200 and vrai.json()["image_url"].endswith("/photo")
+    assert vrai.status_code == 200 and vrai.json()["image_url"].startswith("/medias/plats/")
     image = await client_base.get(vrai.json()["image_url"])
     assert image.status_code == 200 and image.headers["content-type"] == "image/png" and image.content == PNG
 
@@ -140,3 +140,20 @@ async def test_copie_d_une_semaine(client_base: httpx.AsyncClient, application_b
     semaine = await client_base.get(f"/api/v1/admin/menus?du={vers}", headers=admin)
     etats = [j["etat"] for j in semaine.json()["jours"]]
     assert etats.count("brouillon") == 2
+
+
+async def test_medias_refuse_un_chemin_hors_du_dossier(client_base: httpx.AsyncClient) -> None:
+    for chemin in (
+        "/medias/../pyproject.toml",
+        "/medias/%2e%2e/%2e%2e/etc/passwd",
+        "/medias/plats/absent.png",
+    ):
+        assert (await client_base.get(chemin)).status_code == 404
+
+
+def test_images_de_demo_copiees_sans_ecraser(tmp_path) -> None:
+    from app.services.stockage import copier_demo
+
+    assert copier_demo(str(tmp_path)) == 15
+    assert copier_demo(str(tmp_path)) == 0
+    assert (tmp_path / "demo" / "attieke.jpg").is_file()

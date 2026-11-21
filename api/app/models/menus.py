@@ -84,7 +84,7 @@ class Plat(AvecModification, Base):
     regimes: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, server_default=TABLEAU_VIDE)
     calories: Mapped[int | None] = mapped_column(Integer)
     prix_supplement_xof: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
-    # Photo rangée en base : colonne lourde, chargée seulement quand on sert l'image.
+    # Inutilisée depuis le passage des photos sur le volume (image_url) ; gardée vide, chargée à la demande.
     photo: Mapped[bytes | None] = mapped_column(LargeBinary, deferred=True)
     photo_type: Mapped[str | None] = mapped_column(Text)
     actif: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))

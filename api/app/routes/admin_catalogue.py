@@ -65,10 +65,17 @@ async def envoyer_photo(
     plat_id: uuid.UUID, photo: UploadFile, admin: Admin, request: Request, session: SessionBase
 ) -> PlatSortie:
     """Range la photo d'un plat, envoyée en multipart ; son type est vérifié par ses premiers octets."""
-    taille_max = request.app.state.config.taille_requete_max_octets
+    config = request.app.state.config
+    taille_max = min(config.stockage_taille_max_mo * 1024 * 1024, config.taille_requete_max_octets)
     contenu = await photo.read(taille_max + 1)
     plat = await catalogue.ranger_photo(
-        session, admin.utilisateur.id, plat_id, contenu, taille_max, adresse_client(request)
+        session,
+        admin.utilisateur.id,
+        plat_id,
+        contenu,
+        config.stockage_dossier,
+        taille_max,
+        adresse_client(request),
     )
     return vue_plat(plat)
 

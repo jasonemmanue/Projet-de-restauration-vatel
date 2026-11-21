@@ -1,7 +1,6 @@
 """Routes de lecture des menus et des plats : /api/v1/menus/semaine, /menus/{date}, /plats/{id}.
 
-Réservées aux comptes vérifiés ; seuls les menus publiés sont visibles. La photo d'un plat est publique :
-elle ne dit rien de personne et s'affiche sans jeton dans une balise d'image.
+Réservées aux comptes vérifiés ; seuls les menus publiés sont visibles. Les photos sont servies par /medias.
 """
 
 import uuid
@@ -9,7 +8,6 @@ from datetime import UTC, date, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
-from fastapi.responses import Response
 from sqlalchemy import func, select
 
 from app.core.dependances import Connecte, exiger_role
@@ -81,10 +79,3 @@ async def lire_plat(plat_id: uuid.UUID, lecteur: Lecteur, session: SessionBase) 
         "note_moyenne": round(float(moyenne), 1) if moyenne is not None else None,
         "nombre_avis": int(nombre),
     }
-
-
-@routeur.get("/plats/{plat_id}/photo", include_in_schema=True)
-async def photo_du_plat(plat_id: uuid.UUID, session: SessionBase) -> Response:
-    """La photo d'un plat, publique, mise en cache une heure."""
-    contenu, type_mime = await catalogue.lire_photo(session, plat_id)
-    return Response(content=contenu, media_type=type_mime, headers={"Cache-Control": "public, max-age=3600"})

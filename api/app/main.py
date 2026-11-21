@@ -24,12 +24,14 @@ from app.routes import (
     admin_menus,
     admin_utilisateurs,
     auth,
+    medias,
     menus,
     moi,
     reservations,
     sante,
 )
 from app.services.amorcage import creer_admin_initial
+from app.services.stockage import copier_demo
 
 
 def creer_application(config: Configuration | None = None) -> FastAPI:
@@ -40,6 +42,10 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def cycle_de_vie(app: FastAPI) -> AsyncIterator[None]:
+        try:
+            copier_demo(config.stockage_dossier)
+        except OSError:
+            logging.getLogger("vatel.stockage").exception("copie des images de démonstration impossible")
         try:
             await creer_admin_initial(app.state.fabrique_sessions, config)
         except Exception:
@@ -62,7 +68,17 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
     application.state.limiter = creer_limiteur(config.limite_debit_defaut)
 
     installer_gestionnaires(application)
-    for module in (sante, auth, moi, menus, reservations, admin_utilisateurs, admin_catalogue, admin_menus):
+    for module in (
+        sante,
+        medias,
+        auth,
+        moi,
+        menus,
+        reservations,
+        admin_utilisateurs,
+        admin_catalogue,
+        admin_menus,
+    ):
         application.include_router(module.routeur)
 
     # add_middleware empile vers l'extérieur : la dernière ajoutée est la plus externe.
