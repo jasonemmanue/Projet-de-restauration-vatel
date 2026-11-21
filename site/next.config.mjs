@@ -1,12 +1,14 @@
 // Role du fichier : reglages Next.js du site public de Cantine Vatel.
+// Export statique : le site part sur un hebergement de fichiers, sans serveur Node.
 
 /** @type {import('next').NextConfig} */
 const config = {
+  output: 'export',
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    // Les logos de la marque et des boutiques sont des SVG locaux, ecrits dans ce depot.
-    // Next refuse les SVG par defaut : on les autorise, enfermes dans un bac a sable.
+    // L export statique ne peut pas optimiser les images a la volee.
+    unoptimized: true,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
