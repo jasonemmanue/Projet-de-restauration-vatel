@@ -17,6 +17,9 @@ rien qui n'y figure pas. Une session qui a besoin d'un changement le signale dan
   `/auth/pin/verifier` et valable deux minutes.
 - Pagination : `?page=1&taille=20`, réponse `{"elements": [], "page": 1, "taille": 20, "total": 0}`.
 - Version déployée : chaque réponse porte l'en-tête `X-Version-Commit`.
+- Compte à vérifier : tant que l'identifiant n'est pas vérifié, toute route autre que `GET /moi`, la
+  vérification et la déconnexion répond 403 `a_verifier`.
+- Action sensible du back office : en-tête `X-Mot-De-Passe-Actions`, contrôlé après le rôle admin.
 
 ### Format d'erreur unique
 
@@ -38,16 +41,16 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /auth/inscription | public | `{"nom_complet", "identifiant", "mot_de_passe", "role", "statut_convive"}` | `{"utilisateur_id", "etat": "a_verifier", "canal": "telephone"}` | `identifiant_deja_pris` 409, `mot_de_passe_faible` 422, `validation` |
-| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` | `{"jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` | `identifiants_invalides` 401, `compte_a_verifier` 403, `compte_desactive` 403 |
-| POST /auth/verification/envoyer | public | `{"identifiant", "canal", "usage"}` | `{"mode_livraison": "demo", "code_demo": "123456", "expire_le"}` ; en mode `reel`, pas de `code_demo` | `introuvable` 404, `trop_de_requetes` 429, `envoi_impossible` 502 |
-| POST /auth/verification/confirmer | public | `{"identifiant", "canal", "usage", "code"}` | `{"verifie": true, "jeton", "jeton_rafraichissement"}` | `code_invalide` 400, `code_expire` 410, `trop_essais` 429 |
-| POST /auth/mot-de-passe/oublie | public | `{"identifiant", "canal"}` | `{"mode_livraison", "code_demo"}` | `trop_de_requetes` 429 |
-| POST /auth/mot-de-passe/reinitialiser | public | `{"identifiant", "code", "nouveau_mot_de_passe"}` | `{"reinitialise": true}` | `code_invalide` 400, `code_expire` 410, `mot_de_passe_faible` 422 |
+| POST /auth/inscription | public | `{"type": "telephone"\|"email", "identifiant", "mot_de_passe", "prenom", "nom", "role": "convive"\|"parent", "statut_convive", "conditions_acceptees": true, "appareil": {"nom", "plateforme"}}` ; `statut_convive` (eleve, etudiant, employe, autre) obligatoire pour un convive, absent pour un parent ; `appareil` facultatif | 201 `{"utilisateur_id", "etat": "a_verifier", "canal", "jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` : le compte naît à vérifier et sa session s'ouvre | `compte_existe` 409, `identifiant_invalide` 422, `mot_de_passe_faible` 422, `conditions_requises` 422, `validation` 422 |
+| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` ; identifiant numéro ou e-mail, `appareil` facultatif | `{"jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` ; `utilisateur.verifie` dit si le compte est vérifié | `identifiants_invalides` 401 (message unique, compte existant ou non), `trop_de_tentatives` 429 (blocage par compte et par IP), `compte_desactive` 403 |
+| POST /auth/verification/envoyer | public | `{"identifiant", "canal", "usage": "verification_compte"}` | `{"mode_livraison": "demo", "code_demo": "123456", "expire_le"}` ; `code_demo` seulement en démo et pour un compte à vérifier : réponse identique sinon, sans `code_demo` | `trop_de_requetes` 429 (un code par minute, 5 par jour, limite par IP), `trop_essais` 429, `envoi_impossible` 502 (livraison `reel` avant E1) |
+| POST /auth/verification/confirmer | public | `{"identifiant", "canal", "usage": "verification_compte", "code"}` ; code lu sans casse ni espaces | `{"verifie": true}` ; la session ouverte à l'inscription reste valable | `code_invalide` 400, `code_expire` 410, `trop_essais` 429 (au sixième code faux, 15 min) |
+| POST /auth/mot-de-passe/oublie | public | `{"identifiant", "canal"}` | `{"mode_livraison", "expire_le", "code_demo"}` ; même réponse que le compte existe ou non, jamais de `code_demo` pour un compte inconnu | `trop_de_requetes` 429, `envoi_impossible` 502 |
+| POST /auth/mot-de-passe/reinitialiser | public | `{"identifiant", "canal", "code", "nouveau_mot_de_passe"}` ; `canal` facultatif | `{"reinitialise": true}` ; toutes les sessions du compte sont fermées | `code_invalide` 400, `code_expire` 410, `trop_essais` 429, `mot_de_passe_faible` 422 |
 | POST /auth/mot-de-passe/changer | tous | `{"ancien", "nouveau"}` | `{"change": true, "pin_a_redefinir": true}` | `identifiants_invalides` 401, `mot_de_passe_faible` 422 |
 | POST /auth/code-secours | admin, parent | `{"utilisateur_id"}` | `{"code", "expire_le"}` | `acces_refuse` 403, `introuvable` 404 |
 | POST /auth/rafraichir | public | `{"jeton_rafraichissement"}` | `{"jeton", "jeton_rafraichissement", "expire_dans"}` | `jeton_invalide` 401, `session_revoquee` 401 |
-| POST /auth/deconnexion | tous | `{"jeton_rafraichissement"}` | `{"deconnecte": true}` | `non_authentifie` 401 |
+| POST /auth/deconnexion | tous, même non vérifié | aucun | `{"deconnecte": true}` ; ferme la session du jeton présenté | `non_authentifie` 401 |
 | POST /auth/google | public | `{"jeton_google", "appareil"}` | `{"jeton", "jeton_rafraichissement", "profil_complet": false}` | `jeton_invalide` 401 |
 | POST /auth/apple | public | `{"jeton_apple", "appareil"}` | idem Google | `jeton_invalide` 401 |
 | POST /auth/profil/finaliser | tous | `{"nom_complet", "identifiant", "role", "statut_convive", "mot_de_passe"}` | `{"profil_complet": true, "verification_requise": true}` | `identifiant_deja_pris` 409, `validation` |
@@ -247,7 +250,8 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
 | GET /admin/utilisateurs | `?role=&recherche=` pagination | liste | `validation` |
-| POST /admin/utilisateurs | `{"nom_complet", "identifiant", "role", "statut_convive"}` | compte créé, code de vérification selon le mode | `identifiant_deja_pris` 409 |
+| POST /admin/utilisateurs | `{"type", "identifiant", "mot_de_passe", "prenom", "nom", "role", "statut_convive"}` + `X-Mot-De-Passe-Actions` ; tous rôles, compte créé déjà vérifié | 201 compte créé | `compte_existe` 409, `mot_de_passe_actions_invalide` 403, `validation` 422 |
+| DELETE /admin/utilisateurs/{id} | `X-Mot-De-Passe-Actions` | `{"supprime": true}` ; suppression logique : identifiants libérés, sessions fermées, ligne au journal | `introuvable` 404, `suppression_interdite` 409 (compte admin ou soi-même) |
 | PATCH /admin/utilisateurs/{id} | champs modifiés | compte mis à jour | `introuvable` 404 |
 | POST /admin/utilisateurs/{id}/desactiver | `{"motif"}` | compte désactivé, sessions révoquées | `conflit` 409 |
 | POST /admin/utilisateurs/{id}/ajustement | `{"sens", "montant_xof", "motif"}` + `Cle-Geste` | mouvement créé | `montant_invalide` 422, `motif_requis` 422 |

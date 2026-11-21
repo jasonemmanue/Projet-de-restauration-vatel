@@ -53,7 +53,7 @@ class Tarif(AvecModification, Base):
 
     __tablename__ = "tarifs"
     __table_args__ = (
-        choix("profil", "eleve", "etudiant", "employe", "visiteur"),
+        choix("profil", "eleve", "etudiant", "employe", "autre", "visiteur"),
         CheckConstraint("prix_xof >= 0", name="prix_positif"),
         CheckConstraint("actif_au is null or actif_au > actif_du", name="periode_valide"),
         Index("uq_tarifs_plat_profil_debut", "plat_id", "profil", "actif_du", unique=True),

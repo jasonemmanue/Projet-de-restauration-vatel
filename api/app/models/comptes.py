@@ -13,6 +13,8 @@ from app.db.base import AvecCreation, AvecModification, Base, choix, cle_primair
 UTILISATEUR_FK = "utilisateurs.id"
 PLATEFORMES = ("android", "ios", "web")
 CANAUX = ("telephone", "email")
+ROLES = ("convive", "parent", "agent", "admin")
+STATUTS_CONVIVE = ("eleve", "etudiant", "employe", "autre")
 
 
 class Utilisateur(AvecModification, Base):
@@ -20,12 +22,12 @@ class Utilisateur(AvecModification, Base):
 
     __tablename__ = "utilisateurs"
     __table_args__ = (
-        choix("role", "convive", "parent", "agent", "admin"),
-        choix("statut_convive", "eleve", "etudiant", "employe"),
+        choix("role", *ROLES),
+        choix("statut_convive", *STATUTS_CONVIVE),
         choix("langue", "fr", "en"),
         CheckConstraint("telephone is not null or email is not null", name="identifiant_present"),
         CheckConstraint("(role = 'convive') = (statut_convive is not null)", name="statut_selon_role"),
-        CheckConstraint("telephone ~ '^\\+225[0-9]{10}$'", name="telephone_format"),
+        CheckConstraint("telephone ~ '^\\+[1-9][0-9]{7,14}$'", name="telephone_format"),
         CheckConstraint("seuil_alerte_solde >= 0", name="seuil_positif"),
         Index("uq_utilisateurs_email_minuscule", func.lower(text("email")), unique=True),
         Index("ix_utilisateurs_role", "role"),
@@ -34,6 +36,9 @@ class Utilisateur(AvecModification, Base):
 
     id: Mapped[uuid.UUID] = cle_primaire()
     nom_complet: Mapped[str] = mapped_column(Text, nullable=False)
+    prenom: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("''"))
+    nom: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("''"))
+    conditions_acceptees_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     telephone: Mapped[str | None] = mapped_column(Text, unique=True)
     email: Mapped[str | None] = mapped_column(Text)
     mot_de_passe_hache: Mapped[str] = mapped_column(Text, nullable=False)
@@ -122,6 +127,8 @@ class JournalVerification(AvecCreation, Base):
         choix("canal", *CANAUX),
         choix("etape", "demande", "envoye", "verifie", "echec"),
         choix("raison", "code_faux", "expire", "trop_essais", "envoi_impossible"),
+        choix("mode_livraison", "demo", "reel"),
+        Index("ix_journal_verifications_adresse_ip_cree_le", "adresse_ip", "cree_le"),
         Index("ix_journal_verifications_cree_le", text("cree_le desc")),
         Index("ix_journal_verifications_canal_etape", "canal", "etape"),
     )
@@ -131,6 +138,7 @@ class JournalVerification(AvecCreation, Base):
     canal: Mapped[str] = mapped_column(Text, nullable=False)
     etape: Mapped[str] = mapped_column(Text, nullable=False)
     raison: Mapped[str | None] = mapped_column(Text)
+    mode_livraison: Mapped[str | None] = mapped_column(Text)
     adresse_ip: Mapped[str | None] = mapped_column(INET)
 
 
@@ -153,3 +161,16 @@ class ConnexionQr(AvecModification, Base):
     lu_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     confirme_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     expire_le: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class Tentative(AvecModification, Base):
+    """Compteur d'échecs qui mène à un blocage temporaire : connexion par compte ou par adresse IP, codes
+    faux par identifiant. La clé dit ce qui est compté, par exemple « connexion:compte:<identifiant> »."""
+
+    __tablename__ = "tentatives"
+    __table_args__ = (CheckConstraint("echecs >= 0", name="echecs_positifs"),)
+
+    cle: Mapped[str] = mapped_column(Text, primary_key=True)
+    echecs: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    dernier_echec_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    bloque_jusqua: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

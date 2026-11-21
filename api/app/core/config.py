@@ -101,6 +101,17 @@ class Configuration(BaseSettings):
     taille_requete_max_ko: int = Field(default=1024, ge=1, validation_alias="TAILLE_REQUETE_MAX_KO")
     limite_debit_defaut: str = Field(default="120/minute", validation_alias="LIMITE_DEBIT_DEFAUT")
     proxies_de_confiance: int = Field(default=1, ge=0, le=5, validation_alias="PROXIES_DE_CONFIANCE")
+    jwt_duree_minutes: int = Field(default=15, ge=1, le=120, validation_alias="JWT_DUREE_MINUTES")
+    jwt_rafraichissement_jours: int = Field(
+        default=30, ge=1, le=90, validation_alias="JWT_RAFRAICHISSEMENT_JOURS"
+    )
+    # Coût bcrypt : 12 en production, abaissé seulement par les tests pour aller vite.
+    bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
+    # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
+    admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")
+    admin_initial_mot_de_passe: str | None = Field(
+        default=None, validation_alias="ADMIN_INITIAL_MOT_DE_PASSE"
+    )
 
     @field_validator("database_url")
     @classmethod

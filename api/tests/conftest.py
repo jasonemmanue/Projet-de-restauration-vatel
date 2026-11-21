@@ -5,6 +5,7 @@ migration au premier usage. Sans cette variable, ils sont ignorés avec la raiso
 """
 
 import os
+import secrets
 import subprocess
 import sys
 from collections.abc import AsyncIterator
@@ -35,15 +36,22 @@ def configuration_test(url_base: str = URL_SANS_BASE, **valeurs: object) -> Conf
         "CORS_ORIGINS": ORIGINE_CONNUE,
         "RAILWAY_GIT_COMMIT_SHA": "abcdef1234567890",
         "LOG_NIVEAU": "warning",
+        "BCRYPT_TOURS": 4,
     }
     reglages.update(valeurs)
     return Configuration(_env_file=None, **reglages)  # type: ignore[arg-type]
 
 
-def client_pour(application: FastAPI) -> httpx.AsyncClient:
-    """Client HTTP branché directement sur l'application, sans réseau."""
+def adresse_aleatoire() -> str:
+    """Adresse IP de test tirée au hasard : les compteurs par adresse ne se mélangent pas entre tests."""
+    return "10.{}.{}.{}".format(*(secrets.randbelow(250) + 1 for _ in range(3)))
+
+
+def client_pour(application: FastAPI, adresse: str | None = None) -> httpx.AsyncClient:
+    """Client HTTP branché directement sur l'application, sans réseau, derrière un faux relais."""
     transport = httpx.ASGITransport(app=application, raise_app_exceptions=False)
-    return httpx.AsyncClient(transport=transport, base_url="https://testserver")
+    entetes = {"X-Forwarded-For": adresse or adresse_aleatoire()}
+    return httpx.AsyncClient(transport=transport, base_url="https://testserver", headers=entetes)
 
 
 @pytest.fixture(scope="session")
@@ -73,3 +81,10 @@ async def application_base(base_migree: str) -> AsyncIterator[FastAPI]:
     application = creer_application(configuration_test(base_migree))
     yield application
     await application.state.moteur.dispose()
+
+
+@pytest.fixture
+async def client_base(application_base: FastAPI) -> AsyncIterator[httpx.AsyncClient]:
+    """Client sur l'application branchée à la base de test, avec sa propre adresse IP."""
+    async with client_pour(application_base) as c:
+        yield c

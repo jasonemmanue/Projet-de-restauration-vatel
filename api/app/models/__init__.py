@@ -7,6 +7,7 @@ from app.models.comptes import (
     ConnexionQr,
     JournalVerification,
     SessionAppareil,
+    Tentative,
     Utilisateur,
 )
 from app.models.menus import Creneau, Menu, MenuPlat, Plat, Tarif
@@ -41,5 +42,6 @@ __all__ = [
     "SessionAppareil",
     "Signalement",
     "Tarif",
+    "Tentative",
     "Utilisateur",
 ]

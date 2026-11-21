@@ -10,6 +10,7 @@ import sys
 import httpx
 
 from recette.blocs import BLOCS
+from recette.comptes import SecretManquantError
 from recette.executeur import CROIX, Recette, creer_client, preparer_console
 
 
@@ -48,6 +49,9 @@ def principal(argv: list[str] | None = None) -> int:
                 print(f"\nBloc {nom}")
                 try:
                     BLOCS[nom](recette)
+                except SecretManquantError as exc:
+                    # Le message ne nomme que les variables absentes, jamais une valeur.
+                    recette.verifier(f"secrets du bloc {nom} posés dans le terminal", False, str(exc))
                 except Exception as exc:  # un bloc qui plante compte comme un échec, les autres continuent
                     recette.verifier(f"bloc {nom} exécuté jusqu'au bout", False, type(exc).__name__)
         finally:

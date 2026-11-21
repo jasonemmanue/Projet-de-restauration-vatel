@@ -22,8 +22,10 @@ Propriétaire : A3.
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
 | id | uuid | pk |
-| nom_complet | text | not null |
-| telephone | text | unique, format +225XXXXXXXXXX, nullable si e-mail fourni |
+| nom_complet | text | not null, prénom et nom réunis |
+| prenom | text | not null default chaîne vide (migration 0002) |
+| nom | text | not null default chaîne vide (migration 0002) |
+| telephone | text | unique, format international `^\+[1-9][0-9]{7,14}$` (un numéro +225 est un mobile en 01, 05 ou 07), nullable si e-mail fourni |
 | email | text | unique en minuscules, nullable si téléphone fourni |
 | mot_de_passe_hache | text | not null |
 | role | text | not null, check in (convive, parent, agent, admin) |
@@ -39,6 +41,7 @@ Propriétaire : A3.
 | profil_complet | boolean | not null default true |
 | allergies | text[] | not null default tableau vide |
 | seuil_alerte_solde | integer | null, >= 0 |
+| conditions_acceptees_le | timestamptz | null, date d'acceptation des conditions à l'inscription (migration 0002) |
 | actif | boolean | not null default true |
 | supprime_le | timestamptz | null |
 
@@ -412,6 +415,11 @@ Clés prévues au départ : `heure_limite_defaut`, `delai_annulation_minutes`, `
 `portees_reservation` (jour, semaine, mois) et `services_obligatoires` (aucun par défaut : un convive peut
 ne prendre que la résistance).
 
+Clés ajoutées par M1 (migration 0002) : `duree_code_email_minutes` (15), `intervalle_codes_secondes` (60),
+`codes_par_jour_max` (5), `demandes_codes_ip_jour_max` (200), `blocage_codes_minutes` (15),
+`connexion_essais_max` (5 par compte), `connexion_essais_ip_max` (30 par adresse : une salle partage souvent une
+seule IP), `connexion_blocage_minutes` (15). `jour_publication_menu` vaut 4, jeudi en numérotation ISO.
+
 Rythme réel de la cantine : le menu de toute la semaine est préparé et publié le jeudi pour la semaine
 suivante. Le back office propose donc la duplication d'une semaine entière, et l'écran des menus s'ouvre
 sur la semaine à préparer, pas sur le jour courant. Ces deux réglages restent modifiables.
@@ -464,9 +472,24 @@ Propriétaire : A3. Table en ajout seul, sans identifiant en clair.
 | canal | text | not null, check in (telephone, email) |
 | etape | text | not null, check in (demande, envoye, verifie, echec) |
 | raison | text | null, check in (code_faux, expire, trop_essais, envoi_impossible) |
+| mode_livraison | text | null, check in (demo, reel) (migration 0002) |
 | adresse_ip | inet | null |
 
-Index : `(cree_le desc)` ; index sur `(canal, etape)`.
+Index : `(cree_le desc)` ; index sur `(canal, etape)` ; index sur `(adresse_ip, cree_le)` pour la limite de
+demandes par adresse.
+
+## tentatives
+Propriétaire : M1 (A3). Compteurs d'échecs menant à un blocage temporaire, rangés en base pour survivre aux
+redéploiements. Créée par la migration 0002.
+
+| Colonne | Type | Contraintes |
+| --- | --- | --- |
+| cle | text | pk, par exemple `connexion:compte:email:a@b.ci`, `connexion:ip:41.66.1.2`, `codes:email:a@b.ci` |
+| echecs | integer | not null default 0, >= 0 |
+| dernier_echec_le | timestamptz | null ; un échec plus ancien qu'une durée de blocage est oublié |
+| bloque_jusqua | timestamptz | null |
+
+Une clé de compte est posée aussi pour un identifiant sans compte : le blocage ne trahit pas l'existence.
 
 ## file_scans
 Propriétaire : A5. Scans faits hors ligne par l'agent, envoyés au retour du réseau.

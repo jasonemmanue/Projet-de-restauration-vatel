@@ -4,6 +4,8 @@ Ils sont volontairement génériques : aucun ne révèle l'existence d'un compte
 Chaque bloc ajoute ici les codes qu'il crée, toujours dans les deux langues.
 """
 
+from app.core.messages_comptes import MESSAGES_COMPTES
+
 LANGUES = ("fr", "en")
 LANGUE_DEFAUT = "fr"
 
@@ -53,6 +55,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "en": "An unexpected error occurred.",
     },
 }
+
+MESSAGES.update(MESSAGES_COMPTES)
 
 # Code générique associé à un statut HTTP quand aucune erreur métier n'est levée.
 CODE_PAR_STATUT: dict[int, str] = {

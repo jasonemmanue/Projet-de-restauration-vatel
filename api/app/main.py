@@ -5,6 +5,7 @@ limite de débit, puis l'application. La garde est tout à l'extérieur pour que
 erreur inattendue porte les en-têtes de sécurité.
 """
 
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -18,7 +19,8 @@ from app.core.journalisation import configurer_journaux
 from app.core.limites import creer_limiteur
 from app.core.securite import CorsStrict, GardeEtEntetes, LimiteTaille
 from app.db.moteur import creer_fabrique, creer_moteur
-from app.routes import sante
+from app.routes import admin_utilisateurs, auth, moi, sante
+from app.services.amorcage import creer_admin_initial
 
 
 def creer_application(config: Configuration | None = None) -> FastAPI:
@@ -28,7 +30,12 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
     moteur = creer_moteur(config)
 
     @asynccontextmanager
-    async def cycle_de_vie(_: FastAPI) -> AsyncIterator[None]:
+    async def cycle_de_vie(app: FastAPI) -> AsyncIterator[None]:
+        try:
+            await creer_admin_initial(app.state.fabrique_sessions, config)
+        except Exception:
+            # Une base indisponible au démarrage ne doit pas empêcher /health de le signaler.
+            logging.getLogger("vatel.amorcage").exception("amorçage impossible")
         yield
         await moteur.dispose()
 
@@ -46,7 +53,8 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
     application.state.limiter = creer_limiteur(config.limite_debit_defaut)
 
     installer_gestionnaires(application)
-    application.include_router(sante.routeur)
+    for module in (sante, auth, moi, admin_utilisateurs):
+        application.include_router(module.routeur)
 
     # add_middleware empile vers l'extérieur : la dernière ajoutée est la plus externe.
     application.add_middleware(SlowAPIASGIMiddleware)
