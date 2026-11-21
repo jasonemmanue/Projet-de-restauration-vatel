@@ -297,8 +297,10 @@ Propriétaire : A6. Recharges Mobile Money par GeniusPay.
 | etat | text | not null, check in (initie, en_attente, reussi, echoue, expire) |
 | reference_geniuspay | text | unique, null tant que non initié chez le prestataire |
 | cle_geste | text | not null, unique |
-| frais_xof | integer | not null default 0, >= 0, prélevé par GeniusPay sur ce paiement |
-| net_xof | integer | not null default 0, >= 0, ce qui reste à la cantine, montant moins frais |
+| frais_passerelle_xof | integer | not null default 0, >= 0, pris par l'opérateur Mobile Money |
+| frais_geniuspay_xof | integer | not null default 0, >= 0, part fixe plus pourcentage |
+| frais_retrait_xof | integer | not null default 0, >= 0, pris au moment du retrait |
+| net_xof | integer | not null default 0, >= 0, montant moins les trois frais |
 | charge_utile_webhook | jsonb | null |
 | motif_echec | text | null |
 | confirme_le | timestamptz | null |
@@ -308,12 +310,25 @@ Index : unique `cle_geste` ; unique `reference_geniuspay` ; index sur `(benefici
 Le crédit du porte-monnaie se fait dans la transaction qui passe le paiement à `reussi`, jamais avant. La
 notification part après la validation de cette transaction.
 
-Frais GeniusPay : le convive est crédité de `montant_xof` entier, c'est ce qu'il a payé. La cantine, elle,
-ne touche que `net_xof`, parce que GeniusPay retient `frais_xof` sur chaque encaissement, et un pourcentage
-de plus au moment du retrait. Les trois taux vivent dans `parametres` (`frais_geniuspay_pourcent`,
-`frais_geniuspay_fixe_xof`, `frais_retrait_pourcent`), parce qu'ils changent selon le contrat marchand. Le
-tableau de bord montre toujours les trois chiffres côte à côte, recettes brutes, frais supportés et net
-attendu après retrait, pour que l'exploitant fixe ses prix en connaissance de cause.
+Frais : le convive est crédité de `montant_xof` entier, c'est ce qu'il a payé. La cantine ne touche que
+`net_xof`, parce que trois prélèvements passent avant elle. Les taux réels du contrat, au 21/11 :
+
+| Prélèvement | Taux |
+| --- | --- |
+| passerelle Wave | 1,5 % |
+| passerelle Orange Money | 3,5 % |
+| passerelle MTN Money | 3,5 % |
+| passerelle Stripe | 5 % |
+| passerelle lien tiers | 5 % |
+| GeniusPay | 100 XOF plus 1 % |
+| retrait | 1 % |
+
+Exemple vérifié : 500 XOF payés par Wave donnent 8 XOF de passerelle, 105 XOF de GeniusPay, 4 XOF de
+retrait, et 384 XOF pour la cantine. Les taux vivent dans `parametres`
+(`frais_passerelle_pourcent` par opérateur, `frais_geniuspay_fixe_xof`, `frais_geniuspay_pourcent`,
+`frais_retrait_pourcent`) : ils changent avec le contrat marchand, jamais dans le code. Le tableau de bord
+montre les trois chiffres côte à côte, recettes brutes, frais supportés et net attendu, et chaque frais entre
+au budget comme une sortie.
 
 ## liens_paiement
 Propriétaire : A6. Un parent ou un convive demande à un proche de payer.
@@ -442,7 +457,8 @@ Clés prévues au départ : `gel_jours_avant_service` (1, la veille), `heure_gel
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
 `seuil_alerte_solde_defaut`, `langues_actives`,
 `jour_publication_menu` (jeudi par défaut), `semaines_preparees_a_l_avance` (1 par défaut),
-`jours_inactivite_avant_verification` (5 par défaut), `portees_reservation` (jour, semaine, mois) et
+`frais_passerelle_pourcent` (objet par opérateur : wave 1.5, orange_money 3.5, mtn_money 3.5, stripe 5,
+lien_tiers 5), `jours_inactivite_avant_verification` (5 par défaut), `portees_reservation` (jour, semaine, mois) et
 `services_obligatoires` (aucun par défaut : un convive peut
 ne prendre que la résistance).
 
@@ -457,6 +473,34 @@ code (usage `reconnexion`).
 Rythme réel de la cantine : le menu de toute la semaine est préparé et publié le jeudi pour la semaine
 suivante. Le back office propose donc la duplication d'une semaine entière, et l'écran des menus s'ouvre
 sur la semaine à préparer, pas sur le jour courant. Ces deux réglages restent modifiables.
+
+## budget
+Propriétaire : A8. Le cahier de caisse de la cantine : ce qui entre, ce qui sort, et quand.
+
+| Colonne | Type | Contraintes |
+| --- | --- | --- |
+| id | uuid | pk |
+| date_operation | date | not null |
+| sens | text | not null, check in (entree, sortie) |
+| montant_xof | integer | not null, > 0 |
+| categorie | text | not null, check in (paiement, frais_passerelle, frais_geniuspay, frais_retrait, achat_cuisine, salaire, charge, equipement, autre) |
+| libelle | text | not null |
+| origine | text | not null, check in (automatique, manuelle) |
+| reference_type | text | null, check in (paiement, mouvement_stock) |
+| reference_id | uuid | null |
+| cree_par | uuid | fk utilisateurs, null pour une ligne automatique |
+| supprime_le | timestamptz | null |
+
+Index : `(date_operation desc)` ; index sur `(sens, date_operation)` ; index sur `categorie` ; unique
+partiel `(reference_type, reference_id)` pour qu une même source n entre jamais deux fois.
+
+Ce qui s inscrit tout seul : chaque paiement passé à `reussi` écrit une entrée de son `net_xof` et une sortie
+des `frais_xof` de GeniusPay ; chaque sortie de stock écrit une sortie au prix d achat quand il est connu. Le
+reste est saisi à la main par l admin : salaires, charges, équipement, achats réglés en espèces.
+
+Le calendrier budgétaire est une lecture de cette table, jour par jour sur un mois : l admin voit d un coup
+d oeil les jours qui rentrent et ceux qui coûtent, et peut ajouter une ligne sur n importe quel jour, passé
+ou à venir. Une ligne à venir sert de prévision et se distingue d une ligne passée par sa date, rien d autre.
 
 ## journal_admin
 Propriétaire : A1. Table en ajout seul, toute action sensible du back office.

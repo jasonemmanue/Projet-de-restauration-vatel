@@ -261,7 +261,11 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 | POST /admin/menus/{id}/publier | aucun | `{"etat": "publie"}`, notification aux convives après validation | `menu_vide` 409 |
 | POST /admin/menus/{id}/annuler | `{"motif"}` | menu annulé, réservations remboursées | `deja_servi` 409 |
 | POST /admin/menus/{id}/dupliquer | `{"vers_date"}` | nouveau brouillon | `menu_existant` 409 |
-| GET /admin/frais | `?du=&au=` | recettes brutes, frais GeniusPay retenus, frais de retrait estimés et net attendu, par jour et sur la période | `validation` |
+| GET /admin/budget | `?du=&au=` | solde global, total entrées, total sorties, solde du mois, évolution mois par mois, répartition des sorties par catégorie, et les lignes de la période | `validation` |
+| GET /admin/budget/calendrier | `?mois=2026-11` | une case par jour du mois : entrées, sorties, solde du jour, nombre de lignes | `validation` |
+| POST /admin/budget | `{"date_operation", "sens", "montant_xof", "categorie", "libelle"}` | la ligne créée, origine `manuelle` | `validation`, `montant_invalide` 422 |
+| PATCH DELETE /admin/budget/{id} | champs modifiés | ligne mise à jour ou supprimée ; une ligne `automatique` refuse la modification | `ligne_automatique` 409, `introuvable` 404 |
+| GET /admin/frais | `?du=&au=` | recettes brutes et net, le détail par opérateur (paiements, reçu, frais, net) et le détail par paiement (date, facture, opérateur, montant, passerelle, GeniusPay, retrait, net) | `validation` |
 
 ### Utilisateurs
 
