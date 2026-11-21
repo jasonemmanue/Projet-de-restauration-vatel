@@ -1,0 +1,409 @@
+// Role du fichier : toutes les routes de l application, une pile par onglet et une porte par role.
+// Un role n atteint que ses ecrans : la redirection est faite ici, et le serveur refait le controle.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../features/admin/ecran_cuisine.dart';
+import '../../features/admin/ecran_menus_admin.dart';
+import '../../features/admin/ecran_reglages_admin.dart';
+import '../../features/admin/ecran_tableau_bord.dart';
+import '../../features/auth/ecran_bienvenue.dart';
+import '../../features/menus/ecran_accueil.dart';
+import '../../features/menus/ecran_menu.dart';
+import '../../features/notifications/ecran_notifications.dart';
+import '../../features/parent/ecran_famille.dart';
+import '../../features/parent/ecran_messages.dart';
+import '../../features/parent/ecran_recharge.dart';
+import '../../features/porte_monnaie/ecran_porte_monnaie.dart';
+import '../../features/profil/ecran_compte.dart';
+import '../../features/reservations/ecran_ticket.dart';
+import '../../features/service/ecran_collecte.dart';
+import '../../features/service/ecran_manifeste.dart';
+import '../../features/service/ecran_reglages_poste.dart';
+import '../../l10n/traductions.dart';
+import '../../shared/widgets/texte_adapte.dart';
+import '../responsive/type_ecran.dart';
+import '../securite/session.dart';
+import 'coquille.dart';
+
+/// Les chemins connus de l application.
+class Chemins {
+  const Chemins._();
+
+  /// Ecran montre tant que personne n est connecte.
+  static const String bienvenue = '/bienvenue';
+
+  /// Racine de l espace convive.
+  static const String convive = '/convive';
+
+  /// Racine de l espace parent.
+  static const String parent = '/parent';
+
+  /// Racine de l espace agent.
+  static const String agent = '/agent';
+
+  /// Racine du back office.
+  static const String admin = '/admin';
+
+  /// Rend la racine de l espace d un role.
+  static String racine(Role role) => switch (role) {
+        Role.convive => convive,
+        Role.parent => parent,
+        Role.agent => agent,
+        Role.admin => admin,
+      };
+
+  /// Rend le premier ecran de l espace d un role.
+  static String accueil(Role role) => switch (role) {
+        Role.convive => '$convive/accueil',
+        Role.parent => '$parent/famille',
+        Role.agent => '$agent/collecte',
+        Role.admin => '$admin/tableau-bord',
+      };
+}
+
+/// Le routeur de l application, reconstruit a chaque changement de session.
+final Provider<GoRouter> routeurProvider = Provider<GoRouter>((Ref ref) {
+  final ValueNotifier<int> changements = ValueNotifier<int>(0);
+  ref.listen<AsyncValue<Session?>>(
+    sessionProvider,
+    (AsyncValue<Session?>? avant, AsyncValue<Session?> apres) => changements.value++,
+  );
+  ref.onDispose(changements.dispose);
+
+  return GoRouter(
+    initialLocation: Chemins.bienvenue,
+    refreshListenable: changements,
+    redirect: (BuildContext contexte, GoRouterState etat) {
+      final AsyncValue<Session?> session = ref.read(sessionProvider);
+      if (session.isLoading) {
+        // Tant que la session se relit, on ne deplace personne.
+        return null;
+      }
+      final Session? ouverte = session.value;
+      final String chemin = etat.uri.path;
+      if (ouverte == null) {
+        return chemin == Chemins.bienvenue ? null : Chemins.bienvenue;
+      }
+      final String racine = Chemins.racine(ouverte.role);
+      if (!chemin.startsWith(racine)) {
+        return Chemins.accueil(ouverte.role);
+      }
+      return null;
+    },
+    errorBuilder: (BuildContext contexte, GoRouterState etat) => const _EcranIntrouvable(),
+    routes: <RouteBase>[
+      GoRoute(
+        path: Chemins.bienvenue,
+        builder: (BuildContext contexte, GoRouterState etat) => const EcranBienvenue(),
+      ),
+      _coquilleConvive(),
+      _coquilleParent(),
+      _coquilleAgent(),
+      _coquilleAdmin(),
+    ],
+  );
+});
+
+StatefulShellRoute _coquilleConvive() {
+  return StatefulShellRoute.indexedStack(
+    builder: (BuildContext contexte, GoRouterState etat, StatefulNavigationShell shell) {
+      final Traductions mots = Traductions.of(contexte);
+      return Coquille(
+        shell: shell,
+        titre: mots.nomApplication,
+        destinations: <DestinationOnglet>[
+          DestinationOnglet(
+            libelle: mots.ongletAccueil,
+            icone: Icons.home_outlined,
+            iconeActive: Icons.home,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletMenu,
+            icone: Icons.restaurant_outlined,
+            iconeActive: Icons.restaurant,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletTicket,
+            icone: Icons.qr_code_2_outlined,
+            iconeActive: Icons.qr_code_2,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletCompte,
+            icone: Icons.person_outline,
+            iconeActive: Icons.person,
+          ),
+        ],
+      );
+    },
+    branches: <StatefulShellBranch>[
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.convive}/accueil',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranAccueil(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.convive}/menu',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranMenu(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.convive}/ticket',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranTicket(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.convive}/compte',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranCompte(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'porte-monnaie',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranPorteMonnaie(),
+              ),
+              GoRoute(
+                path: 'notifications',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranNotifications(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+StatefulShellRoute _coquilleParent() {
+  return StatefulShellRoute.indexedStack(
+    builder: (BuildContext contexte, GoRouterState etat, StatefulNavigationShell shell) {
+      final Traductions mots = Traductions.of(contexte);
+      return Coquille(
+        shell: shell,
+        titre: mots.ongletFamille,
+        destinations: <DestinationOnglet>[
+          DestinationOnglet(
+            libelle: mots.ongletFamille,
+            icone: Icons.family_restroom_outlined,
+            iconeActive: Icons.family_restroom,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletRecharge,
+            icone: Icons.account_balance_wallet_outlined,
+            iconeActive: Icons.account_balance_wallet,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletMessages,
+            icone: Icons.forum_outlined,
+            iconeActive: Icons.forum,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletProfil,
+            icone: Icons.person_outline,
+            iconeActive: Icons.person,
+          ),
+        ],
+      );
+    },
+    branches: <StatefulShellBranch>[
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.parent}/famille',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranFamille(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.parent}/recharge',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranRecharge(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.parent}/messages',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranMessages(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.parent}/profil',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranCompte(),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+StatefulShellRoute _coquilleAgent() {
+  return StatefulShellRoute.indexedStack(
+    builder: (BuildContext contexte, GoRouterState etat, StatefulNavigationShell shell) {
+      final Traductions mots = Traductions.of(contexte);
+      return Coquille(
+        shell: shell,
+        titre: mots.ongletCollecte,
+        destinations: <DestinationOnglet>[
+          DestinationOnglet(
+            libelle: mots.ongletCollecte,
+            icone: Icons.qr_code_scanner_outlined,
+            iconeActive: Icons.qr_code_scanner,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletManifeste,
+            icone: Icons.checklist_outlined,
+            iconeActive: Icons.checklist,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletReglages,
+            icone: Icons.tune_outlined,
+            iconeActive: Icons.tune,
+          ),
+        ],
+      );
+    },
+    branches: <StatefulShellBranch>[
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.agent}/collecte',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranCollecte(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.agent}/manifeste',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranManifeste(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.agent}/reglages',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranReglagesPoste(),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+StatefulShellRoute _coquilleAdmin() {
+  return StatefulShellRoute.indexedStack(
+    builder: (BuildContext contexte, GoRouterState etat, StatefulNavigationShell shell) {
+      final Traductions mots = Traductions.of(contexte);
+      return Coquille(
+        shell: shell,
+        titre: mots.ongletTableauBord,
+        destinations: <DestinationOnglet>[
+          DestinationOnglet(
+            libelle: mots.ongletTableauBord,
+            icone: Icons.insights_outlined,
+            iconeActive: Icons.insights,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletCuisine,
+            icone: Icons.soup_kitchen_outlined,
+            iconeActive: Icons.soup_kitchen,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletMenus,
+            icone: Icons.menu_book_outlined,
+            iconeActive: Icons.menu_book,
+          ),
+          DestinationOnglet(
+            libelle: mots.ongletReglages,
+            icone: Icons.tune_outlined,
+            iconeActive: Icons.tune,
+          ),
+        ],
+      );
+    },
+    branches: <StatefulShellBranch>[
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.admin}/tableau-bord',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranTableauBord(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.admin}/cuisine',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranCuisine(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.admin}/menus',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranMenusAdmin(),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.admin}/reglages',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranReglagesAdmin(),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+class _EcranIntrouvable extends StatelessWidget {
+  const _EcranIntrouvable();
+
+  @override
+  Widget build(BuildContext contexte) {
+    final Traductions mots = Traductions.of(contexte);
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(Mesures.marge),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TexteAdapte(
+                mots.pageIntrouvable,
+                maxLignes: 2,
+                alignement: TextAlign.center,
+                style: Theme.of(contexte).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton(
+                onPressed: () => contexte.go(Chemins.bienvenue),
+                child: Text(mots.retourAccueil),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,88 @@
+# Role du fichier : dependances, ressources et outils de l application Cantine Vatel.
+name: cantine_vatel
+description: "Cantine Vatel : reservation de repas, porte-monnaie et ticket QR"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  dio: ^5.11.1
+  firebase_core: ^5.1.0
+  firebase_messaging: ^17.0.1
+  flutter_riverpod: ^3.3.2
+  flutter_secure_storage: ^11.2.0
+  go_router: ^17.5.0
+  intl: 0.20.2
+  local_auth: ^3.0.2
+  mobile_scanner: ^7.5.0
+  qr_flutter: ^4.1.0
+  shared_preferences: ^2.5.5
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.7
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/marque/
+
+  # Les polices sont embarquees : aucune n est telechargee a l ouverture.
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/polices/PlusJakartaSans-400.ttf
+          weight: 400
+        - asset: assets/polices/PlusJakartaSans-500.ttf
+          weight: 500
+        - asset: assets/polices/PlusJakartaSans-600.ttf
+          weight: 600
+        - asset: assets/polices/PlusJakartaSans-700.ttf
+          weight: 700
+        - asset: assets/polices/PlusJakartaSans-800.ttf
+          weight: 800
+
+# Icones produites depuis docs/marque/exports/ : lancer
+# dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: assets/marque/icone-1024.png
+  android: true
+  min_sdk_android: 23
+  adaptive_icon_background: "#f4f6fb"
+  adaptive_icon_foreground: assets/marque/android-premier-plan-1024.png
+  adaptive_icon_monochrome: assets/marque/android-monochrome-1024.png
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: assets/marque/web-512.png
+    background_color: "#f4f6fb"
+    theme_color: "#2f6bff"
+
+# Ecrans de lancement clair et sombre : lancer
+# dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#f4f6fb"
+  image: assets/marque/symbole-transparent-clair-1024.png
+  color_dark: "#0b1220"
+  image_dark: assets/marque/symbole-transparent-sombre-1024.png
+  android_12:
+    image: assets/marque/symbole-transparent-clair-1024.png
+    color: "#f4f6fb"
+    image_dark: assets/marque/symbole-transparent-sombre-1024.png
+    color_dark: "#0b1220"
+  web: false

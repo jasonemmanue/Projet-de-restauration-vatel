@@ -190,6 +190,20 @@ function main() {
     join(EXPORTS, 'android-monochrome-1024.png'),
   )
 
+  // Symboles sur fond transparent : ils servent d ecran de lancement natif, en clair et en sombre.
+  capturer(
+    pageImage(symboleClair, 660, 1024, 1024, null),
+    1024,
+    1024,
+    join(EXPORTS, 'symbole-transparent-clair-1024.png'),
+  )
+  capturer(
+    pageImage(join(MARQUE, 'symbole-sombre.svg'), 660, 1024, 1024, null),
+    1024,
+    1024,
+    join(EXPORTS, 'symbole-transparent-sombre-1024.png'),
+  )
+
   // Icone de notification : silhouette blanche sur fond transparent, rendue en 512 puis reduite en 96.
   const notificationGrande = join(TEMPORAIRE, 'notification-512.png')
   capturer(pageImage(silhouette, 384, 512, 512, null), 512, 512, notificationGrande)

@@ -1,0 +1,30 @@
+# Role du fichier : regles d analyse du code Dart. Strictes : un avertissement est une erreur a corriger.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Les regles de qualite de CLAUDE.md sont des erreurs, pas des suggestions.
+    always_declare_return_types: error
+    prefer_const_constructors: warning
+    unawaited_futures: error
+    avoid_print: error
+    public_member_api_docs: ignore
+  exclude:
+    - "**/*.g.dart"
+    - "**/generated_plugin_registrant.dart"
+    - "lib/l10n/traductions*.dart"
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_print
+    - prefer_final_locals
+    - prefer_single_quotes
+    - require_trailing_commas
+    - sort_child_properties_last
+    - unawaited_futures
+    - use_super_parameters
