@@ -1,0 +1,133 @@
+# Construit l'application Flutter chez GitHub, jamais sur le poste de l'exploitant.
+# Deux travaux indépendants : l'application web, publiée sur Firebase Hosting, et l'APK Android,
+# attachée au résultat de l'exécution puis à la Release quand on en pousse une.
+name: Application
+
+on:
+  push:
+    branches: [main, web, android/apk]
+    paths:
+      - "app/**"
+      - ".github/workflows/application.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: application-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  API_URL: https://projet-de-restauration-vatel-production.up.railway.app/api/v1
+  SITE_URL: https://cantine-vatel.web.app
+
+jobs:
+  web:
+    name: Application web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dépendances
+        working-directory: app
+        run: flutter pub get
+
+      - name: Contrôles
+        working-directory: app
+        run: |
+          flutter analyze
+          flutter test
+
+      - name: Valeurs Firebase
+        working-directory: app
+        env:
+          FIREBASE_DEFINES: ${{ secrets.FIREBASE_DEFINES }}
+        run: |
+          if [ -n "$FIREBASE_DEFINES" ]; then
+            printf '%s' "$FIREBASE_DEFINES" > firebase.defines
+          else
+            echo '{}' > firebase.defines
+            echo "Aucun secret FIREBASE_DEFINES : build sans notifications poussées."
+          fi
+
+      - name: Construire l'application web
+        working-directory: app
+        run: >
+          flutter build web --release
+          --dart-define=API_URL=$API_URL
+          --dart-define=SITE_URL=$SITE_URL
+          --dart-define-from-file=firebase.defines
+
+      - name: Garder le résultat
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-web
+          path: app/build/web
+          retention-days: 7
+
+      - name: Publier sur Firebase Hosting
+        if: ${{ github.ref == 'refs/heads/main' && secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: vatel-project
+          channelId: live
+
+  apk:
+    name: APK Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dépendances
+        working-directory: app
+        run: flutter pub get
+
+      - name: Valeurs Firebase
+        working-directory: app
+        env:
+          FIREBASE_DEFINES: ${{ secrets.FIREBASE_DEFINES }}
+        run: |
+          if [ -n "$FIREBASE_DEFINES" ]; then
+            printf '%s' "$FIREBASE_DEFINES" > firebase.defines
+          else
+            echo '{}' > firebase.defines
+          fi
+
+      - name: Fichier google-services.json
+        working-directory: app
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES" ]; then
+            printf '%s' "$GOOGLE_SERVICES" > android/app/google-services.json
+          fi
+
+      - name: Construire l'APK
+        working-directory: app
+        run: >
+          flutter build apk --release
+          --dart-define=API_URL=$API_URL
+          --dart-define=SITE_URL=$SITE_URL
+          --dart-define-from-file=firebase.defines
+
+      - name: Garder l'APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cantine-vatel-apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
