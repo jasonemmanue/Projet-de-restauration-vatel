@@ -9,6 +9,7 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+import httpx
 from fastapi import FastAPI
 from slowapi.middleware import SlowAPIASGIMiddleware
 
@@ -29,6 +30,7 @@ from app.routes import (
     medias,
     menus,
     moi,
+    paiements,
     parent,
     reservations,
     sante,
@@ -55,6 +57,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
             # Une base indisponible au démarrage ne doit pas empêcher /health de le signaler.
             logging.getLogger("vatel.amorcage").exception("amorçage impossible")
         yield
+        await app.state.client_http.aclose()
         await moteur.dispose()
 
     application = FastAPI(
@@ -69,6 +72,8 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
     application.state.moteur = moteur
     application.state.fabrique_sessions = creer_fabrique(moteur)
     application.state.limiter = creer_limiteur(config.limite_debit_defaut)
+    # Un seul client HTTP pour les prestataires (GeniusPay) : connexions réutilisées, délais bornés.
+    application.state.client_http = httpx.AsyncClient(timeout=httpx.Timeout(20.0))
 
     installer_gestionnaires(application)
     for module in (
@@ -79,6 +84,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         menus,
         reservations,
         parent,
+        paiements,
         admin_utilisateurs,
         admin_catalogue,
         admin_menus,

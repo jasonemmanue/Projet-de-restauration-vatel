@@ -53,4 +53,28 @@ MESSAGES_COMMANDES: dict[str, dict[str, str]] = {
         "fr": "Ce compte n'a pas de code de liaison.",
         "en": "This account has no link code.",
     },
+    "beneficiaire_interdit": {
+        "fr": "Vous ne pouvez pas recharger ce compte.",
+        "en": "You cannot top up this account.",
+    },
+    "montant_invalide": {
+        "fr": "Ce montant n'est pas accepté.",
+        "en": "This amount is not accepted.",
+    },
+    "mode_paiement_invalide": {
+        "fr": "Le paiement n'est pas ouvert dans ce mode.",
+        "en": "Payment is not open in this mode.",
+    },
+    "cles_absentes": {
+        "fr": "Le paiement n'est pas encore configuré.",
+        "en": "Payment is not configured yet.",
+    },
+    "paiement_indisponible": {
+        "fr": "Le service de paiement ne répond pas. Réessayez dans un instant.",
+        "en": "The payment service is not responding. Please try again shortly.",
+    },
+    "signature_invalide": {
+        "fr": "Signature refusée.",
+        "en": "Signature rejected.",
+    },
 }

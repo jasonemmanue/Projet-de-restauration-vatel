@@ -21,6 +21,7 @@ from app.main import creer_application
 
 DOSSIER_API = Path(__file__).resolve().parent.parent
 # Médias des tests dans un dossier temporaire du système, jamais dans le dépôt.
+SECRET_WEBHOOK_TEST = "whsec_test_" + "x" * 24
 DOSSIER_MEDIAS_TEST = str(Path(tempfile.gettempdir()) / "vatel-medias-tests")
 ORIGINE_CONNUE = "https://app.vatel.test"
 URL_BASE_TEST = os.environ.get("TEST_DATABASE_URL", "")
@@ -41,6 +42,9 @@ def configuration_test(url_base: str = URL_SANS_BASE, **valeurs: object) -> Conf
         "LOG_NIVEAU": "warning",
         "BCRYPT_TOURS": 4,
         "STOCKAGE_DOSSIER": DOSSIER_MEDIAS_TEST,
+        "GENIUSPAY_CLE_PUBLIQUE_TEST": "pk_sandbox_test",
+        "GENIUSPAY_CLE_SECRETE_TEST": "sk_sandbox_test",
+        "GENIUSPAY_SECRET_WEBHOOK_TEST": SECRET_WEBHOOK_TEST,
     }
     reglages.update(valeurs)
     return Configuration(_env_file=None, **reglages)  # type: ignore[arg-type]

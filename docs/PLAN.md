@@ -86,7 +86,7 @@ fichier.
 | A3b | à faire | | api/ | | Connexion par QR code, Google et Apple |
 | A3c | à faire | | api/ | | Profil complet, avatars, export des données, signalements |
 | A5 | à faire | | api/ | | Ticket QR signé, scan de l'agent, file hors ligne, liaison parent |
-| A6 | à faire | | api/ | GeniusPay en test puis réel : `frais_xof` et `net_xof` lus dans la réponse et le webhook (`fees`, `net_amount`), jamais recalculés quand GeniusPay les donne ; les taux de `parametres` ne servent qu'à l'estimation affichée avant paiement ; retraits suivis par les webhooks `cashout.*` pour le net après retrait |
+| A6 | en cours | api / compte courant | api/app (geniuspay, paiements, routes/paiements), alembic 0007, tests/test_paiements.py | API-12 écrit : recharge GeniusPay en mode test, webhooks signés /api/v1/paiements/webhook/test et /reel (HMAC horodatage.corps, 5 min, environnement sandbox/live), crédit unique, frais et net gardés ; ruff propre, tests test_paiements.py lancés mais résultat non relu | Relancer `pytest tests/test_paiements.py`, corriger, pousser ; l'exploitant pose dans Railway GENIUSPAY_CLE_PUBLIQUE_TEST, GENIUSPAY_CLE_SECRETE_TEST, GENIUSPAY_SECRET_WEBHOOK_TEST ; puis API-13 (mode réel protégé, liens de paiement) |
 | A7 | à faire | | api/ | | Appareils, notifications ciblées et centre de notifications |
 | A8 | à faire | | api/ | | Stocks, rapports CSV et PDF, utilisateurs, journal des actions |
 | A9 | à faire | | api/ | | Appréciations avec modération et réponse, suggestions |

@@ -109,6 +109,7 @@ class Paiement(AvecModification, Base):
     # Charge utile brute du prestataire : lourde et rarement lue, chargée seulement à la demande.
     charge_utile_webhook: Mapped[dict[str, Any] | None] = mapped_column(JSONB, deferred=True)
     motif_echec: Mapped[str | None] = mapped_column(Text)
+    url_paiement: Mapped[str | None] = mapped_column(Text)
     confirme_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 

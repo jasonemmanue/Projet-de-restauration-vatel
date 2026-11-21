@@ -106,6 +106,33 @@ class Configuration(BaseSettings):
     # Dossier des médias : le volume Railway en production, un dossier local sinon.
     stockage_dossier: str = Field(default="medias", validation_alias="STOCKAGE_DOSSIER")
     stockage_taille_max_mo: int = Field(default=1, ge=1, le=20, validation_alias="STOCKAGE_TAILLE_MAX_MO")
+    # GeniusPay : clés et secrets posés par l'exploitant dans Railway, jamais dans le dépôt.
+    api_url_publique: str = Field(
+        default="http://localhost:8000",
+        validation_alias=AliasChoices("API_URL_PUBLIQUE", "RAILWAY_PUBLIC_DOMAIN"),
+    )
+    geniuspay_url_base: str = Field(
+        default="https://geniuspay.ci/api/v1/merchant", validation_alias="GENIUSPAY_URL_BASE"
+    )
+    geniuspay_cle_publique_test: str | None = Field(
+        default=None, validation_alias="GENIUSPAY_CLE_PUBLIQUE_TEST"
+    )
+    geniuspay_cle_secrete_test: str | None = Field(
+        default=None, validation_alias=AliasChoices("GENIUSPAY_CLE_SECRETE_TEST", "GENIUSPAY_CLE_TEST")
+    )
+    geniuspay_cle_publique_reelle: str | None = Field(
+        default=None, validation_alias="GENIUSPAY_CLE_PUBLIQUE_REELLE"
+    )
+    geniuspay_cle_secrete_reelle: str | None = Field(
+        default=None, validation_alias=AliasChoices("GENIUSPAY_CLE_SECRETE_REELLE", "GENIUSPAY_CLE_REELLE")
+    )
+    geniuspay_secret_webhook_test: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("GENIUSPAY_SECRET_WEBHOOK_TEST", "GENIUSPAY_SECRET_WEBHOOK"),
+    )
+    geniuspay_secret_webhook_reel: str | None = Field(
+        default=None, validation_alias="GENIUSPAY_SECRET_WEBHOOK_REEL"
+    )
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
     admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")
@@ -131,6 +158,13 @@ class Configuration(BaseSettings):
     @classmethod
     def _valider_origines(cls, valeur: str | list[str]) -> list[str]:
         return lire_origines(valeur)
+
+    @field_validator("api_url_publique")
+    @classmethod
+    def _completer_url(cls, valeur: str) -> str:
+        # Railway donne son domaine public sans schéma : l'API n'est servie qu'en https derrière lui.
+        propre = valeur.strip().rstrip("/")
+        return propre if propre.startswith(("http://", "https://")) else "https://" + propre
 
     @field_validator("log_niveau")
     @classmethod
