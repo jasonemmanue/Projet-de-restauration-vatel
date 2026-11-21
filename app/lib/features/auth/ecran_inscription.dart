@@ -2,10 +2,13 @@
 // Un seul champ d identifiant, sous une bascule. Le serveur reste juge de tout : cet écran
 // ne fait que guider la saisie et montrer ses messages tels quels.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/responsive/type_ecran.dart';
 import '../../core/reseau/erreur_api.dart';
@@ -18,6 +21,12 @@ import 'donnees/service_auth.dart';
 import 'ecran_code.dart';
 import 'widgets/bascule_identifiant.dart';
 import 'widgets/champ_mot_de_passe.dart';
+
+/// Adresse du site public, où vivent les pages légales.
+const String adresseSite = String.fromEnvironment(
+  'SITE_URL',
+  defaultValue: 'https://cantine-vatel.web.app',
+);
 
 /// L écran d inscription.
 class EcranInscription extends ConsumerStatefulWidget {
@@ -33,6 +42,7 @@ class _EtatEcranInscription extends ConsumerState<EcranInscription> {
   final TextEditingController _prenom = TextEditingController();
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _motDePasse = TextEditingController();
+  final TextEditingController _confirmation = TextEditingController();
 
   CanalIdentifiant _canal = CanalIdentifiant.telephone;
   String _role = 'convive';
@@ -47,6 +57,7 @@ class _EtatEcranInscription extends ConsumerState<EcranInscription> {
     _prenom.dispose();
     _nom.dispose();
     _motDePasse.dispose();
+    _confirmation.dispose();
     super.dispose();
   }
 
@@ -62,6 +73,7 @@ class _EtatEcranInscription extends ConsumerState<EcranInscription> {
         _prenom.text.trim().isNotEmpty &&
         _nom.text.trim().isNotEmpty &&
         ReglesMotDePasse(_motDePasse.text).toutesTenues &&
+        _confirmation.text == _motDePasse.text &&
         _conditions;
   }
 
@@ -208,18 +220,53 @@ class _EtatEcranInscription extends ConsumerState<EcranInscription> {
                 const SizedBox(height: 18),
                 ChampMotDePasse(
                   controleur: _motDePasse,
-                  onChange: (_) => setState(() {}),
+                  onChange: (String _) => setState(() {}),
                 ),
+                const SizedBox(height: 12),
+                ChampMotDePasse(
+                  controleur: _confirmation,
+                  libelle: mots.confirmerMotDePasse,
+                  montrerRegles: false,
+                  onChange: (String _) => setState(() {}),
+                ),
+                if (_confirmation.text.isNotEmpty && _confirmation.text != _motDePasse.text) ...<Widget>[
+                  const SizedBox(height: 6),
+                  TexteAdapte(
+                    mots.motsDePasseDifferents,
+                    maxLignes: 2,
+                    alignement: TextAlign.center,
+                    style: Theme.of(contexte).textTheme.bodyMedium?.copyWith(color: couleurs.danger),
+                  ),
+                ],
                 const SizedBox(height: 10),
                 CheckboxListTile(
                   value: _conditions,
                   onChanged: (bool? valeur) => setState(() => _conditions = valeur ?? false),
                   controlAffinity: ListTileControlAffinity.leading,
                   contentPadding: EdgeInsets.zero,
-                  title: TexteAdapte(
-                    mots.accepterConditions,
-                    maxLignes: 2,
-                    style: Theme.of(contexte).textTheme.bodyLarge,
+                  title: Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 5,
+                    children: <Widget>[
+                      Text(mots.jaccepteLes, style: Theme.of(contexte).textTheme.bodyLarge),
+                      InkWell(
+                        onTap: () => unawaited(
+                          launchUrl(
+                            Uri.parse('$adresseSite/legal/conditions.html'),
+                            mode: LaunchMode.externalApplication,
+                          ),
+                        ),
+                        child: Text(
+                          mots.conditionsUtilisation,
+                          style: Theme.of(contexte).textTheme.bodyLarge?.copyWith(
+                                color: couleurs.accent,
+                                decoration: TextDecoration.underline,
+                                decorationColor: couleurs.accent,
+                              ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (_erreur != null) ...<Widget>[
@@ -227,6 +274,7 @@ class _EtatEcranInscription extends ConsumerState<EcranInscription> {
                   TexteAdapte(
                     _erreur!,
                     maxLignes: 3,
+                    alignement: TextAlign.center,
                     style: Theme.of(contexte).textTheme.bodyMedium?.copyWith(color: couleurs.danger),
                   ),
                 ],

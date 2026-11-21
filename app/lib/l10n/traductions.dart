@@ -1189,6 +1189,120 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Actualisé à {heure}'**
   String actualiseA(String heure);
+
+  /// No description provided for @budgetTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget et finances'**
+  String get budgetTitre;
+
+  /// No description provided for @soldeGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde global'**
+  String get soldeGlobal;
+
+  /// No description provided for @totalEntrees.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total entrées'**
+  String get totalEntrees;
+
+  /// No description provided for @totalSorties.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total sorties'**
+  String get totalSorties;
+
+  /// No description provided for @soldeCeMois.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde ce mois'**
+  String get soldeCeMois;
+
+  /// No description provided for @entreesCeMois.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrées ce mois'**
+  String get entreesCeMois;
+
+  /// No description provided for @sortiesCeMois.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sorties ce mois'**
+  String get sortiesCeMois;
+
+  /// No description provided for @nouvelleEntree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle entrée'**
+  String get nouvelleEntree;
+
+  /// No description provided for @calendrierBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calendrier budgétaire'**
+  String get calendrierBudget;
+
+  /// No description provided for @evolutionMensuelle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution mensuelle'**
+  String get evolutionMensuelle;
+
+  /// No description provided for @repartitionSorties.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition des sorties'**
+  String get repartitionSorties;
+
+  /// No description provided for @ligneAutomatique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Automatique'**
+  String get ligneAutomatique;
+
+  /// No description provided for @entree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrée'**
+  String get entree;
+
+  /// No description provided for @sortie.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sortie'**
+  String get sortie;
+
+  /// No description provided for @budgetExplication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent réel : paiements confirmés et leurs frais s\'inscrivent seuls, le reste se saisit à la main.'**
+  String get budgetExplication;
+
+  /// No description provided for @jaccepteLes.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'accepte les'**
+  String get jaccepteLes;
+
+  /// No description provided for @conditionsUtilisation.
+  ///
+  /// In fr, this message translates to:
+  /// **'conditions d\'utilisation'**
+  String get conditionsUtilisation;
+
+  /// No description provided for @confirmerMotDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le mot de passe'**
+  String get confirmerMotDePasse;
+
+  /// No description provided for @motsDePasseDifferents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux mots de passe ne sont pas les mêmes'**
+  String get motsDePasseDifferents;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

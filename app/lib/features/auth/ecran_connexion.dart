@@ -153,6 +153,7 @@ class _EtatEcranConnexion extends ConsumerState<EcranConnexion> {
                   TexteAdapte(
                     _erreur!,
                     maxLignes: 3,
+                    alignement: TextAlign.center,
                     style: Theme.of(contexte).textTheme.bodyMedium?.copyWith(color: couleurs.danger),
                   ),
                 ],

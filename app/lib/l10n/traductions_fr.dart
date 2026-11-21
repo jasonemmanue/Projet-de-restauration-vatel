@@ -583,4 +583,63 @@ class TraductionsFr extends Traductions {
   String actualiseA(String heure) {
     return 'Actualisé à $heure';
   }
+
+  @override
+  String get budgetTitre => 'Budget et finances';
+
+  @override
+  String get soldeGlobal => 'Solde global';
+
+  @override
+  String get totalEntrees => 'Total entrées';
+
+  @override
+  String get totalSorties => 'Total sorties';
+
+  @override
+  String get soldeCeMois => 'Solde ce mois';
+
+  @override
+  String get entreesCeMois => 'Entrées ce mois';
+
+  @override
+  String get sortiesCeMois => 'Sorties ce mois';
+
+  @override
+  String get nouvelleEntree => 'Nouvelle entrée';
+
+  @override
+  String get calendrierBudget => 'Calendrier budgétaire';
+
+  @override
+  String get evolutionMensuelle => 'Évolution mensuelle';
+
+  @override
+  String get repartitionSorties => 'Répartition des sorties';
+
+  @override
+  String get ligneAutomatique => 'Automatique';
+
+  @override
+  String get entree => 'Entrée';
+
+  @override
+  String get sortie => 'Sortie';
+
+  @override
+  String get budgetExplication =>
+      'Argent réel : paiements confirmés et leurs frais s\'inscrivent seuls, le reste se saisit à la main.';
+
+  @override
+  String get jaccepteLes => 'J\'accepte les';
+
+  @override
+  String get conditionsUtilisation => 'conditions d\'utilisation';
+
+  @override
+  String get confirmerMotDePasse => 'Confirmer le mot de passe';
+
+  @override
+  String get motsDePasseDifferents =>
+      'Les deux mots de passe ne sont pas les mêmes';
 }

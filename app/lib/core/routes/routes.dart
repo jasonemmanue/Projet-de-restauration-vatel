@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/admin/ecran_budget.dart';
 import '../../features/admin/ecran_cuisine.dart';
 import '../../features/admin/ecran_menus_admin.dart';
 import '../../features/admin/ecran_plats_admin.dart';
@@ -441,6 +442,12 @@ StatefulShellRoute _coquilleAdmin() {
           GoRoute(
             path: '${Chemins.admin}/tableau-bord',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranTableauBord(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'budget',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranBudget(),
+              ),
+            ],
           ),
         ],
       ),

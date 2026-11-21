@@ -35,66 +35,84 @@ class EcranBienvenue extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: couleurs.fond,
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: Mesures.marge),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 24),
-                  LogoAnime(taille: tailleLogo, anime: !dejaConnecte),
-                  const SizedBox(height: 24),
-                  TexteAdapte(
-                    mots.nomApplication,
-                    alignement: TextAlign.center,
-                    style: Theme.of(contexte).textTheme.headlineLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  TexteAdapte(
-                    mots.signatureMarque,
-                    alignement: TextAlign.center,
-                    style: Theme.of(contexte).textTheme.labelMedium?.copyWith(
-                          color: couleurs.texteSecondaire,
-                          letterSpacing: 1.2,
-                        ),
-                  ),
-                  const SizedBox(height: 18),
-                  TexteAdapte(
-                    mots.accrocheBienvenue,
-                    maxLignes: 3,
-                    alignement: TextAlign.center,
-                    style: Theme.of(contexte).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 28),
-                  // F2b branchera ces boutons. Leur place et leur dessin sont fixes ici.
-                  if (fournisseurs.contains(Fournisseur.google))
-                    BoutonFournisseur(
-                      libelle: mots.continuerAvecGoogle,
-                      ressourceLogo: 'assets/marque/google-g-96.png',
-                      onPressed: null,
-                    ),
-                  if (fournisseurs.contains(Fournisseur.apple)) ...<Widget>[
-                    const SizedBox(height: 10),
-                    BoutonFournisseur(
-                      libelle: mots.continuerAvecApple,
-                      ressourceLogo: 'assets/marque/apple-96.png',
-                      onPressed: null,
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  BoutonFournisseur.icone(
-                    libelle: mots.connexionCodeQr,
-                    icone: Icons.qr_code_2,
-                    onPressed: null,
-                  ),
-                  const SizedBox(height: 20),
-                ],
+      body: Stack(
+        children: <Widget>[
+          // Filigrane : le symbole en très grand, à peine visible, derrière tout le reste.
+          Positioned(
+            right: -tailleLogo * 1.1,
+            bottom: -tailleLogo * 0.9,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.06,
+                child: LogoCantine(taille: tailleLogo * 4.2),
               ),
             ),
           ),
-        ),
+          SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Mesures.marge,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(height: 24),
+                      LogoAnime(taille: tailleLogo, anime: !dejaConnecte),
+                      const SizedBox(height: 24),
+                      TexteAdapte(
+                        mots.nomApplication,
+                        alignement: TextAlign.center,
+                        style: Theme.of(contexte).textTheme.headlineLarge,
+                      ),
+                      const SizedBox(height: 8),
+                      TexteAdapte(
+                        mots.signatureMarque,
+                        alignement: TextAlign.center,
+                        style: Theme.of(contexte).textTheme.labelMedium
+                            ?.copyWith(
+                              color: couleurs.texteSecondaire,
+                              letterSpacing: 1.2,
+                            ),
+                      ),
+                      const SizedBox(height: 18),
+                      TexteAdapte(
+                        mots.accrocheBienvenue,
+                        maxLignes: 3,
+                        alignement: TextAlign.center,
+                        style: Theme.of(contexte).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 28),
+                      // F2b branchera ces boutons. Leur place et leur dessin sont fixes ici.
+                      if (fournisseurs.contains(Fournisseur.google))
+                        BoutonFournisseur(
+                          libelle: mots.continuerAvecGoogle,
+                          ressourceLogo: 'assets/marque/google-g-96.png',
+                          onPressed: null,
+                        ),
+                      if (fournisseurs.contains(Fournisseur.apple)) ...<Widget>[
+                        const SizedBox(height: 10),
+                        BoutonFournisseur(
+                          libelle: mots.continuerAvecApple,
+                          ressourceLogo: 'assets/marque/apple-96.png',
+                          onPressed: null,
+                        ),
+                      ],
+                      const SizedBox(height: 10),
+                      BoutonFournisseur.icone(
+                        libelle: mots.connexionCodeQr,
+                        icone: Icons.qr_code_2,
+                        onPressed: null,
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BoutonPrincipal(
         libelle: mots.continuerAvecIdentifiant,

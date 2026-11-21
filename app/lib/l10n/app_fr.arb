@@ -261,5 +261,24 @@
         "type": "String"
       }
     }
-  }
+  },
+  "budgetTitre": "Budget et finances",
+  "soldeGlobal": "Solde global",
+  "totalEntrees": "Total entrées",
+  "totalSorties": "Total sorties",
+  "soldeCeMois": "Solde ce mois",
+  "entreesCeMois": "Entrées ce mois",
+  "sortiesCeMois": "Sorties ce mois",
+  "nouvelleEntree": "Nouvelle entrée",
+  "calendrierBudget": "Calendrier budgétaire",
+  "evolutionMensuelle": "Évolution mensuelle",
+  "repartitionSorties": "Répartition des sorties",
+  "ligneAutomatique": "Automatique",
+  "entree": "Entrée",
+  "sortie": "Sortie",
+  "budgetExplication": "Argent réel : paiements confirmés et leurs frais s'inscrivent seuls, le reste se saisit à la main.",
+  "jaccepteLes": "J'accepte les",
+  "conditionsUtilisation": "conditions d'utilisation",
+  "confirmerMotDePasse": "Confirmer le mot de passe",
+  "motsDePasseDifferents": "Les deux mots de passe ne sont pas les mêmes"
 }

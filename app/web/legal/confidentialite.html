@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité · Cantine Vatel</title>
+<style>
+  :root {
+    --accent: #2f6bff; --fond: #f4f6fb; --surface: #ffffff; --filet: #e2e8f0;
+    --texte: #0f172a; --texte-secondaire: #64748b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #60a5fa; --fond: #0b1220; --surface: #111827; --filet: #334155;
+      --texte: #f8fafc; --texte-secondaire: #94a3b8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--fond); color: var(--texte);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.55;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.04em; margin: 0 0 6px; }
+  h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.04em; margin: 28px 0 8px; }
+  .mention { color: var(--texte-secondaire); font-size: 13px; }
+  .carte {
+    background: var(--surface); border: 1px solid var(--filet); border-radius: 22px;
+    padding: 20px; margin-top: 20px;
+  }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Politique de confidentialité</h1>
+  <p class="mention">Cantine Vatel, Abidjan. Dernière mise à jour : 21 novembre 2026.</p>
+
+  <div class="carte">
+    <h2>Ce que nous gardons</h2>
+    <p>Ton nom, ton prénom, ton numéro ou ton e-mail, ton profil tarifaire, tes commandes, tes paiements et
+      les mouvements de ton porte-monnaie. Tes allergies si tu les déclares. Rien d'autre.</p>
+
+    <h2>Pourquoi</h2>
+    <p>Pour te servir ton repas, tenir ton solde, prévenir la cuisine de ce qu'elle doit préparer, et te
+      prévenir quand il faut. Les comptes des mineurs sont liés à un parent, qui voit leurs repas et leur
+      solde.</p>
+
+    <h2>Ce que nous ne faisons pas</h2>
+    <p>Nous ne vendons rien à personne. Nous ne partageons tes données avec aucun tiers publicitaire. Le
+      prestataire de paiement reçoit seulement ce qu'il lui faut pour encaisser.</p>
+
+    <h2>Combien de temps</h2>
+    <p>Tant que ton compte existe, et un an après sa suppression pour les écritures comptables, comme la loi
+      le demande.</p>
+
+    <h2>Tes droits</h2>
+    <p>Tu peux demander une copie de tes données ou la suppression de ton compte depuis l'application, ou en
+      écrivant à <a href="mailto:cantine@vatel.ci">cantine@vatel.ci</a>.</p>
+
+    <h2>Sécurité</h2>
+    <p>Les mots de passe et les codes sont stockés hachés. Les échanges passent en HTTPS. Seul le serveur
+      touche la base de données.</p>
+  </div>
+</main>
+</body>
+</html>
