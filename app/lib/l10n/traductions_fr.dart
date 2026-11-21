@@ -738,4 +738,136 @@ class TraductionsFr extends Traductions {
   @override
   String get finaliserExplication =>
       'Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander.';
+
+  @override
+  String get operateur => 'Opérateur';
+
+  @override
+  String get telephonePayeur => 'Numéro qui paie';
+
+  @override
+  String get recharger => 'Recharger';
+
+  @override
+  String get paiementOuvert =>
+      'La page de paiement est ouverte. Reviens ici une fois payé.';
+
+  @override
+  String get paiementReussi => 'Paiement reçu, ton solde est à jour.';
+
+  @override
+  String get paiementEchoue => 'Le paiement n\'a pas abouti.';
+
+  @override
+  String get paiementEnAttente =>
+      'Le paiement est encore en attente chez l\'opérateur.';
+
+  @override
+  String get verifierPaiement => 'Vérifier le paiement';
+
+  @override
+  String get faireePayerParUnProche => 'Faire payer par un proche';
+
+  @override
+  String get messageLienDefaut => 'Peux-tu recharger ma cantine ?';
+
+  @override
+  String get famille => 'Ma famille';
+
+  @override
+  String get lierEnfant => 'Lier un enfant';
+
+  @override
+  String get codeLiaison => 'Code de liaison';
+
+  @override
+  String get seuilAlerte => 'Seuil d\'alerte';
+
+  @override
+  String get repasDeLenfant => 'Ses repas';
+
+  @override
+  String rechargerPour(String prenom) {
+    return 'Recharger pour $prenom';
+  }
+
+  @override
+  String get aucunEnfant => 'Aucun enfant lié pour l\'instant';
+
+  @override
+  String get exploitationTitre => 'Exploitation';
+
+  @override
+  String get rapports => 'Rapports';
+
+  @override
+  String get stocksTitre => 'Stocks';
+
+  @override
+  String get avisAModerer => 'Appréciations à examiner';
+
+  @override
+  String get publierAvis => 'Publier';
+
+  @override
+  String get refuserAvis => 'Refuser';
+
+  @override
+  String get motifRefusDefaut => 'Hors sujet ou inapproprié';
+
+  @override
+  String get paysAcceptes => 'Pays acceptés';
+
+  @override
+  String get ajouterPays => 'Ajouter un pays';
+
+  @override
+  String get paysExplication =>
+      'Un pays ajouté ici est aussitôt proposé à l\'inscription, sans nouvelle version de l\'application.';
+
+  @override
+  String get nomDuPays => 'Nom du pays';
+
+  @override
+  String get codePays => 'Code';
+
+  @override
+  String get indicatif => 'Indicatif';
+
+  @override
+  String get nombreDeChiffres => 'Chiffres après l’indicatif';
+
+  @override
+  String get comptesTitre => 'Comptes';
+
+  @override
+  String get validerALaMain => 'Valider à la main';
+
+  @override
+  String get noterLeRepas => 'Noter le repas';
+
+  @override
+  String get critereGout => 'Le goût';
+
+  @override
+  String get critereQuantite => 'La quantité';
+
+  @override
+  String get critereTemperature => 'La température';
+
+  @override
+  String get critereAttente => 'L\'attente';
+
+  @override
+  String get commentaireLibre => 'Un mot, si tu veux';
+
+  @override
+  String get envoyer => 'Envoyer';
+
+  @override
+  String get appreciationEnvoyee => 'Merci, ton avis est parti.';
+
+  @override
+  String get appreciationEnAttente =>
+      'Hors ligne : ton avis partira au retour du réseau.';
 }

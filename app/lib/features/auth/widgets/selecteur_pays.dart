@@ -3,6 +3,10 @@
 // Un pastille aux initiales du pays tient ce role, et reste lisible partout.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/reseau/client_api.dart';
+import '../../../core/reseau/erreur_api.dart';
 
 import '../../../core/responsive/type_ecran.dart';
 import '../../../core/theme/couleurs.dart';
@@ -35,25 +39,61 @@ class Pays {
   final String aide;
 }
 
-/// Les pays proposes. La Côte d Ivoire est en tete, c est celui de la cantine.
-const List<Pays> paysConnus = <Pays>[
+/// Les quatre pays du depart. Le back office en ajoute d autres, aussitot disponibles :
+/// ils arrivent par le reglage `pays_acceptes` de l API et remplacent cette liste des qu elle repond.
+const List<Pays> paysParDefautConnus = <Pays>[
   Pays(code: 'CI', nom: 'Côte d’Ivoire', indicatif: '+225', longueur: 10),
-  Pays(code: 'BF', nom: 'Burkina Faso', indicatif: '+226', longueur: 8),
-  Pays(code: 'ML', nom: 'Mali', indicatif: '+223', longueur: 8),
-  Pays(code: 'SN', nom: 'Sénégal', indicatif: '+221', longueur: 9),
-  Pays(code: 'TG', nom: 'Togo', indicatif: '+228', longueur: 8),
-  Pays(code: 'BJ', nom: 'Bénin', indicatif: '+229', longueur: 10),
-  Pays(code: 'GN', nom: 'Guinée', indicatif: '+224', longueur: 9),
   Pays(code: 'CM', nom: 'Cameroun', indicatif: '+237', longueur: 9),
+  Pays(code: 'EG', nom: 'Égypte', indicatif: '+20', longueur: 10),
   Pays(code: 'FR', nom: 'France', indicatif: '+33', longueur: 9),
 ];
 
-/// Le pays par defaut.
+/// Le pays par defaut : celui de la cantine.
 const Pays paysParDefaut =
     Pays(code: 'CI', nom: 'Côte d’Ivoire', indicatif: '+225', longueur: 10);
 
+/// Lit la liste des pays acceptes, posee par le back office.
+class ServicePays {
+  /// Construit le service.
+  const ServicePays(this._ref);
+
+  final Ref _ref;
+
+  /// Rend les pays acceptes, ou les quatre du depart quand l API ne dit rien.
+  Future<List<Pays>> pays() async {
+    try {
+      final Map<String, dynamic> reponse =
+          await _ref.read(clientApiProvider).lire('/parametres/pays');
+      final Object? brut = reponse['pays'] ?? reponse['elements'];
+      if (brut is! List || brut.isEmpty) {
+        return paysParDefautConnus;
+      }
+      return brut
+          .whereType<Map<dynamic, dynamic>>()
+          .map(
+            (Map<dynamic, dynamic> p) => Pays(
+              code: '${p['code']}',
+              nom: '${p['nom']}',
+              indicatif: '${p['indicatif']}',
+              longueur: p['longueur'] is int ? p['longueur'] as int : 10,
+            ),
+          )
+          .toList(growable: false);
+    } on ErreurApi {
+      return paysParDefautConnus;
+    }
+  }
+}
+
+/// Le service des pays.
+final Provider<ServicePays> servicePaysProvider = Provider<ServicePays>(ServicePays.new);
+
+/// Les pays acceptes, lus une fois par ouverture.
+final FutureProvider<List<Pays>> paysProvider =
+    FutureProvider<List<Pays>>((Ref ref) => ref.watch(servicePaysProvider).pays());
+
 /// Laisse choisir le pays et montre son indicatif.
-class SelecteurPays extends StatelessWidget {
+class SelecteurPays extends ConsumerWidget {
   /// Construit le selecteur.
   const SelecteurPays({required this.pays, required this.onChange, super.key});
 
@@ -64,8 +104,9 @@ class SelecteurPays extends StatelessWidget {
   final ValueChanged<Pays> onChange;
 
   @override
-  Widget build(BuildContext contexte) {
+  Widget build(BuildContext contexte, WidgetRef ref) {
     final Palette couleurs = contexte.couleurs;
+    final List<Pays> liste = ref.watch(paysProvider).value ?? paysParDefautConnus;
 
     return Container(
       height: 56,
@@ -86,10 +127,10 @@ class SelecteurPays extends StatelessWidget {
             if (code == null) {
               return;
             }
-            onChange(paysConnus.firstWhere((Pays p) => p.code == code));
+            onChange(liste.firstWhere((Pays p) => p.code == code, orElse: () => paysParDefaut));
           },
           items: <DropdownMenuItem<String>>[
-            for (final Pays choix in paysConnus)
+            for (final Pays choix in liste)
               DropdownMenuItem<String>(
                 value: choix.code,
                 child: Row(

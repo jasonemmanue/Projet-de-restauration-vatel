@@ -1477,6 +1477,258 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander.'**
   String get finaliserExplication;
+
+  /// No description provided for @operateur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérateur'**
+  String get operateur;
+
+  /// No description provided for @telephonePayeur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro qui paie'**
+  String get telephonePayeur;
+
+  /// No description provided for @recharger.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger'**
+  String get recharger;
+
+  /// No description provided for @paiementOuvert.
+  ///
+  /// In fr, this message translates to:
+  /// **'La page de paiement est ouverte. Reviens ici une fois payé.'**
+  String get paiementOuvert;
+
+  /// No description provided for @paiementReussi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement reçu, ton solde est à jour.'**
+  String get paiementReussi;
+
+  /// No description provided for @paiementEchoue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement n\'a pas abouti.'**
+  String get paiementEchoue;
+
+  /// No description provided for @paiementEnAttente.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement est encore en attente chez l\'opérateur.'**
+  String get paiementEnAttente;
+
+  /// No description provided for @verifierPaiement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier le paiement'**
+  String get verifierPaiement;
+
+  /// No description provided for @faireePayerParUnProche.
+  ///
+  /// In fr, this message translates to:
+  /// **'Faire payer par un proche'**
+  String get faireePayerParUnProche;
+
+  /// No description provided for @messageLienDefaut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peux-tu recharger ma cantine ?'**
+  String get messageLienDefaut;
+
+  /// No description provided for @famille.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma famille'**
+  String get famille;
+
+  /// No description provided for @lierEnfant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lier un enfant'**
+  String get lierEnfant;
+
+  /// No description provided for @codeLiaison.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de liaison'**
+  String get codeLiaison;
+
+  /// No description provided for @seuilAlerte.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuil d\'alerte'**
+  String get seuilAlerte;
+
+  /// No description provided for @repasDeLenfant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ses repas'**
+  String get repasDeLenfant;
+
+  /// No description provided for @rechargerPour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger pour {prenom}'**
+  String rechargerPour(String prenom);
+
+  /// No description provided for @aucunEnfant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun enfant lié pour l\'instant'**
+  String get aucunEnfant;
+
+  /// No description provided for @exploitationTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exploitation'**
+  String get exploitationTitre;
+
+  /// No description provided for @rapports.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rapports'**
+  String get rapports;
+
+  /// No description provided for @stocksTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stocks'**
+  String get stocksTitre;
+
+  /// No description provided for @avisAModerer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appréciations à examiner'**
+  String get avisAModerer;
+
+  /// No description provided for @publierAvis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier'**
+  String get publierAvis;
+
+  /// No description provided for @refuserAvis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get refuserAvis;
+
+  /// No description provided for @motifRefusDefaut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors sujet ou inapproprié'**
+  String get motifRefusDefaut;
+
+  /// No description provided for @paysAcceptes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays acceptés'**
+  String get paysAcceptes;
+
+  /// No description provided for @ajouterPays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un pays'**
+  String get ajouterPays;
+
+  /// No description provided for @paysExplication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un pays ajouté ici est aussitôt proposé à l\'inscription, sans nouvelle version de l\'application.'**
+  String get paysExplication;
+
+  /// No description provided for @nomDuPays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du pays'**
+  String get nomDuPays;
+
+  /// No description provided for @codePays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code'**
+  String get codePays;
+
+  /// No description provided for @indicatif.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indicatif'**
+  String get indicatif;
+
+  /// No description provided for @nombreDeChiffres.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chiffres après l’indicatif'**
+  String get nombreDeChiffres;
+
+  /// No description provided for @comptesTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes'**
+  String get comptesTitre;
+
+  /// No description provided for @validerALaMain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider à la main'**
+  String get validerALaMain;
+
+  /// No description provided for @noterLeRepas.
+  ///
+  /// In fr, this message translates to:
+  /// **'Noter le repas'**
+  String get noterLeRepas;
+
+  /// No description provided for @critereGout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le goût'**
+  String get critereGout;
+
+  /// No description provided for @critereQuantite.
+  ///
+  /// In fr, this message translates to:
+  /// **'La quantité'**
+  String get critereQuantite;
+
+  /// No description provided for @critereTemperature.
+  ///
+  /// In fr, this message translates to:
+  /// **'La température'**
+  String get critereTemperature;
+
+  /// No description provided for @critereAttente.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'attente'**
+  String get critereAttente;
+
+  /// No description provided for @commentaireLibre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un mot, si tu veux'**
+  String get commentaireLibre;
+
+  /// No description provided for @envoyer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get envoyer;
+
+  /// No description provided for @appreciationEnvoyee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci, ton avis est parti.'**
+  String get appreciationEnvoyee;
+
+  /// No description provided for @appreciationEnAttente.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : ton avis partira au retour du réseau.'**
+  String get appreciationEnAttente;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

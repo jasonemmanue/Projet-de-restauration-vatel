@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/admin/ecran_budget.dart';
 import '../../features/admin/ecran_cuisine.dart';
+import '../../features/admin/ecran_exploitation.dart';
 import '../../features/admin/ecran_menus_admin.dart';
 import '../../features/admin/ecran_plats_admin.dart';
 import '../../features/admin/ecran_reglages_admin.dart';
@@ -30,6 +31,7 @@ import '../../features/porte_monnaie/ecran_lien_paiement.dart';
 import '../../features/porte_monnaie/ecran_porte_monnaie.dart';
 import '../../features/profil/ecran_compte.dart';
 import '../../features/reservations/donnees/service_commandes.dart';
+import '../../features/reservations/ecran_appreciation.dart';
 import '../../features/reservations/ecran_commande.dart';
 import '../../features/reservations/ecran_mes_commandes.dart';
 import '../../features/reservations/ecran_ticket.dart';
@@ -257,6 +259,16 @@ StatefulShellRoute _coquilleConvive() {
             path: '${Chemins.convive}/ticket',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranMesCommandes(),
             routes: <RouteBase>[
+              GoRoute(
+                path: 'noter',
+                builder: (BuildContext contexte, GoRouterState etat) {
+                  final Object? commande = etat.extra;
+                  if (commande is! Commande) {
+                    return const EcranMesCommandes();
+                  }
+                  return EcranAppreciation(commande: commande);
+                },
+              ),
               GoRoute(
                 path: 'billet',
                 builder: (BuildContext contexte, GoRouterState etat) {
@@ -499,6 +511,10 @@ StatefulShellRoute _coquilleAdmin() {
       ),
       StatefulShellBranch(
         routes: <RouteBase>[
+          GoRoute(
+            path: '${Chemins.admin}/exploitation',
+            builder: (BuildContext contexte, GoRouterState etat) => const EcranExploitation(),
+          ),
           GoRoute(
             path: '${Chemins.admin}/reglages',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranReglagesAdmin(),

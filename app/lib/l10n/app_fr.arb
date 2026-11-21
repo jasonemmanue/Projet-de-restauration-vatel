@@ -340,5 +340,30 @@
       }
     }
   },
-  "aucunEnfant": "Aucun enfant lié pour l'instant"
+  "aucunEnfant": "Aucun enfant lié pour l'instant",
+  "exploitationTitre": "Exploitation",
+  "rapports": "Rapports",
+  "stocksTitre": "Stocks",
+  "avisAModerer": "Appréciations à examiner",
+  "publierAvis": "Publier",
+  "refuserAvis": "Refuser",
+  "motifRefusDefaut": "Hors sujet ou inapproprié",
+  "paysAcceptes": "Pays acceptés",
+  "ajouterPays": "Ajouter un pays",
+  "paysExplication": "Un pays ajouté ici est aussitôt proposé à l'inscription, sans nouvelle version de l'application.",
+  "nomDuPays": "Nom du pays",
+  "codePays": "Code",
+  "indicatif": "Indicatif",
+  "nombreDeChiffres": "Chiffres après l’indicatif",
+  "comptesTitre": "Comptes",
+  "validerALaMain": "Valider à la main",
+  "noterLeRepas": "Noter le repas",
+  "critereGout": "Le goût",
+  "critereQuantite": "La quantité",
+  "critereTemperature": "La température",
+  "critereAttente": "L'attente",
+  "commentaireLibre": "Un mot, si tu veux",
+  "envoyer": "Envoyer",
+  "appreciationEnvoyee": "Merci, ton avis est parti.",
+  "appreciationEnAttente": "Hors ligne : ton avis partira au retour du réseau."
 }

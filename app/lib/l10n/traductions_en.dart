@@ -735,4 +735,136 @@ class TraductionsEn extends Traductions {
   @override
   String get finaliserExplication =>
       'Google and Apple only give your name. Your number, role and price profile are still needed to order.';
+
+  @override
+  String get operateur => 'Operator';
+
+  @override
+  String get telephonePayeur => 'Paying number';
+
+  @override
+  String get recharger => 'Top up';
+
+  @override
+  String get paiementOuvert =>
+      'The payment page is open. Come back here once paid.';
+
+  @override
+  String get paiementReussi => 'Payment received, your balance is up to date.';
+
+  @override
+  String get paiementEchoue => 'The payment did not go through.';
+
+  @override
+  String get paiementEnAttente =>
+      'The payment is still pending with the operator.';
+
+  @override
+  String get verifierPaiement => 'Check the payment';
+
+  @override
+  String get faireePayerParUnProche => 'Have a relative pay';
+
+  @override
+  String get messageLienDefaut => 'Could you top up my canteen account?';
+
+  @override
+  String get famille => 'My family';
+
+  @override
+  String get lierEnfant => 'Link a child';
+
+  @override
+  String get codeLiaison => 'Linking code';
+
+  @override
+  String get seuilAlerte => 'Alert threshold';
+
+  @override
+  String get repasDeLenfant => 'Their meals';
+
+  @override
+  String rechargerPour(String prenom) {
+    return 'Top up for $prenom';
+  }
+
+  @override
+  String get aucunEnfant => 'No child linked yet';
+
+  @override
+  String get exploitationTitre => 'Operations';
+
+  @override
+  String get rapports => 'Reports';
+
+  @override
+  String get stocksTitre => 'Stock';
+
+  @override
+  String get avisAModerer => 'Reviews to check';
+
+  @override
+  String get publierAvis => 'Publish';
+
+  @override
+  String get refuserAvis => 'Reject';
+
+  @override
+  String get motifRefusDefaut => 'Off topic or inappropriate';
+
+  @override
+  String get paysAcceptes => 'Accepted countries';
+
+  @override
+  String get ajouterPays => 'Add a country';
+
+  @override
+  String get paysExplication =>
+      'A country added here is offered at sign-up straight away, with no new app version.';
+
+  @override
+  String get nomDuPays => 'Country name';
+
+  @override
+  String get codePays => 'Code';
+
+  @override
+  String get indicatif => 'Dialling code';
+
+  @override
+  String get nombreDeChiffres => 'Digits after the code';
+
+  @override
+  String get comptesTitre => 'Accounts';
+
+  @override
+  String get validerALaMain => 'Verify by hand';
+
+  @override
+  String get noterLeRepas => 'Rate the meal';
+
+  @override
+  String get critereGout => 'Taste';
+
+  @override
+  String get critereQuantite => 'Quantity';
+
+  @override
+  String get critereTemperature => 'Temperature';
+
+  @override
+  String get critereAttente => 'Waiting';
+
+  @override
+  String get commentaireLibre => 'A word, if you like';
+
+  @override
+  String get envoyer => 'Send';
+
+  @override
+  String get appreciationEnvoyee => 'Thanks, your review is on its way.';
+
+  @override
+  String get appreciationEnAttente =>
+      'Offline: your review will go when the network is back.';
 }
