@@ -128,10 +128,13 @@ class Configuration(BaseSettings):
     )
     geniuspay_secret_webhook_test: str | None = Field(
         default=None,
-        validation_alias=AliasChoices("GENIUSPAY_SECRET_WEBHOOK_TEST", "GENIUSPAY_SECRET_WEBHOOK"),
+        validation_alias=AliasChoices(
+            "GENIUSPAY_WEBHOOK_SECRET", "GENIUSPAY_SECRET_WEBHOOK_TEST", "GENIUSPAY_SECRET_WEBHOOK"
+        ),
     )
     geniuspay_secret_webhook_reel: str | None = Field(
-        default=None, validation_alias="GENIUSPAY_SECRET_WEBHOOK_REEL"
+        default=None,
+        validation_alias=AliasChoices("GENIUSPAY_LIVE_WEBHOOK_SECRET", "GENIUSPAY_SECRET_WEBHOOK_REEL"),
     )
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
