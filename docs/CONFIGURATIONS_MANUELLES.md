@@ -9,8 +9,8 @@ Mis à jour le 21 novembre 2026.
 
 | # | Tâche | État |
 |---|-------|------|
-| 1 | Connecter gcloud au projet Firebase | à faire |
-| 2 | Restreindre les trois clés API Firebase | à faire |
+| 1 | Connecter gcloud au projet Firebase | fait |
+| 2 | Restreindre les trois clés API Firebase | en cours |
 | 3 | Connexions Google et Apple + clients OAuth | à faire |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
 | 5 | API Gmail (envoi réel des codes) | à faire |
@@ -26,7 +26,7 @@ Rappels permanents :
 
 ---
 
-## 1. Connecter gcloud au projet Firebase — à faire
+## 1. Connecter gcloud au projet Firebase — fait
 
 Pourquoi : sans cette connexion, impossible de créer la clé de l'Admin SDK, donc pas de
 notifications push.
@@ -41,11 +41,12 @@ Procédure (PowerShell, dans n'importe quel dossier) :
 (c'est une adresse publique, pas un secret).
 
 Valeurs récoltées :
-- Compte de service Admin SDK : _(à remplir)_
+- Compte de service Admin SDK : `firebase-adminsdk-fbsvc@vatel-project.iam.gserviceaccount.com`
+- Compte gcloud actif : `emmanudev2@gmail.com`, projet `vatel-project` (c'était `prepaxia-project` avant)
 
 ---
 
-## 2. Restreindre les trois clés API Firebase — à faire
+## 2. Restreindre les trois clés API Firebase — en cours
 
 Pourquoi : ces trois clés ne sont pas des mots de passe. Elles identifient le projet et sont
 livrées dans l'application Android, dans l'application iOS et dans le code de la page web :

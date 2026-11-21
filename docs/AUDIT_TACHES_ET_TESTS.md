@@ -375,17 +375,16 @@ sur les vraies routes dès A8.
 
 ## Clé du compte de service Firebase, pour l'Admin SDK
 
-**État.** Pas encore générée. Elle est nécessaire à l'API pour envoyer les notifications poussées (A7).
+**État.** Faite le 21/11. L'exploitant a connecté gcloud au compte propriétaire `emmanudev2@gmail.com`,
+puis la clé du compte de service `firebase-adminsdk-fbsvc@vatel-project.iam.gserviceaccount.com` a été
+générée en ligne de commande et posée dans Railway sous `FIREBASE_COMPTE_SERVICE`, encodée en base64, avec
+`FIREBASE_PROJET_ID` et `FCM_ACTIF`. Le fichier JSON est rangé dans le dossier confidentiel de l'exploitant,
+hors du dépôt et hors du projet. Une seule clé est active : la première, créée puis remplacée, a été
+supprimée du compte de service.
 
-**Pourquoi elle n'est pas faite ici.** Les deux comptes authentifiés dans gcloud sur ce poste
-(`emmasurfohhgreat@gmail.com` et `sakamemmanuel@gmail.com`) n'ont aucun droit sur le projet `vatel-project`,
-qui appartient à `emmanudev2@gmail.com`. Authentifier ce compte demande un navigateur, donc une action de
-l'exploitant.
-
-**Comment la poser, au choix.**
-1. `gcloud auth login` avec `emmanudev2@gmail.com`, puis la clé se crée en une commande et part dans Railway.
-2. Console Firebase, Paramètres du projet, Comptes de service, « Générer une nouvelle clé privée ». Le JSON
-   téléchargé est ensuite encodé et posé dans Railway sans jamais passer par le dépôt.
+**Ce que l'exploitant a fait lui-même.** `gcloud auth login` avec le compte propriétaire, puis
+`gcloud config set project vatel-project`. Sans cette authentification, rien n'était possible : les autres
+comptes du poste n'ont aucun droit sur ce projet.
 
 **Pourquoi c'est sûr.** La clé ne touche pas le dépôt, qui est public : elle vit uniquement dans les
 variables du service Railway, encodée en base64 sous `FIREBASE_COMPTE_SERVICE`, et n'est lue que par l'API au
