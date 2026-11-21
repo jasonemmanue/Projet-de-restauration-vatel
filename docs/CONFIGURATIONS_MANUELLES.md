@@ -11,7 +11,7 @@ Mis à jour le 21 novembre 2026.
 |---|-------|------|
 | 1 | Connecter gcloud au projet Firebase | fait |
 | 2 | Restreindre les trois clés API Firebase | fait |
-| 3 | Clients OAuth Google (hors Firebase Auth) | en cours |
+| 3 | Clients OAuth Google (hors Firebase Auth) | fait |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
 | 5 | API Gmail (envoi réel des codes) | à faire |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | à faire |
@@ -103,7 +103,7 @@ Valeurs récoltées :
 
 ---
 
-## 3. Clients OAuth Google — en cours
+## 3. Clients OAuth Google — fait
 
 Décision du 21/11 : **l'authentification ne passe pas par Firebase Authentication.** Le client
 obtient un jeton d'identité Google, l'envoie à notre API (`POST /auth/google`, champ
@@ -137,10 +137,22 @@ vérification du jeton, et c'est **l'identifiant du client Web** que l'applicati
 Web (`GOOGLE_CLIENT_SECRET`) n'est nécessaire que si le site échange un code côté serveur : il va
 dans Railway, jamais dans le dépôt.
 
-Valeurs récoltées :
-- Client Web : _(à remplir)_
-- Client Android : _(à remplir)_
-- Client iOS : _(à remplir)_
+Deux projets Google Cloud, et c'est voulu :
+- `cantine-vatel`, numéro **457382581913** : écran de consentement et clients OAuth, donc toute
+  l'authentification Google, et l'API Gmail de la tâche 5.
+- `vatel-project`, numéro **814642268084** : Firebase, donc les notifications push et les trois
+  clés API bridées à la tâche 2.
+Rien à unifier : notre API vérifie le jeton par son audience, elle ne demande pas que le client
+OAuth et Firebase soient dans le même projet. La seule contrainte, respectée ici, est que le
+client Android et le client Web servant de `serverClientId` vivent dans le même projet.
+
+Valeurs récoltées, créées le 21/11 dans `cantine-vatel` (identifiants publics) :
+- Client Web : `457382581913-u97oj133odtlq9qd92dlvi12pkigmtlo.apps.googleusercontent.com`
+- Client Android : `457382581913-lj1ploqk6f98scr0872jp22o47tm3t4i.apps.googleusercontent.com`
+- Client iOS : `457382581913-kenhhok1h0jk1svp6q35647ltrk2q1jh.apps.googleusercontent.com`
+- Origines du client Web : `http://localhost:3000` et `http://localhost:8080` pour l'instant.
+  L'adresse publique du site reste à ajouter dès que la session Site l'aura donnée, sinon la
+  connexion Google échouera depuis le site en ligne avec une erreur `origin_mismatch`.
 
 ---
 
@@ -184,7 +196,7 @@ Pourquoi : en fin de journée, le code de vérification à 5 caractères doit pa
 courriel, pas rester en mode démo.
 
 Procédure :
-1. `https://console.cloud.google.com/apis/library/gmail.googleapis.com?project=vatel-project` →
+1. `https://console.cloud.google.com/apis/library/gmail.googleapis.com?project=cantine-vatel` →
    **Activer**.
 2. `https://console.cloud.google.com/auth/overview?project=vatel-project` → écran de consentement
    OAuth, type *Externe*, nom « Cantine Vatel », courriel d'assistance, enregistrer.
