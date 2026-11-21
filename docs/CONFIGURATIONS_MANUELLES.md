@@ -18,7 +18,7 @@ Mis à jour le 21 novembre 2026.
 | 7 | Fiches des boutiques (Play, App Store) | écarté pour aujourd'hui |
 | 8 | Clé web push FCM (notifications sur le site) | fait |
 | 9 | Compte développeur Google Play (25 USD, une fois) | écarté pour aujourd'hui |
-| 11 | Codemagic, construction iOS vers TestFlight | en cours |
+| 11 | Codemagic, construction iOS vers TestFlight | fait, premier build à lancer |
 
 Rappels permanents :
 - Projet Google Cloud et Firebase : `vatel-project`, numéro `814642268084`, propriétaire
@@ -386,7 +386,7 @@ auprès des clés publiques d'Apple.
 
 ---
 
-## 11. Codemagic, construction iOS vers TestFlight — en cours
+## 11. Codemagic, construction iOS vers TestFlight — fait, premier build à lancer
 
 Construit sur macOS dans le nuage, donc pas de Mac nécessaire. Exige le compte Apple payant,
 confirmé.
@@ -417,6 +417,21 @@ de conformité export au premier build, à laquelle on répond non, l'applicatio
 HTTPS standard.
 
 L'éditeur de workflow graphique suffit : aucun `codemagic.yaml` n'est nécessaire.
+
+Fait le 21/11 : fiche de l'application créée dans App Store Connect (UGS `cantine-vatel`, accès
+complet, bundle `com.vatel.cantine`), clé App Store Connect API générée et `.p8` rangé hors dépôt,
+Codemagic branché sur le dépôt. Reste à lancer le premier build sur `ios/testflight`, ce qui
+suppose que la session App y ait poussé l'état de `main`.
+
+Variables de construction : **aucune n'est nécessaire** pour un premier build TestFlight. En
+particulier `GOOGLE_SERVICES_JSON` est inutile, puisque `app/android/app/google-services.json`,
+`GoogleService-Info.plist` et `firebase_options.dart` sont présents dans le dépôt et seront donc
+clonés par Codemagic. `FIREBASE_SERVICE_ACCOUNT` ne servirait qu'à un déploiement sur Firebase
+Hosting, qui n'est pas le choix retenu pour le site Next.js ; au besoin, le compte de service
+`firebase-adminsdk-fbsvc` devrait d'abord recevoir le rôle *Firebase Hosting Admin*, qu'il n'a
+pas. `FIREBASE_DEFINES` n'est pas un nom standard : seule la session App sait ce qu'elle attend
+derrière, et une valeur devinée ferait un build qui passe en pointant vers la mauvaise
+configuration. Ne rien créer sans sa réponse.
 
 Valeurs récoltées :
 - Issuer ID App Store Connect : _(à remplir)_
