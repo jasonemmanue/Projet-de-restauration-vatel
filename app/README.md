@@ -29,18 +29,27 @@ Projet `vatel-project` (compte `emmanudev2@gmail.com`). Les trois applications s
 | iOS | `1:814642268084:ios:ae9fe8822c2740a15a14e1` |
 | Web | `1:814642268084:web:da3c853f2c2e63075a14e1` |
 
-`lib/firebase_options.dart` est versionné : ce sont des identifiants publics, déjà présents dans toute
-application livrée. En revanche `android/app/google-services.json` et `ios/Runner/GoogleService-Info.plist`
-ne le sont pas. Sur une autre machine, les récupérer ainsi :
+Aucune clé n'est versionnée : le dépôt est public, et GitHub signale toute clé Google qui y entre.
+`lib/firebase_options.dart` ne contient que des `String.fromEnvironment` ; les valeurs vivent dans
+`app/firebase.defines`, qui est ignoré par git. Sur une autre machine :
 
 ```bash
 firebase login:use emmanudev2@gmail.com
 firebase apps:sdkconfig ANDROID 1:814642268084:android:5311e2edc6b39eed5a14e1 --project vatel-project --out android/app/google-services.json
 firebase apps:sdkconfig IOS 1:814642268084:ios:ae9fe8822c2740a15a14e1 --project vatel-project --out ios/Runner/GoogleService-Info.plist
+python outils/options_firebase.py   # fabrique firebase.defines
+firebase apps:sdkconfig WEB 1:814642268084:web:da3c853f2c2e63075a14e1 --project vatel-project
+# recopier les trois valeurs web dans firebase.defines
 ```
 
-Firebase démarre dans `main.dart` et son échec n'empêche pas l'application de tourner : sans lui, seules les
-notifications poussées manquent.
+Puis construire avec les valeurs :
+
+```bash
+flutter run --dart-define-from-file=firebase.defines --dart-define=API_URL=https://<URL_API>/api/v1
+```
+
+Firebase ne démarre que si les valeurs ont été passées au build, et son échec n'empêche jamais l'application
+de tourner : sans lui, seules les notifications poussées manquent.
 
 ## Marque
 

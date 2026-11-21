@@ -1,14 +1,30 @@
-// Role du fichier : les identifiants publics des applications Firebase du projet vatel-project.
-// Ce ne sont pas des secrets : ils voyagent deja dans chaque application livree, et l acces est
-// tenu par les regles de securite Firebase, pas par ces valeurs.
-// Produit depuis android/app/google-services.json et ios/Runner/GoogleService-Info.plist.
+// Role du fichier : les identifiants des applications Firebase du projet vatel-project.
+// Le depot est public : aucune valeur n est ecrite ici. Tout arrive par --dart-define au build,
+// depuis app/firebase.defines, qui n est pas versionne. Sans ces valeurs, l application tourne
+// normalement : seules les notifications poussees manquent.
+//
+// Pour construire avec Firebase :
+//   flutter run --dart-define-from-file=firebase.defines --dart-define=API_URL=...
+// Pour reconstruire le fichier de valeurs : python outils/options_firebase.py
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-/// Les options Firebase de chaque plateforme.
+/// Les options Firebase de chaque plateforme, lues a la compilation.
 class OptionsFirebase {
   const OptionsFirebase._();
+
+  /// Identifiant du projet Firebase, commun aux trois plateformes.
+  static const String projet = String.fromEnvironment('FIREBASE_PROJET');
+
+  /// Numero du projet, qui sert aussi d expediteur de notifications.
+  static const String expediteur = String.fromEnvironment('FIREBASE_EXPEDITEUR');
+
+  /// Depot de fichiers du projet.
+  static const String stockage = String.fromEnvironment('FIREBASE_STOCKAGE');
+
+  /// Vrai quand les valeurs ont ete passees au build.
+  static bool get configurees => projet.isNotEmpty && expediteur.isNotEmpty;
 
   /// Rend les options de la plateforme courante.
   static FirebaseOptions get courante {
@@ -23,30 +39,33 @@ class OptionsFirebase {
     };
   }
 
-    static const FirebaseOptions android = FirebaseOptions(
-      apiKey: 'AIzaSyDZGuuV4lpWn_mnLTE069OaYswTaVuQ4dg',
-      appId: '1:814642268084:android:5311e2edc6b39eed5a14e1',
-      messagingSenderId: '814642268084',
-      projectId: 'vatel-project',
-      storageBucket: 'vatel-project.firebasestorage.app',
-    );
+  /// Options de l application Android.
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: String.fromEnvironment('FIREBASE_CLE_ANDROID'),
+    appId: String.fromEnvironment('FIREBASE_APP_ANDROID'),
+    messagingSenderId: expediteur,
+    projectId: projet,
+    storageBucket: stockage,
+  );
 
-    static const FirebaseOptions ios = FirebaseOptions(
-      apiKey: 'AIzaSyCwenWaBNXZ6TmHrpztN53bq_2UPa8qJXU',
-      appId: '1:814642268084:ios:ae9fe8822c2740a15a14e1',
-      messagingSenderId: '814642268084',
-      projectId: 'vatel-project',
-      storageBucket: 'vatel-project.firebasestorage.app',
-      iosBundleId: 'com.vatel.cantine',
-    );
+  /// Options de l application iOS.
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: String.fromEnvironment('FIREBASE_CLE_IOS'),
+    appId: String.fromEnvironment('FIREBASE_APP_IOS'),
+    messagingSenderId: expediteur,
+    projectId: projet,
+    storageBucket: stockage,
+    iosBundleId: String.fromEnvironment('FIREBASE_BUNDLE_IOS'),
+  );
 
-    static const FirebaseOptions web = FirebaseOptions(
-      apiKey: 'AIzaSyBR6WTZTftsxaIxuQXIpi2m1LdrrVFnTRc',
-      appId: '1:814642268084:web:da3c853f2c2e63075a14e1',
-      messagingSenderId: '814642268084',
-      projectId: 'vatel-project',
-      authDomain: 'vatel-project.firebaseapp.com',
-      storageBucket: 'vatel-project.firebasestorage.app',
-      measurementId: 'G-L92CPFLT2Q',
-    );
+  /// Options de l application web.
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: String.fromEnvironment('FIREBASE_CLE_WEB'),
+    appId: String.fromEnvironment('FIREBASE_APP_WEB'),
+    messagingSenderId: expediteur,
+    projectId: projet,
+    authDomain: String.fromEnvironment('FIREBASE_DOMAINE_AUTH'),
+    storageBucket: stockage,
+    measurementId: String.fromEnvironment('FIREBASE_MESURE_WEB'),
+  );
 }

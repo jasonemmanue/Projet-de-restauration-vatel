@@ -99,3 +99,6 @@ uiux vatel/
 
 # Dossier de travail des exports de marque
 docs/marque/exports/.travail/
+
+# Valeurs Firebase, jamais versionnees : le depot est public
+app/firebase.defines

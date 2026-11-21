@@ -28,12 +28,15 @@ Future<void> main() async {
 
   final SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  bool firebaseDemarre = true;
-  try {
-    await Firebase.initializeApp(options: OptionsFirebase.courante);
-  } on Object {
-    // L application doit demarrer meme sans Firebase : les notifications attendront.
-    firebaseDemarre = false;
+  // Sans valeurs passees au build, on ne tente meme pas : le depot ne porte aucune cle.
+  bool firebaseDemarre = OptionsFirebase.configurees;
+  if (firebaseDemarre) {
+    try {
+      await Firebase.initializeApp(options: OptionsFirebase.courante);
+    } on Object {
+      // L application doit demarrer meme sans Firebase : les notifications attendront.
+      firebaseDemarre = false;
+    }
   }
 
   runApp(
