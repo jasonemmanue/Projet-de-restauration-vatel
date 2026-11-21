@@ -12,8 +12,8 @@ Mis à jour le 21 novembre 2026.
 | 1 | Connecter gcloud au projet Firebase | fait |
 | 2 | Restreindre les trois clés API Firebase | fait |
 | 3 | Clients OAuth Google (hors Firebase Auth) | fait |
-| 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
-| 5 | API Gmail (envoi réel des codes) | à faire |
+| 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire, compte payant confirmé |
+| 5 | API Gmail (envoi réel des codes) | en cours |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | en cours |
 | 7 | Fiches des boutiques (Play, App Store) | à faire |
 | 8 | Clé web push FCM (notifications sur le site) | fait, valeur à reporter |
@@ -156,7 +156,7 @@ Valeurs récoltées, créées le 21/11 dans `cantine-vatel` (identifiants public
 
 ---
 
-## 4. Apple Developer — à faire
+## 4. Apple Developer — à faire, compte payant confirmé le 21/11
 
 Ne concerne que l'exploitant s'il a un compte Apple Developer payant (99 USD par an). Sans ce
 compte, pas de build iOS signé ni de notification push iOS : **iOS se limitera à la version web**,
@@ -182,7 +182,8 @@ Où ranger les fichiers : les deux `.p8` restent **hors du dépôt**, dans
 contenu des `.p8`.
 
 Valeurs récoltées :
-- Compte Apple payant : _(à remplir)_
+- Compte Apple payant : **oui**, confirmé par l'exploitant le 21/11. iOS n'est donc pas limité
+  au web : build signé et notifications push possibles.
 - Team ID : _(à remplir)_
 - Key ID Sign in with Apple : _(à remplir)_
 - Key ID APNs : _(à remplir)_
@@ -190,7 +191,7 @@ Valeurs récoltées :
 
 ---
 
-## 5. API Gmail — à faire
+## 5. API Gmail — en cours
 
 Pourquoi : en fin de journée, le code de vérification à 5 caractères doit partir par un vrai
 courriel, pas rester en mode démo.
