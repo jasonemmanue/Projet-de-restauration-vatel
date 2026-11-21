@@ -18,7 +18,7 @@ from app.core.config import Configuration
 from app.core.erreurs import ErreurApi
 from app.core.hachage import egal_en_temps_constant, hmac_hex
 from app.models import CodeVerification, JournalVerification
-from app.services import tentatives
+from app.services import gmail, tentatives
 from app.services.parametres import lire_parametres
 from app.services.regles_comptes import (
     CANAL_EMAIL,
@@ -115,8 +115,8 @@ async def demander_code(
     if len(dates) >= int(reglages["codes_par_jour_max"]) or any(d > maintenant - intervalle for d in dates):
         await _refuser(session, "trop_de_requetes", 429)
 
-    if mode != "demo":
-        # Livraison réelle pas encore branchée (étape E1) : on refuse plutôt que de prétendre avoir envoyé.
+    if mode != "demo" and canal != CANAL_EMAIL:
+        # Le téléphone n'a pas de livraison réelle : on refuse plutôt que de prétendre avoir envoyé.
         session.add(_journal(identifiant, "echec", ip, mode, "envoi_impossible"))
         await _refuser(session, "envoi_impossible", 502)
 
@@ -147,7 +147,19 @@ async def demander_code(
         )
     )
     session.add(_journal(identifiant, "envoye", ip, mode))
-    return CodeEnvoye(mode, expire_le, code if destinataire_id is not None else None, canal)
+    if mode == "reel" and destinataire_id is not None:
+        minutes = int(reglages[cle_duree])
+
+        async def _envoyer() -> None:
+            application = session.info.get("application")
+            if application is not None:
+                await gmail.envoyer_code(
+                    application.state.client_http, config, identifiant.valeur, usage, code, minutes, "fr"
+                )
+
+        session.info.setdefault("apres_validation", []).append(_envoyer)
+    rendu = code if destinataire_id is not None and mode == "demo" else None
+    return CodeEnvoye(mode, expire_le, rendu, canal)
 
 
 async def controler_code(

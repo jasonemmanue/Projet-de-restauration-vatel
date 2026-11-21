@@ -9,7 +9,7 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import DateTime
 
-from app.db.base import AvecModification, Base, choix, cle_primaire
+from app.db.base import AvecCreation, AvecModification, Base, choix, cle_primaire
 from app.models.comptes import UTILISATEUR_FK
 
 NOTES = ("note_gout", "note_quantite", "note_temperature", "note_attente")
@@ -77,3 +77,17 @@ class Notification(AvecModification, Base):
     lue_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     envoi_push: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'non_demande'"))
     envoye_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Suggestion(AvecCreation, Base):
+    """Suggestion d'un convive à la cantine, lue par l'admin. Ajout seul. Propriétaire : A9."""
+
+    __tablename__ = "suggestions"
+    __table_args__ = (Index("ix_suggestions_cree_le", text("cree_le desc")),)
+
+    id: Mapped[uuid.UUID] = cle_primaire()
+    auteur_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey(UTILISATEUR_FK), nullable=False
+    )
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    plat_souhaite: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("''"))

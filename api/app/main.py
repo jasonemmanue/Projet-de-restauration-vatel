@@ -23,12 +23,16 @@ from app.core.limites import creer_limiteur
 from app.core.securite import CorsStrict, GardeEtEntetes, LimiteTaille
 from app.db.moteur import creer_fabrique, creer_moteur
 from app.routes import (
+    admin_avis,
     admin_catalogue,
+    admin_equipe,
     admin_menus,
+    admin_stocks,
     admin_tableau,
     admin_utilisateurs,
     agent,
     auth,
+    avis,
     liens_paiement,
     medias,
     menus,
@@ -91,6 +95,10 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         paiements,
         liens_paiement,
         notifications,
+        avis,
+        admin_avis,
+        admin_stocks,
+        admin_equipe,
         admin_utilisateurs,
         admin_catalogue,
         admin_menus,

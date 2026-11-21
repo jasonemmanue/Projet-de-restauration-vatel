@@ -147,6 +147,19 @@ class Configuration(BaseSettings):
     firebase_compte_service: str | None = Field(default=None, validation_alias="FIREBASE_COMPTE_SERVICE")
     firebase_projet_id: str | None = Field(default=None, validation_alias="FIREBASE_PROJET_ID")
     fcm_actif: bool = Field(default=False, validation_alias="FCM_ACTIF")
+    # API Gmail pour les codes par e-mail : jamais SMTP, que Railway bloque.
+    gmail_client_id: str | None = Field(
+        default=None, validation_alias=AliasChoices("GMAIL_API_CLIENT_ID", "GMAIL_CLIENT_ID")
+    )
+    gmail_client_secret: str | None = Field(
+        default=None, validation_alias=AliasChoices("GMAIL_API_CLIENT_SECRET", "GMAIL_CLIENT_SECRET")
+    )
+    gmail_refresh_token: str | None = Field(
+        default=None, validation_alias=AliasChoices("GMAIL_API_REFRESH_TOKEN", "GMAIL_REFRESH_TOKEN")
+    )
+    gmail_expediteur: str | None = Field(
+        default=None, validation_alias=AliasChoices("GMAIL_API_SENDER", "GMAIL_EXPEDITEUR")
+    )
     bcrypt_tours: int = Field(default=12, ge=4, le=15, validation_alias="BCRYPT_TOURS")
     # Premier compte admin, créé au démarrage s'il n'existe pas encore ; jamais écrasé ensuite.
     admin_initial_email: str | None = Field(default=None, validation_alias="ADMIN_INITIAL_EMAIL")

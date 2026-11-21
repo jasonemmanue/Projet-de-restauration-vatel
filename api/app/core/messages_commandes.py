@@ -93,4 +93,20 @@ MESSAGES_COMMANDES: dict[str, dict[str, str]] = {
         "fr": "Choisissez au moins un destinataire.",
         "en": "Choose at least one recipient.",
     },
+    "repas_non_servi": {
+        "fr": "Vous pourrez noter ce repas une fois servi.",
+        "en": "You can rate this meal once it has been served.",
+    },
+    "avis_existant": {
+        "fr": "Vous avez déjà noté ce repas.",
+        "en": "You have already rated this meal.",
+    },
+    "avis_non_publie": {
+        "fr": "Publiez d'abord cette appréciation.",
+        "en": "Publish this review first.",
+    },
+    "stock_insuffisant": {
+        "fr": "Le stock ne permet pas cette sortie.",
+        "en": "The stock does not allow this withdrawal.",
+    },
 }

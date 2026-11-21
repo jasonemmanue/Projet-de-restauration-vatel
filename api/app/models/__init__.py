@@ -12,7 +12,7 @@ from app.models.comptes import (
 )
 from app.models.menus import Menu, MenuPlat, Plat, Tarif
 from app.models.profil import Appareil, Avatar, Signalement
-from app.models.retours import Avis, Notification
+from app.models.retours import Avis, Notification, Suggestion
 from app.models.service import FileScan, LienParentEnfant, LigneReservation, LotReservation, Reservation
 from app.models.stocks import Ingredient, MouvementStock
 
@@ -42,6 +42,7 @@ __all__ = [
     "Reservation",
     "SessionAppareil",
     "Signalement",
+    "Suggestion",
     "Tarif",
     "Tentative",
     "Utilisateur",
