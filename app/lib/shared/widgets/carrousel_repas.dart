@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../core/reseau/client_api.dart';
 import '../../core/responsive/type_ecran.dart';
 import '../../core/theme/couleurs.dart';
 import '../../l10n/traductions.dart';
@@ -15,9 +16,17 @@ import 'texte_adapte.dart';
 /// Une vue du carrousel : une photo et son accroche.
 class VueCarrousel {
   /// Construit une vue.
-  const VueCarrousel({required this.image, required this.titre, required this.detail});
+  const VueCarrousel({
+    required this.photo,
+    required this.image,
+    required this.titre,
+    required this.detail,
+  });
 
-  /// Fichier de la photo dans les ressources.
+  /// Nom de la photo dans le dossier demo du volume de l API, servi par GET /medias/demo/.
+  final String photo;
+
+  /// Fichier de repli dans les ressources, montre hors ligne ou si le volume ne repond pas.
   final String image;
 
   /// Accroche, deja traduite.
@@ -80,23 +89,33 @@ class _EtatCarrouselRepas extends State<CarrouselRepas> {
     );
   }
 
+  /// Les photos des repas vivent sur le volume de l API, a cote de ses routes : on retire /api/v1.
+  String _adressePhoto(String photo) {
+    final Uri api = Uri.parse(adresseApi);
+    return api.replace(path: '/medias/demo/$photo').toString();
+  }
+
   List<VueCarrousel> _vues(Traductions mots) => <VueCarrousel>[
         VueCarrousel(
+          photo: 'attieke-poisson.jpg',
           image: 'assets/plats/attieke.jpg',
           titre: mots.carrouselTitre1,
           detail: mots.carrouselDetail1,
         ),
         VueCarrousel(
+          photo: 'poulet-braise.jpg',
           image: 'assets/plats/poulet.jpg',
           titre: mots.carrouselTitre2,
           detail: mots.carrouselDetail2,
         ),
         VueCarrousel(
+          photo: 'foutou-sauce-graine.jpg',
           image: 'assets/plats/sauce.jpg',
           titre: mots.carrouselTitre3,
           detail: mots.carrouselDetail3,
         ),
         VueCarrousel(
+          photo: 'riz-gras.jpg',
           image: 'assets/plats/riz.jpg',
           titre: mots.carrouselTitre4,
           detail: mots.carrouselDetail4,
@@ -118,11 +137,15 @@ class _EtatCarrouselRepas extends State<CarrouselRepas> {
             controller: _pages,
             itemCount: vues.length,
             onPageChanged: (int index) => setState(() => _vue = index),
-            itemBuilder: (BuildContext contexte, int index) => Image.asset(
-              vues[index].image,
+            itemBuilder: (BuildContext contexte, int index) => Image.network(
+              _adressePhoto(vues[index].photo),
               fit: BoxFit.cover,
-              errorBuilder: (BuildContext _, Object _, StackTrace? _) =>
-                  ColoredBox(color: couleurs.muet),
+              errorBuilder: (BuildContext _, Object _, StackTrace? _) => Image.asset(
+                vues[index].image,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext _, Object _, StackTrace? _) =>
+                    ColoredBox(color: couleurs.muet),
+              ),
             ),
           ),
           // Voile sombre : le texte reste lisible quelle que soit la photo.

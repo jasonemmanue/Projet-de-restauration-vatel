@@ -2,6 +2,17 @@
 
 import 'package:flutter/foundation.dart';
 
+import '../../../core/reseau/client_api.dart';
+
+/// Rend l adresse complete d une photo. L API donne un chemin relatif a son origine (/medias/...),
+/// servi depuis son volume : sans l origine, l ecran le prendrait pour un fichier local.
+String? adresseMedia(String? chemin) {
+  if (chemin == null || chemin.isEmpty || !chemin.startsWith('/')) {
+    return chemin;
+  }
+  return Uri.parse(adresseApi).replace(path: chemin).toString();
+}
+
 /// Les trois services d un repas.
 enum Service {
   /// L entrée.
@@ -43,7 +54,7 @@ class Plat {
         nom: json['nom'] as String? ?? json['nom_fr'] as String? ?? '',
         service: Service.depuisTexte(json['service'] as String? ?? json['categorie'] as String?),
         description: json['description'] as String? ?? json['description_fr'] as String? ?? '',
-        image: json['image_url'] as String?,
+        image: adresseMedia(json['image_url'] as String?),
         allergenes: _liste(json['allergenes']),
         regimes: _liste(json['regimes']),
         calories: json['calories'] as int?,
