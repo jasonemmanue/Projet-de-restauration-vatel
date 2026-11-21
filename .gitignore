@@ -1,0 +1,98 @@
+# ---------------------------------------------------------------------------
+# Fichiers que git ne doit jamais suivre. Le depot est public : aucun secret.
+# ---------------------------------------------------------------------------
+
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+service-account*.json
+google-services.json
+GoogleService-Info.plist
+firebase-adminsdk*.json
+
+# Signature des applications
+*.keystore
+*.jks
+key.properties
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.sqlite3
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+app/build/
+app/android/.gradle/
+app/android/local.properties
+app/android/app/debug/
+app/android/app/profile/
+app/android/app/release/
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/Flutter.framework
+app/ios/Flutter/Flutter.podspec
+app/ios/Flutter/Generated.xcconfig
+app/ios/Flutter/flutter_export_environment.sh
+app/ios/Runner/GeneratedPluginRegistrant.*
+*.apk
+*.aab
+*.ipa
+*.app.dSYM.zip
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Journaux Firebase et outils
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+database-debug.log
+ui-debug.log
+.firebase/
+
+# Systeme et editeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# Dossiers de travail hors depot
+uiux vatel/
