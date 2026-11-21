@@ -149,4 +149,19 @@ class TraductionsFr extends Traductions {
 
   @override
   String get ecranEnConstruction => 'Écran en construction';
+
+  @override
+  String get connexionCodeQr => 'Se connecter avec un code QR';
+
+  @override
+  String get ouvrirSurWebPc => 'Ouvrir sur Web / PC';
+
+  @override
+  String get disponibleSur => 'Disponible sur';
+
+  @override
+  String get telechargerDans => 'Télécharger dans';
+
+  @override
+  String get lienPaiement => 'Lien de paiement';
 }

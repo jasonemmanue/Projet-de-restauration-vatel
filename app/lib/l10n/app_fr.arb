@@ -51,5 +51,10 @@
   "erreurReseau": "Le serveur est injoignable. Vérifie ta connexion.",
   "pageIntrouvable": "Cette page n'existe pas.",
   "retourAccueil": "Revenir à l'accueil",
-  "ecranEnConstruction": "Écran en construction"
+  "ecranEnConstruction": "Écran en construction",
+  "connexionCodeQr": "Se connecter avec un code QR",
+  "ouvrirSurWebPc": "Ouvrir sur Web / PC",
+  "disponibleSur": "Disponible sur",
+  "telechargerDans": "Télécharger dans",
+  "lienPaiement": "Lien de paiement"
 }

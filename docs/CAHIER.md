@@ -21,10 +21,19 @@ commandes du jour avant de cuisiner, suit les stocks et lit ses chiffres sur un 
 | agent | scan des tickets, service en cours. Rien d'autre |
 | admin | plats, tarifs, menus, créneaux, commandes, stocks, rapports, utilisateurs, paiements, réglages, journal |
 
-Le compte d'un convive porte un statut : `eleve`, `etudiant` ou `employe`. Un élève mineur est rechargé par le
-parent lié à son code. Un étudiant majeur ou un employé se recharge lui-même, par le même mécanisme Mobile
-Money que le parent : mêmes montants, mêmes opérateurs, même webhook GeniusPay, même écriture au
-porte-monnaie. Le statut décide seulement de qui peut payer, jamais du reste de l'application.
+Le compte d'un convive porte un statut : `eleve`, `etudiant`, `employe` ou `autre`. Tout le monde peut payer
+pour soi, élève compris, par le même mécanisme Mobile Money : mêmes montants, mêmes opérateurs, même webhook
+GeniusPay, même écriture au porte-monnaie. Un parent lié peut en plus recharger le compte de ses enfants.
+Un employé, un étudiant ou un compte « autre » n a besoin d aucune liaison. Et depuis n importe quel écran
+d'argent, un convive peut créer un lien de paiement pour se faire payer par un proche. Le statut sert au
+tarif et aux statistiques, jamais à interdire un paiement.
+
+## Rythme de la semaine
+
+Le menu de toute la semaine est préparé et publié le jeudi pour la semaine suivante. L'administration
+travaille donc par semaine entière, pas jour par jour : duplication d'une semaine, publication groupée,
+et les convives voient la semaine à venir dès qu'elle est publiée. Le jour de publication est un réglage
+du back office (`jour_publication_menu`), au cas où la cantine change d'habitude.
 
 ## Minimum exigé par le jury
 - Inscription et connexion par numéro ou e-mail et mot de passe.

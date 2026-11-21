@@ -204,6 +204,22 @@ function main() {
     join(EXPORTS, 'symbole-transparent-sombre-1024.png'),
   )
 
+  // Logos des fournisseurs de connexion et des boutiques, sur fond transparent.
+  // Ils sont rendus carres et a taille fixe : un bouton ne les deforme jamais.
+  const boutons = join(MARQUE, 'boutons')
+  for (const [fichier, sortie, largeur] of [
+    ['google-g.svg', 'google-g-96.png', 96],
+    ['apple.svg', 'apple-96.png', 96],
+    ['play.svg', 'play-96.png', 86],
+  ]) {
+    capturer(
+      pageImage(join(boutons, fichier), largeur, 96, 96, null),
+      96,
+      96,
+      join(EXPORTS, sortie),
+    )
+  }
+
   // Icone de notification : silhouette blanche sur fond transparent, rendue en 512 puis reduite en 96.
   const notificationGrande = join(TEMPORAIRE, 'notification-512.png')
   capturer(pageImage(silhouette, 384, 512, 512, null), 512, 512, notificationGrande)

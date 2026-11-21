@@ -1,14 +1,18 @@
 // Role du fichier : l ecran de bienvenue, avant toute connexion.
 // Le symbole se dessine puis se remplit en moins d une seconde, sauf si l utilisateur est deja
 // connecte ou si le systeme demande de reduire les animations.
+// Les fournisseurs proposes suivent l appareil : Android ne montre que Google, iPhone, iPad et
+// ordinateur montrent Google et Apple. Le code QR est propose partout.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/outils/plateforme.dart';
 import '../../core/responsive/type_ecran.dart';
 import '../../core/securite/session.dart';
 import '../../core/theme/couleurs.dart';
 import '../../l10n/traductions.dart';
+import '../../shared/widgets/bouton_fournisseur.dart';
 import '../../shared/widgets/bouton_principal.dart';
 import '../../shared/widgets/logo_cantine.dart';
 import '../../shared/widgets/texte_adapte.dart';
@@ -24,7 +28,8 @@ class EcranBienvenue extends ConsumerWidget {
     final Palette couleurs = contexte.couleurs;
     final bool dejaConnecte = ref.watch(sessionProvider).value != null;
     final TypeEcran type = TypeEcran.de(contexte);
-    final double tailleLogo = type.estTelephone ? 132 : 168;
+    final double tailleLogo = type.estTelephone ? 124 : 160;
+    final List<Fournisseur> fournisseurs = Plateforme.fournisseurs;
 
     return Scaffold(
       backgroundColor: couleurs.fond,
@@ -32,13 +37,13 @@ class EcranBienvenue extends ConsumerWidget {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: Mesures.marge),
               child: Column(
                 children: <Widget>[
-                  const Spacer(),
+                  const SizedBox(height: 24),
                   LogoAnime(taille: tailleLogo, anime: !dejaConnecte),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 24),
                   TexteAdapte(
                     mots.nomApplication,
                     alignement: TextAlign.center,
@@ -53,19 +58,36 @@ class EcranBienvenue extends ConsumerWidget {
                           letterSpacing: 1.2,
                         ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
                   TexteAdapte(
                     mots.accrocheBienvenue,
                     maxLignes: 3,
                     alignement: TextAlign.center,
                     style: Theme.of(contexte).textTheme.bodyLarge,
                   ),
-                  const Spacer(),
-                  // La place des boutons Google et Apple est tenue ici : F2b les branchera.
-                  _BoutonFournisseurAVenir(libelle: mots.continuerAvecGoogle, icone: Icons.g_mobiledata),
+                  const SizedBox(height: 28),
+                  // F2b branchera ces boutons. Leur place et leur dessin sont fixes ici.
+                  if (fournisseurs.contains(Fournisseur.google))
+                    BoutonFournisseur(
+                      libelle: mots.continuerAvecGoogle,
+                      ressourceLogo: 'assets/marque/google-g-96.png',
+                      onPressed: null,
+                    ),
+                  if (fournisseurs.contains(Fournisseur.apple)) ...<Widget>[
+                    const SizedBox(height: 10),
+                    BoutonFournisseur(
+                      libelle: mots.continuerAvecApple,
+                      ressourceLogo: 'assets/marque/apple-96.png',
+                      onPressed: null,
+                    ),
+                  ],
                   const SizedBox(height: 10),
-                  _BoutonFournisseurAVenir(libelle: mots.continuerAvecApple, icone: Icons.apple),
-                  const SizedBox(height: 16),
+                  BoutonFournisseur.icone(
+                    libelle: mots.connexionCodeQr,
+                    icone: Icons.qr_code_2,
+                    onPressed: null,
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -74,35 +96,8 @@ class EcranBienvenue extends ConsumerWidget {
       ),
       bottomNavigationBar: BoutonPrincipal(
         libelle: mots.continuerAvecIdentifiant,
-        // F2 branchera l ecran d inscription et de connexion.
         onPressed: null,
         raisonIndisponible: mots.bientotDisponible,
-      ),
-    );
-  }
-}
-
-class _BoutonFournisseurAVenir extends StatelessWidget {
-  const _BoutonFournisseurAVenir({required this.libelle, required this.icone});
-
-  final String libelle;
-  final IconData icone;
-
-  @override
-  Widget build(BuildContext contexte) {
-    return SizedBox(
-      height: Mesures.hauteurBouton,
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: null,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(icone, size: 22),
-            const SizedBox(width: 10),
-            Flexible(child: TexteAdapte(libelle, alignement: TextAlign.center)),
-          ],
-        ),
       ),
     );
   }

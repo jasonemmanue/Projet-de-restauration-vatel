@@ -51,5 +51,10 @@
   "erreurReseau": "The server is unreachable. Check your connection.",
   "pageIntrouvable": "This page does not exist.",
   "retourAccueil": "Back to home",
-  "ecranEnConstruction": "Screen under construction"
+  "ecranEnConstruction": "Screen under construction",
+  "connexionCodeQr": "Sign in with a QR code",
+  "ouvrirSurWebPc": "Open on Web / PC",
+  "disponibleSur": "Available on",
+  "telechargerDans": "Download on",
+  "lienPaiement": "Payment link"
 }

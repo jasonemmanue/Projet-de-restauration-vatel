@@ -10,9 +10,11 @@ Lis ce fichier en entier avant toute action. Il prime sur tes habitudes.
 
 ## Rôles
 - convive : menu de la semaine, réservation, ticket QR, solde et historique, notes, suggestions, allergies.
-  Statut du compte : `eleve` (rechargé par le parent lié à son code), `etudiant` ou `employe` (se recharge
-  lui-même, même Mobile Money, mêmes montants, même webhook GeniusPay, même écriture au porte-monnaie). Le
-  statut décide seulement de qui peut payer, jamais du reste de l'application.
+  Statut du compte : `eleve`, `etudiant`, `employe` ou `autre`. Tout convive peut recharger son propre
+  porte-monnaie, élève compris : mêmes opérateurs, mêmes montants, même webhook GeniusPay, même écriture au
+  porte-monnaie. Un parent lié peut en plus recharger celui de ses enfants, et n importe qui peut se faire
+  payer par un proche avec un lien de paiement. Le statut sert au tarif et aux statistiques, jamais à
+  interdire un paiement.
 - parent : lié à un ou plusieurs enfants par un code de liaison. Recharge, lien de paiement, suivi des repas,
   seuil d'alerte de solde bas, allergies de l'enfant.
 - agent : scan des tickets et service en cours. Rien d'autre.

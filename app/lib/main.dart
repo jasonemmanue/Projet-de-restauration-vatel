@@ -1,13 +1,17 @@
 // Role du fichier : demarrer l application.
-// Affichage bord a bord des le premier ecran, preferences locales chargees avant le premier rendu.
+// Affichage bord a bord des le premier ecran, preferences locales chargees avant le premier rendu,
+// Firebase demarre si sa configuration est la.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'core/outils/firebase_pret.dart';
 import 'core/stockage/preferences.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,9 +28,20 @@ Future<void> main() async {
 
   final SharedPreferences preferences = await SharedPreferences.getInstance();
 
+  bool firebaseDemarre = true;
+  try {
+    await Firebase.initializeApp(options: OptionsFirebase.courante);
+  } on Object {
+    // L application doit demarrer meme sans Firebase : les notifications attendront.
+    firebaseDemarre = false;
+  }
+
   runApp(
     ProviderScope(
-      overrides: [preferencesProvider.overrideWithValue(preferences)],
+      overrides: [
+        preferencesProvider.overrideWithValue(preferences),
+        firebasePretProvider.overrideWithValue(firebaseDemarre),
+      ],
       child: const Application(),
     ),
   );

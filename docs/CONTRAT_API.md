@@ -130,12 +130,14 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /paiements/recharge | convive, parent | `{"beneficiaire_id", "montant_xof", "operateur", "telephone_payeur"}` + `Cle-Geste` | `{"paiement_id", "etat": "en_attente", "mode", "url_redirection"}` | `montant_invalide` 422, `beneficiaire_interdit` 403, `operateur_inconnu` 422, `mode_paiement_invalide` 409 |
+| POST /paiements/recharge | convive, parent | `{"beneficiaire_id", "montant_xof", "operateur", "telephone_payeur"}` ; `beneficiaire_id` absent vaut soi-même + `Cle-Geste` | `{"paiement_id", "etat": "en_attente", "mode", "url_redirection"}` | `montant_invalide` 422, `beneficiaire_interdit` 403, `operateur_inconnu` 422, `mode_paiement_invalide` 409 |
 | GET /paiements/{id} | convive, parent | aucun | état du paiement | `introuvable` 404, `acces_refuse` 403 |
 | GET /paiements | convive, parent | pagination | ses paiements | 401 |
 | POST /paiements/webhook/test | public, signé | charge utile GeniusPay de test | `{"recu": true}` | `signature_invalide` 401 |
 | POST /paiements/webhook/reel | public, signé | charge utile GeniusPay réelle | `{"recu": true}` | `signature_invalide` 401 |
 | GET /paiements/retour | public | `?reference=` | page de retour, redirige vers l'application | `introuvable` 404 |
+
+Qui peut être bénéficiaire : soi-même, quel que soit le statut du compte, ou un enfant lié quand le payeur est son parent. Toute autre valeur rend `beneficiaire_interdit` 403. Un lien de paiement se crée depuis n importe quel écran d argent de l application, pour se faire payer par un proche.
 
 Le webhook vérifie la signature, écrit le paiement et le mouvement dans une seule transaction, puis envoie la
 notification après la validation. Un second appel avec la même référence ne crédite rien.
@@ -144,7 +146,7 @@ notification après la validation. Un second appel avec la même référence ne 
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /liens-paiement | convive, parent | `{"beneficiaire_id", "montant_xof", "message", "expire_dans_heures"}` | `{"id", "url_publique", "expire_le"}` | `beneficiaire_interdit` 403, `validation` |
+| POST /liens-paiement | convive, parent | `{"beneficiaire_id", "montant_xof", "message", "expire_dans_heures"}` ; `beneficiaire_id` absent vaut soi-même | `{"id", "url_publique", "expire_le"}` | `beneficiaire_interdit` 403, `validation` |
 | GET /liens-paiement | convive, parent | pagination | ses liens et leur état | 401 |
 | DELETE /liens-paiement/{id} | convive, parent | aucun | `{"annule": true}` | `deja_paye` 409 |
 | GET /public/liens-paiement/{jeton} | public | aucun | `{"beneficiaire_prenom", "montant_xof", "message", "etat"}` | `introuvable` 404, `lien_expire` 410 |

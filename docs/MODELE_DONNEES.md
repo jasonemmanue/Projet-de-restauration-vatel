@@ -27,7 +27,7 @@ Propriétaire : A3.
 | email | text | unique en minuscules, nullable si téléphone fourni |
 | mot_de_passe_hache | text | not null |
 | role | text | not null, check in (convive, parent, agent, admin) |
-| statut_convive | text | null sauf role convive, check in (eleve, etudiant, employe) |
+| statut_convive | text | null sauf role convive, check in (eleve, etudiant, employe, autre) |
 | langue | text | not null default fr, check in (fr, en) |
 | pin_hache | text | null |
 | pin_essais | integer | not null default 0 |
@@ -44,6 +44,8 @@ Propriétaire : A3.
 
 Contraintes et index : `check (telephone is not null or email is not null)` ; unique sur `lower(email)` ;
 unique sur `telephone` ; index sur `role`, sur `statut_convive`, sur `google_id`, sur `apple_id`.
+Qui peut payer : tout convive recharge son propre porte-monnaie, quel que soit son statut, élève compris. Un parent lié peut en plus recharger celui de ses enfants. Un employé, un étudiant ou un compte « autre » n a besoin d aucune liaison. Le statut sert au tarif et aux statistiques, jamais à interdire un paiement.
+
 Un compte créé par Google ou Apple reçoit un mot de passe haché aléatoire inutilisable et `profil_complet` à
 faux jusqu'à la finalisation du profil, ce qui garde la colonne obligatoire.
 
@@ -106,7 +108,7 @@ Propriétaire : A4. Le prix dépend du plat et du profil du convive.
 | --- | --- | --- |
 | id | uuid | pk |
 | plat_id | uuid | fk plats, not null |
-| profil | text | not null, check in (eleve, etudiant, employe, visiteur) |
+| profil | text | not null, check in (eleve, etudiant, employe, autre, visiteur) |
 | prix_xof | integer | not null, >= 0 |
 | actif_du | timestamptz | not null |
 | actif_au | timestamptz | null |
@@ -359,7 +361,12 @@ Propriétaire : A1. Tout réglage modifiable du produit.
 Clés prévues au départ : `heure_limite_defaut`, `delai_annulation_minutes`, `capacite_creneau_defaut`,
 `mode_paiement` (test ou reel), `livraison_verification_telephone` (demo ou reel),
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
-`seuil_alerte_solde_defaut`, `remise_anti_gaspillage_pourcent`, `langues_actives`.
+`seuil_alerte_solde_defaut`, `remise_anti_gaspillage_pourcent`, `langues_actives`,
+`jour_publication_menu` (jeudi par défaut) et `semaines_preparees_a_l_avance` (1 par défaut).
+
+Rythme réel de la cantine : le menu de toute la semaine est préparé et publié le jeudi pour la semaine
+suivante. Le back office propose donc la duplication d'une semaine entière, et l'écran des menus s'ouvre
+sur la semaine à préparer, pas sur le jour courant. Ces deux réglages restent modifiables.
 
 ## journal_admin
 Propriétaire : A1. Table en ajout seul, toute action sensible du back office.

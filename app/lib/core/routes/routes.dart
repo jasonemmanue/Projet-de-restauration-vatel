@@ -16,6 +16,7 @@ import '../../features/notifications/ecran_notifications.dart';
 import '../../features/parent/ecran_famille.dart';
 import '../../features/parent/ecran_messages.dart';
 import '../../features/parent/ecran_recharge.dart';
+import '../../features/porte_monnaie/ecran_lien_paiement.dart';
 import '../../features/porte_monnaie/ecran_porte_monnaie.dart';
 import '../../features/profil/ecran_compte.dart';
 import '../../features/reservations/ecran_ticket.dart';
@@ -177,6 +178,16 @@ StatefulShellRoute _coquilleConvive() {
                 path: 'notifications',
                 builder: (BuildContext contexte, GoRouterState etat) => const EcranNotifications(),
               ),
+              // Tout convive recharge son propre porte-monnaie, quel que soit son statut,
+              // et peut se faire payer par un proche avec un lien.
+              GoRoute(
+                path: 'recharge',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranRecharge(),
+              ),
+              GoRoute(
+                path: 'lien-paiement',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranLienPaiement(),
+              ),
             ],
           ),
         ],
@@ -230,6 +241,12 @@ StatefulShellRoute _coquilleParent() {
           GoRoute(
             path: '${Chemins.parent}/recharge',
             builder: (BuildContext contexte, GoRouterState etat) => const EcranRecharge(),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'lien-paiement',
+                builder: (BuildContext contexte, GoRouterState etat) => const EcranLienPaiement(),
+              ),
+            ],
           ),
         ],
       ),

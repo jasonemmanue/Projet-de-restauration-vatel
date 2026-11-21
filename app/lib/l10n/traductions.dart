@@ -367,6 +367,36 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Écran en construction'**
   String get ecranEnConstruction;
+
+  /// No description provided for @connexionCodeQr.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter avec un code QR'**
+  String get connexionCodeQr;
+
+  /// No description provided for @ouvrirSurWebPc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir sur Web / PC'**
+  String get ouvrirSurWebPc;
+
+  /// No description provided for @disponibleSur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible sur'**
+  String get disponibleSur;
+
+  /// No description provided for @telechargerDans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger dans'**
+  String get telechargerDans;
+
+  /// No description provided for @lienPaiement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de paiement'**
+  String get lienPaiement;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {
