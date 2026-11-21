@@ -1729,6 +1729,24 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Hors ligne : ton avis partira au retour du réseau.'**
   String get appreciationEnAttente;
+
+  /// No description provided for @ouvertureTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le repas, sans la file.'**
+  String get ouvertureTitre;
+
+  /// No description provided for @ouvertureDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande, porte-monnaie, ticket QR.'**
+  String get ouvertureDetail;
+
+  /// No description provided for @ouvertureCommencer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer'**
+  String get ouvertureCommencer;
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

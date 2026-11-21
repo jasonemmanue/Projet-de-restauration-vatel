@@ -870,4 +870,13 @@ class TraductionsFr extends Traductions {
   @override
   String get appreciationEnAttente =>
       'Hors ligne : ton avis partira au retour du réseau.';
+
+  @override
+  String get ouvertureTitre => 'Le repas, sans la file.';
+
+  @override
+  String get ouvertureDetail => 'Commande, porte-monnaie, ticket QR.';
+
+  @override
+  String get ouvertureCommencer => 'Commencer';
 }

@@ -278,5 +278,8 @@
   "commentaireLibre": "A word, if you like",
   "envoyer": "Send",
   "appreciationEnvoyee": "Thanks, your review is on its way.",
-  "appreciationEnAttente": "Offline: your review will go when the network is back."
+  "appreciationEnAttente": "Offline: your review will go when the network is back.",
+  "ouvertureTitre": "Your meal, no queue.",
+  "ouvertureDetail": "Order, wallet, QR ticket.",
+  "ouvertureCommencer": "Get started"
 }

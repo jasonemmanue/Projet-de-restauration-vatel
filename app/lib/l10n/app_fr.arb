@@ -365,5 +365,8 @@
   "commentaireLibre": "Un mot, si tu veux",
   "envoyer": "Envoyer",
   "appreciationEnvoyee": "Merci, ton avis est parti.",
-  "appreciationEnAttente": "Hors ligne : ton avis partira au retour du réseau."
+  "appreciationEnAttente": "Hors ligne : ton avis partira au retour du réseau.",
+  "ouvertureTitre": "Le repas, sans la file.",
+  "ouvertureDetail": "Commande, porte-monnaie, ticket QR.",
+  "ouvertureCommencer": "Commencer"
 }

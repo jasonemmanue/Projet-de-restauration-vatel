@@ -10,6 +10,7 @@ import 'core/routes/routes.dart';
 import 'core/theme/mode_theme.dart';
 import 'core/theme/theme.dart';
 import 'l10n/traductions.dart';
+import 'shared/widgets/porte_ouverture.dart';
 
 /// L application Cantine Vatel.
 class Application extends ConsumerWidget {
@@ -46,7 +47,7 @@ class Application extends ConsumerWidget {
           data: donnees.copyWith(
             textScaler: TextScaler.linear(reglageSysteme * facteurEcran),
           ),
-          child: enfant ?? const SizedBox.shrink(),
+          child: PorteOuverture(enfant: enfant ?? const SizedBox.shrink()),
         );
       },
     );

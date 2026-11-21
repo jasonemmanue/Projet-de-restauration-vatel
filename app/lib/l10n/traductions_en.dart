@@ -867,4 +867,13 @@ class TraductionsEn extends Traductions {
   @override
   String get appreciationEnAttente =>
       'Offline: your review will go when the network is back.';
+
+  @override
+  String get ouvertureTitre => 'Your meal, no queue.';
+
+  @override
+  String get ouvertureDetail => 'Order, wallet, QR ticket.';
+
+  @override
+  String get ouvertureCommencer => 'Get started';
 }
