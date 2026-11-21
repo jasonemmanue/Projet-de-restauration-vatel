@@ -14,9 +14,9 @@ Mis à jour le 21 novembre 2026.
 | 3 | Clients OAuth Google (hors Firebase Auth) | fait |
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire |
 | 5 | API Gmail (envoi réel des codes) | à faire |
-| 6 | GeniusPay (clés, webhooks, taux de frais) | à faire |
+| 6 | GeniusPay (clés, webhooks, taux de frais) | en cours |
 | 7 | Fiches des boutiques (Play, App Store) | à faire |
-| 8 | Clé web push FCM (notifications sur le site) | à faire |
+| 8 | Clé web push FCM (notifications sur le site) | fait, valeur à reporter |
 | 9 | Compte développeur Google Play (25 USD, une fois) | à faire |
 
 Rappels permanents :
@@ -219,7 +219,7 @@ Valeurs récoltées :
 
 ---
 
-## 6. GeniusPay — à faire
+## 6. GeniusPay — en cours
 
 À récupérer dans le tableau de bord marchand GeniusPay :
 1. La clé marchand de **test**.
@@ -259,7 +259,7 @@ Valeurs récoltées :
 
 ---
 
-## 8. Clé web push FCM — à faire
+## 8. Clé web push FCM — fait, valeur à reporter
 
 Sans cette clé, les notifications ne marchent pas sur la version web, même si tout le reste est
 posé. Deux minutes.
