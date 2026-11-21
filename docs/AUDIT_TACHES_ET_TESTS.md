@@ -443,3 +443,20 @@ lancées avec l'adresse de l'API de production et les valeurs Firebase.
 
 **Reste à faire.** La Release GitHub se crée à la main, faute de `gh` installé sur ce poste : le document
 donne l'adresse et le tag à utiliser.
+
+---
+
+## Vérifications en veille, à faire dès que l'API livre
+
+Ces contrôles ne peuvent pas être faits aujourd'hui faute de routes. Ils sont à reprendre dans cet ordre dès
+que la session API annonce les blocs correspondants. Ne pas clore les lots concernés avant.
+
+| Quand | Ce qu'il faut vérifier | Lot concerné |
+| --- | --- | --- |
+| Dès A4 | `GET /menus/semaine` répond : le menu de l'application cesse de tomber sur le jeu de démonstration, les prix et les plats viennent du serveur | APP-05 |
+| Dès A5 | Une commande passée depuis le téléphone est acceptée, débitée une seule fois malgré un double envoi, puis annulée avant son gel | APP-06 |
+| Dès A5 | Le solde et les mouvements remplacent le tiret de l'accueil et du porte-monnaie | APP-06 |
+| Dès A8 | **Une réservation faite sur le téléphone apparaît dans les commandes du jour du back office.** C'est le « fini quand » d'APP-08, resté en veille | APP-08 |
+| Dès A8 | Le tableau de bord montre de vrais chiffres, et les frais GeniusPay calculés aux taux réels (Wave 1,5 %, Orange et MTN 3,5 %, Stripe et lien tiers 5 %, GeniusPay 100 XOF plus 1 %, retrait 1 %) | APP-08 |
+| Dès A8 | Le budget et le calendrier budgétaire se remplissent tout seuls à partir des paiements et de leurs frais | Budget |
+| Dès A6 | Un paiement de test aboutit, crédite le porte-monnaie et écrit ses trois frais au budget | APP suivant |
