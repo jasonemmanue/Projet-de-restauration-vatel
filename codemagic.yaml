@@ -95,6 +95,10 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     working_directory: app
+    # La signature et la publication passent par la cle App Store Connect enregistree dans
+    # Codemagic (Integrations, Developer Portal) : le nom ci-dessous doit etre celui de la cle.
+    integrations:
+      app_store_connect: Codemagic
     environment:
       flutter: 3.38.4
       xcode: latest
@@ -106,8 +110,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.vatel.cantine
-      groups:
-        - app_store_connect
     triggering:
       events: [push]
       branch_patterns:
@@ -117,11 +119,7 @@ workflows:
       - name: Dépendances
         script: flutter pub get
       - name: Profils de signature
-        script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
-          keychain initialize
-          keychain add-certificates
-          xcode-project use-profiles
+        script: xcode-project use-profiles
       - name: Construire l'archive
         script: >
           flutter build ipa --release
