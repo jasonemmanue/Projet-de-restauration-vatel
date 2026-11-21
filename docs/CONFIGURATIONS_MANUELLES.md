@@ -245,10 +245,10 @@ par mode. La vérification doit utiliser celui du mode de la route appelée :
 `GENIUSPAY_WEBHOOK_SECRET` sur `/webhook/test`, `GENIUSPAY_LIVE_WEBHOOK_SECRET` sur
 `/webhook/reel`. Un webhook qui ne se vérifie qu'avec le secret de l'autre mode se refuse.
 
-Webhooks : en attente. Les deux adresses sont fixées par le contrat et ne changeront pas, mais la
-route n'est pas encore déployée (au 21/11 midi l'API en ligne expose 41 routes, aucune de
-paiement). Si l'interface GeniusPay teste l'adresse au moment de la déclaration, elle échouera :
-dans ce cas, déclarer après la mise en ligne du bloc paiements.
+Webhooks : **les deux adresses sont en ligne et vérifiées le 21/11**. Un POST non signé sur
+chacune renvoie `401 {"code":"signature_invalide"}`, ce qui est le bon comportement : la route
+existe et elle refuse un appel non signé. Elles peuvent donc être déclarées dans GeniusPay.
+Côté API la route est `/api/v1/paiements/webhook/{mode}`, `mode` valant `test` ou `reel`.
 
 ### Grille de frais, donnée par l'exploitant le 21/11
 
