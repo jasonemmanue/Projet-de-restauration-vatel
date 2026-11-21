@@ -1075,6 +1075,120 @@ abstract class Traductions {
   /// In fr, this message translates to:
   /// **'Plats'**
   String get platsTitre;
+
+  /// No description provided for @repasServis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas servis'**
+  String get repasServis;
+
+  /// No description provided for @nonReclames.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non réclamés'**
+  String get nonReclames;
+
+  /// No description provided for @recettesBrutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recettes brutes'**
+  String get recettesBrutes;
+
+  /// No description provided for @fraisGeniusPay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais GeniusPay'**
+  String get fraisGeniusPay;
+
+  /// No description provided for @netAttendu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Net attendu'**
+  String get netAttendu;
+
+  /// No description provided for @platsLesPlusReserves.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plats les plus commandés'**
+  String get platsLesPlusReserves;
+
+  /// No description provided for @septDerniersJours.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sept derniers jours'**
+  String get septDerniersJours;
+
+  /// No description provided for @aPreparer.
+  ///
+  /// In fr, this message translates to:
+  /// **'À préparer'**
+  String get aPreparer;
+
+  /// No description provided for @partsServies.
+  ///
+  /// In fr, this message translates to:
+  /// **'{servies} sur {parts} servies'**
+  String partsServies(int servies, int parts);
+
+  /// No description provided for @ajusterSolde.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajuster un solde'**
+  String get ajusterSolde;
+
+  /// No description provided for @montant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get montant;
+
+  /// No description provided for @motif.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif'**
+  String get motif;
+
+  /// No description provided for @motDePasseActions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe des actions'**
+  String get motDePasseActions;
+
+  /// No description provided for @appliquer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appliquer'**
+  String get appliquer;
+
+  /// No description provided for @crediter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créditer'**
+  String get crediter;
+
+  /// No description provided for @debiter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Débiter'**
+  String get debiter;
+
+  /// No description provided for @ajustementFait.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajustement enregistré'**
+  String get ajustementFait;
+
+  /// No description provided for @identifiantConvive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Identifiant du convive'**
+  String get identifiantConvive;
+
+  /// No description provided for @actualiseA.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actualisé à {heure}'**
+  String actualiseA(String heure);
 }
 
 class _TraductionsDelegate extends LocalizationsDelegate<Traductions> {

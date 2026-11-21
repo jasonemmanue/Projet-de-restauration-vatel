@@ -521,4 +521,65 @@ class TraductionsEn extends Traductions {
 
   @override
   String get platsTitre => 'Dishes';
+
+  @override
+  String get repasServis => 'Meals served';
+
+  @override
+  String get nonReclames => 'Unclaimed';
+
+  @override
+  String get recettesBrutes => 'Gross revenue';
+
+  @override
+  String get fraisGeniusPay => 'GeniusPay fees';
+
+  @override
+  String get netAttendu => 'Expected net';
+
+  @override
+  String get platsLesPlusReserves => 'Most ordered dishes';
+
+  @override
+  String get septDerniersJours => 'Last seven days';
+
+  @override
+  String get aPreparer => 'To prepare';
+
+  @override
+  String partsServies(int servies, int parts) {
+    return '$servies of $parts served';
+  }
+
+  @override
+  String get ajusterSolde => 'Adjust a balance';
+
+  @override
+  String get montant => 'Amount';
+
+  @override
+  String get motif => 'Reason';
+
+  @override
+  String get motDePasseActions => 'Actions password';
+
+  @override
+  String get appliquer => 'Apply';
+
+  @override
+  String get crediter => 'Credit';
+
+  @override
+  String get debiter => 'Debit';
+
+  @override
+  String get ajustementFait => 'Adjustment saved';
+
+  @override
+  String get identifiantConvive => 'Diner identifier';
+
+  @override
+  String actualiseA(String heure) {
+    return 'Updated at $heure';
+  }
 }

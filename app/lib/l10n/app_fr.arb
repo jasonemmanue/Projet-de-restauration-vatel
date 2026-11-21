@@ -225,5 +225,41 @@
   "supplementPrix": "Prix de la part en plus",
   "aucunPlatAuMenu": "Aucun plat au menu ce jour",
   "menusTitre": "Menus de la semaine",
-  "platsTitre": "Plats"
+  "platsTitre": "Plats",
+  "repasServis": "Repas servis",
+  "nonReclames": "Non réclamés",
+  "recettesBrutes": "Recettes brutes",
+  "fraisGeniusPay": "Frais GeniusPay",
+  "netAttendu": "Net attendu",
+  "platsLesPlusReserves": "Plats les plus commandés",
+  "septDerniersJours": "Sept derniers jours",
+  "aPreparer": "À préparer",
+  "partsServies": "{servies} sur {parts} servies",
+  "@partsServies": {
+    "placeholders": {
+      "servies": {
+        "type": "int"
+      },
+      "parts": {
+        "type": "int"
+      }
+    }
+  },
+  "ajusterSolde": "Ajuster un solde",
+  "montant": "Montant",
+  "motif": "Motif",
+  "motDePasseActions": "Mot de passe des actions",
+  "appliquer": "Appliquer",
+  "crediter": "Créditer",
+  "debiter": "Débiter",
+  "ajustementFait": "Ajustement enregistré",
+  "identifiantConvive": "Identifiant du convive",
+  "actualiseA": "Actualisé à {heure}",
+  "@actualiseA": {
+    "placeholders": {
+      "heure": {
+        "type": "String"
+      }
+    }
+  }
 }

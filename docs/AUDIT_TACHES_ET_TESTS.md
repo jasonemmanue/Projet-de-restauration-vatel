@@ -392,3 +392,31 @@ démarrage. Elle ne descend jamais dans l'application mobile ni dans le site, qu
 identifiants publics. Elle est révocable à tout moment depuis la console, ce qui coupe l'accès sans toucher au
 code. Et le `.gitignore` refuse déjà `service-account*.json` et `firebase-adminsdk*.json`, donc un
 téléchargement laissé dans le dossier ne peut pas être commité par erreur.
+
+---
+
+## APP-08, back office partie 2
+
+**Fait.** Commandes du jour par service et par plat, avec le total de parts à préparer, un bouton
+d'actualisation et une actualisation automatique toutes les 30 secondes, arrêtée dès que l'application passe
+en arrière-plan et reprise au retour. Tableau de bord : tuiles repas servis, non réclamés, recettes brutes,
+frais GeniusPay supportés et net attendu, courbe dessinée des sept derniers jours, plats les plus commandés.
+Ajustement du solde d'un convive en feuille du bas, avec sens, montant, motif et mot de passe des actions,
+qui montre tel quel le message de refus de l'API.
+
+**Vérifié par Claude.** `flutter analyze` : « No issues found ». `flutter test` : 5 tests verts. Les routes
+`/admin/commandes-jour`, `/admin/tableau-bord` et `/admin/utilisateurs/{id}/ajustement` n'existent pas encore
+côté API : les écrans montrent un état vide plutôt qu'un chiffre inventé. Le « fini quand » du lot, une
+réservation faite sur le téléphone qui apparaît dans les commandes du jour, ne peut donc pas être vérifié
+avant A8.
+
+**À tester par vous.**
+1. Sur ordinateur, espace admin, onglet Cuisine : l'heure d'actualisation avance toute seule, et le bouton
+   de rafraîchissement la met à jour tout de suite.
+2. Passer l'application en arrière-plan une minute, revenir : l'heure se met à jour au retour, pas pendant.
+3. Tableau de bord en mode sombre : les cinq tuiles et la courbe restent lisibles, aucun texte coupé.
+
+**Résultat.**
+
+**Reste à faire.** Brancher les trois routes dès A8, et vérifier alors le parcours complet. Les trois taux de
+frais GeniusPay restent à zéro tant que l'exploitant ne les a pas donnés : le net affiché vaudra le brut.
