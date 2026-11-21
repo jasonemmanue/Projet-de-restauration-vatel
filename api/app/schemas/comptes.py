@@ -40,6 +40,14 @@ class ConnexionEntree(BaseModel):
     appareil: AppareilEntree = Field(default_factory=AppareilEntree)
 
 
+class ConfirmationConnexionEntree(BaseModel):
+    """Corps de POST /auth/connexion/confirmer : le code reçu après le mot de passe."""
+
+    identifiant: str = Field(min_length=1, max_length=254)
+    code: str = Field(min_length=1, max_length=20)
+    appareil: AppareilEntree = Field(default_factory=AppareilEntree)
+
+
 class DemandeCodeEntree(BaseModel):
     """Corps de POST /auth/verification/envoyer."""
 
@@ -98,6 +106,7 @@ class UtilisateurSortie(BaseModel):
 class SessionSortie(BaseModel):
     """Jetons d'une session ouverte et compte concerné."""
 
+    etape: Literal["connecte"] = "connecte"
     jeton: str
     jeton_rafraichissement: str
     expire_dans: int
@@ -123,6 +132,16 @@ class JetonsSortie(BaseModel):
 class CodeEnvoyeSortie(BaseModel):
     """Réponse d'une demande de code ; `code_demo` seulement en livraison démo."""
 
+    mode_livraison: Literal["demo", "reel"]
+    expire_le: datetime
+    code_demo: str | None = None
+
+
+class CodeRequisSortie(BaseModel):
+    """Réponse de la connexion d'un compte qui revient après une absence : un code est à confirmer."""
+
+    etape: Literal["code_requis"] = "code_requis"
+    canal: Canal
     mode_livraison: Literal["demo", "reel"]
     expire_le: datetime
     code_demo: str | None = None

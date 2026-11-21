@@ -38,6 +38,15 @@ class NouveauCompte:
     statut_convive: str | None
 
 
+@dataclass(frozen=True)
+class ResultatConnexion:
+    """Issue d'une connexion : des jetons, ou un code à confirmer après une absence."""
+
+    utilisateur: Utilisateur
+    jetons: sessions.Jetons | None
+    code: verification.CodeEnvoye | None
+
+
 def lire_identifiant(saisie: str, canal: str | None = None) -> Identifiant:
     """Normalise un identifiant saisi, ou répond 422 identifiant_invalide."""
     try:
@@ -116,8 +125,9 @@ async def connecter(
     mot_de_passe: str,
     appareil: sessions.Appareil,
     ip: str,
-) -> tuple[Utilisateur, sessions.Jetons]:
-    """Vérifie identifiant et mot de passe, sous blocage par compte et par IP, puis ouvre une session."""
+) -> "ResultatConnexion":
+    """Vérifie identifiant et mot de passe, sous blocage par compte et par IP, puis ouvre une session,
+    ou demande un code si le compte revient après une absence."""
     try:
         identifiant = normaliser_identifiant(saisie)
         cle_compte = tentatives.cle_connexion_compte(f"{identifiant.canal}:{identifiant.valeur}")
@@ -138,6 +148,53 @@ async def connecter(
     if not utilisateur.actif:
         raise ErreurApi("compte_desactive", 403)
     await tentatives.oublier(session, cle_compte)
+    if await code_de_retour_exige(session, utilisateur):
+        identifiant_compte = identifiant_du_compte(utilisateur)
+        envoi = await verification.demander_code(
+            session, config, identifiant_compte, verification.USAGE_RECONNEXION, ip, utilisateur.id
+        )
+        return ResultatConnexion(utilisateur, None, envoi)
+    jetons = await sessions.ouvrir_session(session, config, utilisateur, appareil, ip)
+    return ResultatConnexion(utilisateur, jetons, None)
+
+
+def identifiant_du_compte(utilisateur: Utilisateur) -> Identifiant:
+    """Identifiant par lequel le compte reçoit ses codes : son e-mail s'il en a un, sinon son numéro."""
+    if utilisateur.email:
+        return Identifiant(CANAL_EMAIL, utilisateur.email.lower())
+    return Identifiant("telephone", utilisateur.telephone or "")
+
+
+async def code_de_retour_exige(session: AsyncSession, utilisateur: Utilisateur) -> bool:
+    """Un compte vérifié qui n'a pas ouvert l'application depuis la durée d'inactivité doit saisir un code.
+
+    Un compte jamais ouvert, créé par l'admin par exemple, est traité comme absent. Un compte encore à
+    vérifier passe : il reçoit de toute façon son code de vérification.
+    """
+    if not est_verifie(utilisateur):
+        return False
+    derniere = await sessions.derniere_activite(session, utilisateur.id)
+    return derniere is None or derniere < datetime.now(UTC) - await sessions.duree_inactivite(session)
+
+
+async def confirmer_retour(
+    session: AsyncSession,
+    config: Configuration,
+    identifiant: Identifiant,
+    code: str,
+    appareil: sessions.Appareil,
+    ip: str | None,
+) -> tuple[Utilisateur, sessions.Jetons]:
+    """Contrôle le code envoyé après le mot de passe et ouvre la session.
+
+    Ce code n'est tiré qu'après un mot de passe juste : le connaître prouve les deux étapes.
+    """
+    ligne = await verification.controler_code(
+        session, config, identifiant, verification.USAGE_RECONNEXION, code, ip
+    )
+    utilisateur = await session.get(Utilisateur, ligne.utilisateur_id)
+    if utilisateur is None or not utilisateur.actif or utilisateur.supprime_le is not None:
+        raise ErreurApi("code_invalide", 400)
     jetons = await sessions.ouvrir_session(session, config, utilisateur, appareil, ip)
     return utilisateur, jetons
 

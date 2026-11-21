@@ -30,6 +30,7 @@ from app.services.regles_comptes import (
 
 USAGE_VERIFICATION = "verification_compte"
 USAGE_REINITIALISATION = "reinitialisation_mot_de_passe"
+USAGE_RECONNEXION = "reconnexion"
 JOUR = timedelta(days=1)
 
 
@@ -40,6 +41,7 @@ class CodeEnvoye:
     mode_livraison: str
     expire_le: datetime
     code_demo: str | None
+    canal: str
 
 
 def _empreinte(config: Configuration, identifiant: Identifiant, code: str) -> str:
@@ -145,7 +147,7 @@ async def demander_code(
         )
     )
     session.add(_journal(identifiant, "envoye", ip, mode))
-    return CodeEnvoye(mode, expire_le, code if destinataire_id is not None else None)
+    return CodeEnvoye(mode, expire_le, code if destinataire_id is not None else None, canal)
 
 
 async def controler_code(

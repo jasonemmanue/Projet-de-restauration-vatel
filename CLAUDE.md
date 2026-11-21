@@ -2,7 +2,7 @@
 
 Gestion de cantine scolaire et d'entreprise en Côte d'Ivoire. Monnaie XOF, indicatif +225.
 Le flux est : commande, paiement, livraison au comptoir, sortie de stock. Chaque convive a un porte-monnaie
-et commande ses repas avant l'heure limite, pour un jour, une semaine ou un mois. Ni heure ni créneau : il
+et commande ses repas avant leur gel, pour un jour, une semaine ou un mois. Ni heure ni créneau : il
 vient manger quand il veut ce jour-là. Un repas tient en trois services, entrée, résistance et sortie, tous au choix : au moins un, et le prix est
 celui du menu du jour pour son profil, qu'il en prenne un ou trois. Chaque repas se gèle la veille de son
 propre service : commander la semaine ne fige pas la semaine. Il reçoit un
@@ -28,7 +28,7 @@ Lis ce fichier en entier avant toute action. Il prime sur tes habitudes.
   journal des actions, remise à zéro des données de démo).
 
 ## Architecture
-- Le serveur décide de tout : prix, solde, heure limite, droits, disponibilité. Le client affiche ce que l'API
+- Le serveur décide de tout : prix, solde, gel des commandes, droits, disponibilité. Le client affiche ce que l'API
   lui donne et ne recalcule jamais un montant.
 - Seule l'API touche la base. Ni l'application ni le site n'ouvrent de connexion PostgreSQL.
 - Tout réglage modifiable passe par la table `parametres` et le back office. Aucune valeur métier en dur.

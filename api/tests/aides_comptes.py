@@ -72,9 +72,15 @@ async def creer_admin(application: FastAPI) -> str:
 
 
 async def connecter(
-    client: httpx.AsyncClient, identifiant: str, mot_de_passe: str = MOT_DE_PASSE
+    client: httpx.AsyncClient, identifiant: str, mot_de_passe: str = MOT_DE_PASSE, confirmer: bool = True
 ) -> httpx.Response:
-    """Connexion par mot de passe."""
-    return await client.post(
+    """Connexion par mot de passe ; si un code est demandé et `confirmer` vaut vrai, le confirme aussitôt."""
+    reponse = await client.post(
         "/api/v1/auth/connexion", json={"identifiant": identifiant, "mot_de_passe": mot_de_passe}
     )
+    if confirmer and reponse.status_code == 200 and reponse.json().get("etape") == "code_requis":
+        return await client.post(
+            "/api/v1/auth/connexion/confirmer",
+            json={"identifiant": identifiant, "code": reponse.json()["code_demo"]},
+        )
+    return reponse

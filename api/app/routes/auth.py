@@ -8,6 +8,8 @@ from app.db.session import SessionBase
 from app.models import Utilisateur
 from app.schemas.comptes import (
     CodeEnvoyeSortie,
+    CodeRequisSortie,
+    ConfirmationConnexionEntree,
     ConfirmationEntree,
     ConnexionEntree,
     DemandeCodeEntree,
@@ -72,11 +74,13 @@ async def inscrire(corps: InscriptionEntree, request: Request, session: SessionB
     )
 
 
-@routeur.post("/connexion", response_model=SessionSortie)
-async def connecter(corps: ConnexionEntree, request: Request, session: SessionBase) -> SessionSortie:
-    """Ouvre une session ; la réponse dit si le compte est vérifié."""
+@routeur.post("/connexion", response_model=SessionSortie | CodeRequisSortie, response_model_exclude_none=True)
+async def connecter(
+    corps: ConnexionEntree, request: Request, session: SessionBase
+) -> SessionSortie | CodeRequisSortie:
+    """Ouvre une session, ou demande un code si le compte revient après plus de 5 jours d'absence."""
     appareil = sessions.Appareil(corps.appareil.nom, corps.appareil.plateforme)
-    utilisateur, jetons = await comptes.connecter(
+    resultat = await comptes.connecter(
         session,
         request.app.state.config,
         corps.identifiant,
@@ -84,6 +88,38 @@ async def connecter(corps: ConnexionEntree, request: Request, session: SessionBa
         appareil,
         adresse_client(request),
     )
+    if resultat.code is not None:
+        return CodeRequisSortie(
+            canal=resultat.code.canal,  # type: ignore[arg-type]
+            mode_livraison=resultat.code.mode_livraison,  # type: ignore[arg-type]
+            expire_le=resultat.code.expire_le,
+            code_demo=resultat.code.code_demo,
+        )
+    if resultat.jetons is None:
+        raise ErreurApi("erreur_serveur", 500)
+    return _sortie_session(resultat.utilisateur, resultat.jetons)
+
+
+@routeur.post("/connexion/confirmer", response_model=SessionSortie)
+async def confirmer_connexion(
+    corps: ConfirmationConnexionEntree, request: Request, session: SessionBase
+) -> SessionSortie:
+    """Contrôle le code reçu après le mot de passe et ouvre la session."""
+    utilisateur_trouve = await comptes.trouver(session, comptes.lire_identifiant(corps.identifiant))
+    if utilisateur_trouve is None:
+        raise ErreurApi("code_invalide", 400)
+    utilisateur, jetons = await comptes.confirmer_retour(
+        session,
+        request.app.state.config,
+        comptes.identifiant_du_compte(utilisateur_trouve),
+        corps.code,
+        sessions.Appareil(corps.appareil.nom, corps.appareil.plateforme),
+        adresse_client(request),
+    )
+    return _sortie_session(utilisateur, jetons)
+
+
+def _sortie_session(utilisateur: Utilisateur, jetons: sessions.Jetons) -> SessionSortie:
     return SessionSortie(
         jeton=jetons.jeton,
         jeton_rafraichissement=jetons.jeton_rafraichissement,

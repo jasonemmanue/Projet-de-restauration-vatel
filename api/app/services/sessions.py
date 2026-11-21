@@ -1,10 +1,14 @@
-"""Sessions ouvertes par appareil : ouverture, rafraîchissement avec remplacement du jeton, révocation."""
+"""Sessions ouvertes par appareil : ouverture, rafraîchissement avec remplacement du jeton, révocation.
+
+Une session est glissante : chaque rafraîchissement la prolonge de `session_inactivite_jours`. Elle ne
+meurt donc qu'après ce nombre de jours sans ouvrir l'application.
+"""
 
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Configuration
@@ -12,6 +16,7 @@ from app.core.erreurs import ErreurApi
 from app.core.hachage import hmac_hex
 from app.core.jetons import creer_jeton_acces, nouveau_jeton_rafraichissement
 from app.models import SessionAppareil, Utilisateur
+from app.services.parametres import lire_entier
 
 
 @dataclass(frozen=True)
@@ -29,6 +34,20 @@ class Jetons:
     jeton: str
     jeton_rafraichissement: str
     expire_dans: int
+
+
+async def duree_inactivite(session: AsyncSession) -> timedelta:
+    """Durée sans ouverture de l'application au bout de laquelle une session expire."""
+    return timedelta(days=await lire_entier(session, "session_inactivite_jours"))
+
+
+async def derniere_activite(session: AsyncSession, utilisateur_id: uuid.UUID) -> datetime | None:
+    """Dernière ouverture de l'application par ce compte, toutes sessions confondues."""
+    return await session.scalar(
+        select(func.max(SessionAppareil.derniere_activite)).where(
+            SessionAppareil.utilisateur_id == utilisateur_id
+        )
+    )
 
 
 def _jetons(config: Configuration, utilisateur_id: uuid.UUID, session_id: uuid.UUID, brut: str) -> Jetons:
@@ -51,7 +70,7 @@ async def ouvrir_session(
         appareil_nom=appareil.nom,
         plateforme=appareil.plateforme,
         adresse_ip=ip,
-        expire_le=datetime.now(UTC) + timedelta(days=config.jwt_rafraichissement_jours),
+        expire_le=datetime.now(UTC) + await duree_inactivite(session),
     )
     session.add(ligne)
     await session.flush()
@@ -83,7 +102,7 @@ async def rafraichir(session: AsyncSession, config: Configuration, brut: str) ->
     nouveau = nouveau_jeton_rafraichissement()
     ligne.jeton_rafraichissement_hache = hmac_hex(config.secret_key, nouveau)
     ligne.derniere_activite = maintenant
-    ligne.expire_le = maintenant + timedelta(days=config.jwt_rafraichissement_jours)
+    ligne.expire_le = maintenant + await duree_inactivite(session)
     return _jetons(config, utilisateur.id, ligne.id, nouveau)
 
 

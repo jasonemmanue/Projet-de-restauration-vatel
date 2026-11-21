@@ -36,6 +36,17 @@ def _inscription(client: httpx.Client, type_: str, identifiant: str, mot_de_pass
     )
 
 
+def _connecter_admin(client: httpx.Client, identifiant: str, mot_de_passe: str) -> httpx.Response:
+    """Connecte l'admin de recette ; après une absence, confirme le code rendu en démo."""
+    reponse = client.post(
+        f"{AUTH}/connexion", json={"identifiant": identifiant, "mot_de_passe": mot_de_passe}
+    )
+    if reponse.status_code == 200 and reponse.json().get("etape") == "code_requis":
+        code = reponse.json().get("code_demo", "")
+        reponse = client.post(f"{AUTH}/connexion/confirmer", json={"identifiant": identifiant, "code": code})
+    return reponse
+
+
 def _verifier(recette: Recette, identifiant: str, canal: str, longueur: int) -> None:
     client = recette.client
     envoi = client.post(f"{AUTH}/verification/envoyer", json={"identifiant": identifiant, "canal": canal})
@@ -60,9 +71,7 @@ def lancer(recette: Recette) -> None:
     client = recette.client
     admin = lire_identifiants_admin()
     actions = {"X-Mot-De-Passe-Actions": lire_mot_de_passe_actions()}
-    connexion_admin = client.post(
-        f"{AUTH}/connexion", json={"identifiant": admin.identifiant, "mot_de_passe": admin.mot_de_passe}
-    )
+    connexion_admin = _connecter_admin(client, admin.identifiant, admin.mot_de_passe)
     if not recette.verifier("connexion de l'admin de recette", connexion_admin.status_code == 200):
         return
     jeton_admin = connexion_admin.json()["jeton"]

@@ -45,14 +45,15 @@ jamais l'existence d'un compte ni un détail technique.
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
 | POST /auth/inscription | public | `{"type": "telephone"\|"email", "identifiant", "mot_de_passe", "prenom", "nom", "role": "convive"\|"parent", "statut_convive", "conditions_acceptees": true, "appareil": {"nom", "plateforme"}}` ; `statut_convive` (eleve, etudiant, employe, autre) obligatoire pour un convive, absent pour un parent ; `appareil` facultatif | 201 `{"utilisateur_id", "etat": "a_verifier", "canal", "jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` : le compte naît à vérifier et sa session s'ouvre | `compte_existe` 409, `identifiant_invalide` 422, `mot_de_passe_faible` 422, `conditions_requises` 422, `validation` 422 |
-| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` ; identifiant numéro ou e-mail, `appareil` facultatif | `{"jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` ; `utilisateur.verifie` dit si le compte est vérifié | `identifiants_invalides` 401 (message unique, compte existant ou non), `trop_de_tentatives` 429 (blocage par compte et par IP), `compte_desactive` 403, `verification_requise` 403 (session dormante depuis plus de cinq jours : l application enchaîne sur l écran du code) |
+| POST /auth/connexion | public | `{"identifiant", "mot_de_passe", "appareil"}` ; identifiant numéro ou e-mail, `appareil` facultatif | `{"etape": "connecte", "jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` ; `utilisateur.verifie` dit si le compte est vérifié. Si le compte vérifié n'a pas ouvert l'application depuis `session_inactivite_jours` (5), ou ne l'a jamais ouverte : `{"etape": "code_requis", "canal", "mode_livraison", "expire_le", "code_demo"}`, sans jeton, à confirmer par la route suivante | `identifiants_invalides` 401 (message unique, compte existant ou non), `trop_de_tentatives` 429 (blocage par compte et par IP), `compte_desactive` 403, `trop_de_requetes` 429 |
+| POST /auth/connexion/confirmer | public | `{"identifiant", "code", "appareil"}` ; le code reçu après le mot de passe | `{"etape": "connecte", "jeton", "jeton_rafraichissement", "expire_dans", "utilisateur"}` | `code_invalide` 400, `code_expire` 410, `trop_essais` 429 |
 | POST /auth/verification/envoyer | public | `{"identifiant", "canal", "usage": "verification_compte"}` | `{"mode_livraison": "demo", "code_demo": "123456", "expire_le"}` ; `code_demo` seulement en démo et pour un compte à vérifier : réponse identique sinon, sans `code_demo` | `trop_de_requetes` 429 (un code par minute, 5 par jour, limite par IP), `trop_essais` 429, `envoi_impossible` 502 (livraison `reel` avant E1) |
 | POST /auth/verification/confirmer | public | `{"identifiant", "canal", "usage": "verification_compte", "code"}` ; code lu sans casse ni espaces | `{"verifie": true}` ; la session ouverte à l'inscription reste valable | `code_invalide` 400, `code_expire` 410, `trop_essais` 429 (au sixième code faux, 15 min) |
 | POST /auth/mot-de-passe/oublie | public | `{"identifiant", "canal"}` | `{"mode_livraison", "expire_le", "code_demo"}` ; même réponse que le compte existe ou non, jamais de `code_demo` pour un compte inconnu | `trop_de_requetes` 429, `envoi_impossible` 502 |
 | POST /auth/mot-de-passe/reinitialiser | public | `{"identifiant", "canal", "code", "nouveau_mot_de_passe"}` ; `canal` facultatif | `{"reinitialise": true}` ; toutes les sessions du compte sont fermées | `code_invalide` 400, `code_expire` 410, `trop_essais` 429, `mot_de_passe_faible` 422 |
 | POST /auth/mot-de-passe/changer | tous | `{"ancien", "nouveau"}` | `{"change": true, "pin_a_redefinir": true}` | `identifiants_invalides` 401, `mot_de_passe_faible` 422 |
 | POST /auth/code-secours | admin, parent | `{"utilisateur_id"}` | `{"code", "expire_le"}` | `acces_refuse` 403, `introuvable` 404 |
-| POST /auth/rafraichir | public | `{"jeton_rafraichissement"}` | `{"jeton", "jeton_rafraichissement", "expire_dans"}` | `jeton_invalide` 401, `session_revoquee` 401 |
+| POST /auth/rafraichir | public | `{"jeton_rafraichissement"}` ; prolonge la session de `session_inactivite_jours` | `{"jeton", "jeton_rafraichissement", "expire_dans"}` | `jeton_invalide` 401, `session_revoquee` 401 |
 | POST /auth/deconnexion | tous, même non vérifié | aucun | `{"deconnecte": true}` ; ferme la session du jeton présenté | `non_authentifie` 401 |
 | POST /auth/google | public | `{"jeton_google", "appareil"}` | `{"jeton", "jeton_rafraichissement", "profil_complet": false}` | `jeton_invalide` 401 |
 | POST /auth/apple | public | `{"jeton_apple", "appareil"}` | idem Google | `jeton_invalide` 401 |
@@ -95,7 +96,7 @@ jamais l'existence d'un compte ni un détail technique.
 | PATCH /moi | tous | `{"nom_complet", "allergies", "seuil_alerte_solde"}` | profil mis à jour | `validation` |
 | PUT /moi/preferences | tous | `{"langue", "theme", "notifications"}` | préférences | `validation` |
 | PUT /moi/avatar | tous | `{"avatar_id"}` ou fichier multipart | `{"url"}` | `fichier_invalide` 422, `trop_lourd` 413 |
-| GET /moi/chiffres | convive, parent | `?du=&au=` | `{"repas", "depense_xof", "plat_favori", "economie_anti_gaspi"}` | `validation` |
+| GET /moi/chiffres | convive, parent | `?du=&au=` | `{"repas", "depense_xof", "plat_favori", "repas_non_reclames"}` | `validation` |
 | GET /moi/recus | tous | pagination | liste de reçus `{id, date, montant_xof, type, url_pdf}` | 401 |
 | GET /moi/recus/{id} | tous | aucun | PDF | `introuvable` 404 |
 | GET /moi/comptes-lies | tous | aucun | `{"google": true, "apple": false, "parents": [], "enfants": []}` | 401 |
@@ -109,7 +110,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, heure limite de commande, heure de gel, `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec leur `prix_supplement_xof` | `validation` |
+| GET /menus/semaine | convive, parent, agent | `?du=` | 7 jours : date, état, moment du gel de ce jour (`gele_le`), `prix_xof` du jour pour le profil du demandeur, et les plats groupés par service (`entree`, `resistance`, `sortie`) avec leur `prix_supplement_xof` | `validation` |
 | GET /menus/{date} | convive, parent, agent | aucun | menu du jour détaillé | `introuvable` 404 |
 | GET /plats/{id} | tous sauf public | aucun | plat, allergènes, régimes, note moyenne, avis publiés | `introuvable` 404 |
 | GET /suggestions | convive | aucun | plats suggérés d'après l'historique et les allergies | 401 |
@@ -118,7 +119,7 @@ jamais l'existence d'un compte ni un détail technique.
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "plats": [{"plat_id", "quantite"}]}]}` ; au moins un plat par jour, aucune heure ni créneau à choisir + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois (menu du jour plus suppléments), et une commande par jour avec son `code_ticket` | `heure_limite_depassee` 409, `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `plat_hors_menu` 422, `aucun_service` 422, `pin_requis` 428 |
+| POST /reservations | convive | `{"portee": "jour" \| "semaine" \| "mois", "debut", "jours": [{"date_service", "plats": [{"plat_id", "quantite"}]}]}` ; au moins un plat par jour, aucune heure ni créneau à choisir + `Cle-Geste` + `X-Preuve-Pin` | le lot créé, son `total_xof` débité en une fois (menu du jour plus suppléments), et une commande par jour avec son `code_ticket` | `commande_gelee` 409 (jour déjà gelé), `reservation_existante` 409 (avec la liste des jours en cause), `solde_insuffisant` 402, `menu_non_publie` 409, `plat_hors_menu` 422, `aucun_service` 422, `pin_requis` 428 |
 | GET /reservations/lots | convive | `?du=&au=` pagination | ses lots, avec portée, période, total et état | 401 |
 | POST /reservations/lots/{id}/annuler | convive | `Cle-Geste` | `{"jours_annules": 4, "rembourse_xof": 6000}`, les jours déjà servis ou passés restent | `deja_servie` 409, `annulation_trop_tard` 409 |
 | GET /reservations | convive | `?du=&au=` pagination | liste des réservations | 401 |
@@ -154,8 +155,8 @@ menu au tarif `prix_supplement_xof` du plat.
 Ni heure ni créneau : un convive qui a commandé pour un jour vient manger quand il veut ce jour-là, aux
 heures d'ouverture du réfectoire. Rien ne lui est imposé.
 
-Gel de la commande, repas par repas : chaque jour se gèle la veille de son propre service, à
-`heure_gel_commandes`, 18 h 00 par défaut. Une commande posée pour la semaine ne gèle pas d'un bloc : seuls
+Gel de la commande, repas par repas : chaque jour se gèle `gel_jours_avant_service` jours avant son propre
+service (1, la veille, par défaut), à `heure_gel_commandes` (18 h 00 par défaut) ; l'admin règle les deux. Une commande posée pour la semaine ne gèle pas d'un bloc : seuls
 les jours dont la veille est passée sont figés, les autres restent modifiables. `PATCH /reservations/{id}`
 porte donc sur un jour précis et ne refuse que celui-là, par `commande_gelee` 409. Un jour gelé peut encore
 être supprimé, sans remboursement. Avant son gel, modification et annulation remboursent intégralement. Le réglage `services_obligatoires` de la table `parametres` peut un jour en
@@ -244,7 +245,7 @@ Toutes ces routes exigent le rôle `admin`. Chaque écriture ajoute une ligne da
 
 | Route | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- |
-| GET POST /admin/menus | `{"date_service", "heure_limite", "heure_gel", "plats": []}` | menu créé en brouillon | `menu_existant` 409, `validation` |
+| GET POST /admin/menus | `{"date_service", "plats": []}` ; le gel suit les réglages `gel_jours_avant_service` et `heure_gel_commandes` | menu créé en brouillon | `menu_existant` 409, `validation` |
 | PATCH /admin/menus/{id} | champs modifiés | menu mis à jour | `menu_publie` 409 si une réservation existe |
 | POST /admin/menus/{id}/publier | aucun | `{"etat": "publie"}`, notification aux convives après validation | `menu_vide` 409 |
 | POST /admin/menus/{id}/annuler | `{"motif"}` | menu annulé, réservations remboursées | `deja_servi` 409 |

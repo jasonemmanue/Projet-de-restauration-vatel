@@ -139,7 +139,6 @@ Propriétaire : A4. Un menu par jour de service.
 | id | uuid | pk |
 | date_service | date | not null, unique |
 | etat | text | not null, check in (brouillon, publie, annule) |
-| heure_limite | time | not null, heure limite de réservation en UTC |
 | publie_le | timestamptz | null |
 | publie_par | uuid | fk utilisateurs, null |
 
@@ -269,7 +268,7 @@ Propriétaire : A5. Le solde n'existe que par ces lignes. Table en ajout seul.
 | sens | text | not null, check in (credit, debit) |
 | montant_xof | integer | not null, > 0 |
 | motif | text | not null, check in (recharge, reservation, supplement, annulation, remboursement, ajustement_admin) |
-| reference_type | text | null, check in (reservation, paiement, lien_paiement) |
+| reference_type | text | null, check in (lot_reservation, reservation, paiement, lien_paiement) ; un lot est débité une seule fois |
 | reference_id | uuid | null |
 | solde_apres_xof | integer | not null, >= 0 |
 | cle_unique | text | not null, unique |
@@ -409,7 +408,7 @@ Propriétaire : A7. Notification dans l'application, doublée ou non d'un envoi 
 | --- | --- | --- |
 | id | uuid | pk |
 | destinataire_id | uuid | fk utilisateurs, not null |
-| type | text | not null, check in (menu_publie, rappel_limite, rappel_gel, solde_bas, paiement_recu, repas_servi, message_admin) |
+| type | text | not null, check in (menu_publie, rappel_gel, solde_bas, paiement_recu, repas_servi, message_admin) |
 | titre | text | not null |
 | corps | text | not null |
 | donnees | jsonb | not null default objet vide |
@@ -433,7 +432,7 @@ Propriétaire : A1. Tout réglage modifiable du produit.
 | modifiable | boolean | not null default true |
 | modifie_par | uuid | fk utilisateurs, null |
 
-Clés prévues au départ : `heure_limite_defaut`, `heure_gel_commandes`, `heure_ouverture_service`,
+Clés prévues au départ : `gel_jours_avant_service` (1, la veille), `heure_gel_commandes` (18:00), `heure_ouverture_service`,
 `heure_fermeture_service`, `frais_geniuspay_pourcent`, `frais_geniuspay_fixe_xof`, `frais_retrait_pourcent`,
 `mode_paiement` (test ou reel), `livraison_verification_telephone` (demo ou reel),
 `livraison_verification_email` (demo ou reel), `duree_code_verification_minutes`, `essais_code_max`,
@@ -447,6 +446,9 @@ Clés ajoutées par M1 (migration 0002) : `duree_code_email_minutes` (15), `inte
 `codes_par_jour_max` (5), `demandes_codes_ip_jour_max` (200), `blocage_codes_minutes` (15),
 `connexion_essais_max` (5 par compte), `connexion_essais_ip_max` (30 par adresse : une salle partage souvent une
 seule IP), `connexion_blocage_minutes` (15). `jour_publication_menu` vaut 4, jeudi en numérotation ISO.
+Clé ajoutée par la migration 0004 : `session_inactivite_jours` (5). Une session se prolonge à chaque
+ouverture de l'application ; après ce délai sans ouverture, la connexion demande le mot de passe puis un
+code (usage `reconnexion`).
 
 Rythme réel de la cantine : le menu de toute la semaine est préparé et publié le jeudi pour la semaine
 suivante. Le back office propose donc la duplication d'une semaine entière, et l'écran des menus s'ouvre
@@ -479,7 +481,7 @@ Propriétaire : A3.
 | canal | text | not null, check in (telephone, email) |
 | code_hache | text | not null |
 | origine | text | not null, check in (api, admin, parent) |
-| usage | text | not null, check in (verification_compte, reinitialisation_mot_de_passe, secours, changement_identifiant) |
+| usage | text | not null, check in (verification_compte, reinitialisation_mot_de_passe, secours, changement_identifiant, reconnexion) |
 | mode_livraison | text | not null, check in (demo, reel) |
 | essais | integer | not null default 0 |
 | essais_max | integer | not null default 5 |

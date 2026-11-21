@@ -8,7 +8,7 @@ ni ce qu'il reste sur son compte.
 
 ## La réponse
 Chaque convive a un porte-monnaie électronique. Il choisit ses plats dans le menu de la semaine, un par
-service (entrée, résistance, sortie), et commande avant l'heure limite du jour. Il n'y a ni heure ni créneau
+service (entrée, résistance, sortie), et commande avant le gel de chaque repas, la veille à 18 h par défaut, réglable par l'admin. Il n'y a ni heure ni créneau
 à choisir : il vient manger quand il veut ce jour-là.
 Les trois services sont au choix : il peut ne prendre que la résistance, mais le menu est vendu comme un
 tout, donc il paie le prix du jour dans les deux cas.

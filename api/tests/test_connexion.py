@@ -1,8 +1,13 @@
 """Tests de la connexion, des jetons, du mot de passe oublié et des routes admin de comptes."""
 
+from datetime import UTC, datetime, timedelta
+
 import httpx
 from fastapi import FastAPI
+from sqlalchemy import update
 
+from app.models import CodeVerification, SessionAppareil
+from app.services import comptes
 from app.services.amorcage import creer_admin_initial
 from tests.aides_comptes import (
     MOT_DE_PASSE,
@@ -125,3 +130,40 @@ async def test_admin_initial_cree_une_seule_fois(application_base: FastAPI) -> N
         reponse = await connecter(client, email, "AdminInitial2026")
     assert reponse.status_code == 200
     assert reponse.json()["utilisateur"]["role"] == "admin"
+
+
+async def test_retour_apres_absence_demande_un_code(
+    client_base: httpx.AsyncClient, application_base: FastAPI
+) -> None:
+    identifiant, _ = await inscrire_et_verifier(client_base)
+    async with application_base.state.fabrique_sessions() as session, session.begin():
+        utilisateur = await comptes.trouver(session, comptes.lire_identifiant(identifiant))
+        await session.execute(
+            update(SessionAppareil)
+            .where(SessionAppareil.utilisateur_id == utilisateur.id)
+            .values(derniere_activite=datetime.now(UTC) - timedelta(days=6))
+        )
+        # Le code de vérification de l'inscription date lui aussi d'avant l'absence.
+        await session.execute(
+            update(CodeVerification)
+            .where(CodeVerification.identifiant_vise == identifiant)
+            .values(cree_le=datetime.now(UTC) - timedelta(days=6))
+        )
+    etape = await connecter(client_base, identifiant, confirmer=False)
+    assert etape.status_code == 200
+    corps = etape.json()
+    assert corps["etape"] == "code_requis" and "jeton" not in corps and corps["code_demo"]
+    faux = await client_base.post(
+        "/api/v1/auth/connexion/confirmer", json={"identifiant": identifiant, "code": "ZZZZZ"}
+    )
+    assert faux.status_code == 400
+    juste = await client_base.post(
+        "/api/v1/auth/connexion/confirmer", json={"identifiant": identifiant, "code": corps["code_demo"]}
+    )
+    assert juste.status_code == 200 and juste.json()["etape"] == "connecte" and juste.json()["jeton"]
+
+
+async def test_sans_absence_pas_de_code(client_base: httpx.AsyncClient) -> None:
+    identifiant, _ = await inscrire_et_verifier(client_base)
+    reponse = await connecter(client_base, identifiant, confirmer=False)
+    assert reponse.json()["etape"] == "connecte"
