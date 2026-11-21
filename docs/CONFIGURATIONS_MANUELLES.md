@@ -235,7 +235,20 @@ Valeurs récoltées :
 6. Les clés vont dans Railway (`GENIUSPAY_CLE_TEST`, `GENIUSPAY_CLE_REELLE`,
    `GENIUSPAY_SECRET_WEBHOOK`), jamais dans le dépôt ni dans la conversation.
 
-À reporter : « clés posées dans Railway », « webhooks déclarés », et les trois taux de frais.
+Fait le 21/11 : les quatre clés sont dans Railway, sous les noms que GeniusPay emploie lui-même,
+deux par mode. Noms réels à utiliser côté API, à ne pas renommer :
+- mode test : `GENIUSPAY_API_KEY`, `GENIUSPAY_SECRET_KEY`
+- mode réel : `GENIUSPAY_LIVE_API_KEY`, `GENIUSPAY_LIVE_SECRET_KEY`
+
+GeniusPay ne fournit pas de secret de signature distinct : la signature du webhook se vérifie avec
+la clé secrète du mode concerné. Donc pas de variable `GENIUSPAY_SECRET_WEBHOOK`.
+
+Webhooks : en attente. Les deux adresses sont fixées par le contrat et ne changeront pas, mais la
+route n'est pas encore déployée (au 21/11 midi l'API en ligne expose 41 routes, aucune de
+paiement). Si l'interface GeniusPay teste l'adresse au moment de la déclaration, elle échouera :
+dans ce cas, déclarer après la mise en ligne du bloc paiements.
+
+À reporter : « webhooks déclarés », et les trois taux de frais.
 
 Valeurs récoltées :
 - Pourcentage à l'encaissement : _(à remplir)_
