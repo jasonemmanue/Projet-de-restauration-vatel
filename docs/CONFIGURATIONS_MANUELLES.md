@@ -187,8 +187,15 @@ Valeurs récoltées :
 - Team ID : `LD4W7KA5YG`, donné par l'exploitant le 21/11. Nécessaire à la signature du build iOS
   et au dépôt de la clé APNs dans Firebase.
 - Key ID Sign in with Apple : _(à remplir)_
-- Key ID APNs : _(à remplir)_. La clé Prepaxia `7WB3QA78GD` a été vérifiée le 21/11 : elle n'est
-  **pas** de type APNs, elle ne sert donc à rien ici. Une clé APNs dédiée est à créer. Une clé APNs vaut pour toute l'équipe, pas pour une application : celle créée
+- Key ID APNs : `7WB3QA78GD`. Clé créée à l'origine pour Prepaxia, mais elle porte bien le service
+  APNs, et une clé APNs vaut pour toute l'équipe Apple et non pour une application : elle couvre
+  donc `com.vatel.cantine`. Aucune clé à créer. **Ne jamais la révoquer** tant que Prepaxia
+  tourne, les notifications des deux applications s'arrêteraient ensemble. Le fichier `.p8` reste
+  chez l'exploitant, hors dépôt.
+- Rappel : la clé autorise l'équipe, l'App ID autorise l'application. La case **Push
+  Notifications** doit être cochée et enregistrée sur l'App ID `com.vatel.cantine`.
+- Dépôt dans Firebase : console uniquement. Ni la CLI Firebase ni l'API publique de gestion ne
+  permettent de téléverser une clé APNs ou de générer la clé web push. Une clé APNs vaut pour toute l'équipe, pas pour une application : celle créée
   pour Prepaxia couvre donc aussi `com.vatel.cantine`, à condition d'être dans la même équipe.
   Apple n'autorise que deux clés APNs par équipe, autant ne pas en gâcher une. Si la clé s'avère
   être « Sign in with Apple » ou « App Store Connect API », en créer une vraie.
