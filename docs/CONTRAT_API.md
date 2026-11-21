@@ -125,7 +125,7 @@ jamais l'existence d'un compte ni un détail technique.
 | POST /reservations/lots/{id}/annuler | convive | `Cle-Geste` | `{"jours_annules": 4, "rembourse_xof": 6000}`, les jours déjà servis ou passés restent | `deja_servie` 409, `annulation_trop_tard` 409 |
 | GET /reservations | convive | `?du=&au=` pagination | liste des réservations | 401 |
 | GET /reservations/{id} | convive | aucun | réservation détaillée | `introuvable` 404, `acces_refuse` 403 |
-| GET /reservations/{id}/ticket | convive | aucun | `{"code_ticket", "date_service", "plats": [{"nom", "service", "quantite"}], "etat"}` | `introuvable` 404 |
+| GET /reservations/{id}/ticket | convive | aucun | `{"contenu_qr", "date_service", "etat", "plats"}` ; QR signé HMAC, noir sur blanc côté application | `introuvable` 404 |
 | PATCH /reservations/{id} | convive | `{"plats": [{"plat_id", "quantite"}]}` + `Cle-Geste` | commande modifiée, écart débité ou remboursé | `commande_gelee` 409, `deja_servie` 409, `plat_hors_menu` 422 |
 | POST /reservations/{id}/annuler | convive | `Cle-Geste` | avant le gel `{"annulee": true, "rembourse_xof": 1500}` ; après le gel `{"supprimee": true, "rembourse_xof": 0}` | `deja_servie` 409 |
 
@@ -207,10 +207,10 @@ notification après la validation. Un second appel avec la même référence ne 
 
 | Route | Rôle | Corps | Réponse | Erreurs |
 | --- | --- | --- | --- | --- |
-| GET /agent/service | agent | aucun | le service du jour : attendus, servis, restants, par service et par plat | `aucun_service` 404 |
-| POST /agent/scan | agent | `{"code_ticket", "scanne_le"}` + `Cle-Geste` | `{"resultat": "accepte", "convive", "plats": [{"nom", "service", "quantite"}]}` | `ticket_inconnu` 404, `deja_servi` 409, `mauvais_jour` 409, `reservation_annulee` 409 |
-| POST /agent/scan/file | agent | `[{"code_ticket", "scanne_le", "cle_unique"}]` | résultat par clé unique | `validation` |
-| GET /agent/service/jour | agent | `?date=` | liste des commandes du jour, servies et non servies | `acces_refuse` 403 |
+| GET /agent/service | agent, admin | aucun | service du jour : `{"date", "attendus", "servis", "restants"}` ; pas de créneau | 401, 403 |
+| POST /agent/scan | agent, admin | `{"code_ticket", "scanne_le"}` ; `code_ticket` est le contenu du QR signé + `Cle-Geste` | 200 `{"resultat": "accepte" \| "deja_servi" \| "mauvais_jour" \| "annule" \| "inconnu", "detail", "convive", "plats", "rejoue"}` ; `detail` donne l'heure du premier service pour `deja_servi` | `cle_geste_requise` 428 |
+| POST /agent/scan/file | agent, admin | `[{"code_ticket", "scanne_le", "cle_unique"}]` | un résultat par clé, dans l'ordre ; une clé déjà vue rend son résultat avec `rejoue: true` | `validation` |
+| GET /agent/service/jour | agent, admin | `?date=` | tickets du jour pour le hors ligne : `contenu_qr`, convive (prénom et initiale), plats, état | 403 |
 
 ## Notifications
 

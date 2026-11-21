@@ -7,7 +7,7 @@ import uuid
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, Query
+from fastapi import APIRouter, Depends, Header, Query, Request
 from sqlalchemy import func, select
 
 from app.core.dependances import Connecte, exiger_role
@@ -24,6 +24,7 @@ from app.schemas.commandes import (
     ReservationSortie,
 )
 from app.services import commandes, commandes_suivi, porte_monnaie
+from app.services.agent import contenu_qr
 
 routeur = APIRouter(prefix="/api/v1", tags=["commandes"])
 Convive = Annotated[Connecte, Depends(exiger_role("convive"))]
@@ -83,6 +84,21 @@ async def lire(reservation_id: uuid.UUID, convive: Convive, session: SessionBase
         session, convive.utilisateur.id, reservation_id
     )
     return await commandes_suivi.vue_reservation(session, reservation)
+
+
+@routeur.get("/reservations/{reservation_id}/ticket")
+async def ticket(reservation_id: uuid.UUID, convive: Convive, request: Request, session: SessionBase) -> dict:
+    """Le ticket du jour : contenu du QR signé, à montrer à l'agent, lisible hors ligne une fois chargé."""
+    reservation = await commandes_suivi.reservation_du_convive(
+        session, convive.utilisateur.id, reservation_id
+    )
+    vue = await commandes_suivi.vue_reservation(session, reservation)
+    return {
+        "contenu_qr": contenu_qr(request.app.state.config.secret_key, reservation.code_ticket),
+        "date_service": vue.date_service.isoformat(),
+        "etat": vue.etat,
+        "plats": [p.model_dump(mode="json") for p in vue.plats],
+    }
 
 
 @routeur.post("/reservations/{reservation_id}/annuler", response_model=AnnulationSortie)

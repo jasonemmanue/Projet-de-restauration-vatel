@@ -24,6 +24,7 @@ from app.routes import (
     admin_menus,
     admin_tableau,
     admin_utilisateurs,
+    agent,
     auth,
     medias,
     menus,
@@ -80,6 +81,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
         admin_catalogue,
         admin_menus,
         admin_tableau,
+        agent,
     ):
         application.include_router(module.routeur)
 
