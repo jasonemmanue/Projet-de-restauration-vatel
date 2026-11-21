@@ -26,7 +26,7 @@ fichier.
 | P00 | Cadrage : CLAUDE.md, cahier, modèle de données, contrat d'API, charte provisoire, plan, dépôt |
 | P01 | Charte et logo repris de la maquette : palettes des deux modes, SVG et exports dans `docs/marque/` |
 | A1 | fait | api / compte courant | api/ (app, alembic, recette, tests, Dockerfile, railway.json, .env.example, README), docker-compose.yml | ruff propre, 40 tests verts, migration appliquée sur base vide, image Docker lancée, recette « sante » locale 13/13 | Rien. Suite en A2 : `railway link` puis déploiement et recette « sante » en ligne |
-| A2 | à faire | | api/, railway | | Créer le service Railway (dossier `/api`, variables DATABASE_URL, SECRET_KEY, ADMIN_ACTIONS_PASSWORD, CORS_ORIGINS), `railway link`, vérifier /health puis `python -m recette --url https://[URL_API] --bloc sante` |
+| A2 | Déploiement de l'API sur Railway et recette « sante » en ligne |
 | A3 | Comptes, mot de passe, vérification par code, jetons, rôles, sessions |
 | A3b | Connexion par QR code, Google et Apple |
 | A3c | Profil complet, avatars, assistance et signalements |
@@ -69,7 +69,7 @@ fichier.
 | P00 | fait | cadrage / compte 1 | CLAUDE.md, docs/, .gitignore, .env.example, README.md | Dépôt initialisé, cadrage écrit et commité | Rien, étape close |
 | P01 | fait | cadrage / compte 1 | docs/CHARTE.md, docs/marque/, app/outils/marque.mjs | Palettes, contrastes, 9 SVG et 16 exports PNG produits | Rien, étape close. Les valeurs sont à reporter dans le thème Flutter en F1 |
 | A1 | en cours | api / compte courant | api/app, api/alembic, api/tests | Structure, configuration, 26 modèles, migration 0001, /health, erreurs, middlewares ; ruff et 35 tests verts | Écrire api/recette (bloc « sante »), Dockerfile, railway.json, docker-compose.yml, README |
-| A2 | à faire | | api/, railway | | Déployer sur Railway et passer la recette « sante » en ligne |
+| A2 | fait | api / compte courant | Railway (service API, Postgres, variables, domaine), docs/CONTRAT_API.md, api/README.md | Déployé 314fc8b par la CLI, migration 0001 appliquée, recette « sante » en ligne 13/13 | Rien. Mettre à jour CORS_ORIGINS dans Railway quand l'URL web de l'application (F8) et celle du site (S2) seront connues |
 | F1 | à faire | | app/ | | Créer le projet Flutter, le thème des deux modes depuis docs/CHARTE.md et la navigation |
 | M1 | à faire | | api/ | | Inscription, code de vérification en mode démo, connexion, rôles |
 | A4 | à faire | | api/ | | Plats, tarifs, menus, créneaux et leurs routes |

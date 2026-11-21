@@ -103,3 +103,37 @@ encore lancée : aucun service Railway n'est relié (étape A2).
 emploie encore `JWT_SECRET`, `CORS_ORIGINES` et `APP_COMMIT` : l'API les accepte en alias, mais les noms de
 référence sont ceux de `api/.env.example`.
 
+---
+
+## A2, déploiement de l'API sur Railway
+
+**Fait.** Le service API construisait depuis la racine du dépôt (Railpack, échec) : réglé par la CLI sur le
+dossier `/api` et le Dockerfile, contrôle `/health` sur 300 s, PostgreSQL ajouté sans domaine public, variables
+posées sans qu'aucune valeur ne soit affichée ni écrite, domaine public créé pour l'API seule. Adresse de
+production ajoutée à `docs/CONTRAT_API.md`.
+
+**Vérifié par Claude.** Déploiement `891c7911` en SUCCESS sur le commit `314fc8b`, construit depuis
+`api/Dockerfile`. Dans le conteneur : `alembic current` donne `0001 (head)`, 27 tables, 11 paramètres. En
+ligne : `GET /health` en 200 avec `{"etat":"ok","version":"0.1.0","commit":"314fc8b","base":"ok"}` et les
+quatre en-têtes de sécurité ; pré-vérification CORS d'une origine inconnue en 403
+`{"code":"origine_refusee"}` sans `Access-Control-Allow-Origin` ; `http://` en 301 vers `https://` ; route
+inconnue en 404 `{"code":"introuvable"}` ; `/docs` en 200. Recette : `python -m recette --url
+https://projet-de-restauration-vatel-production.up.railway.app --bloc sante --commit 314fc8b` donne
+13 contrôles, 0 échecs. Pas de nouveau code, donc ruff et pytest inchangés depuis A1 (40 tests verts).
+
+**À tester par vous.**
+1. Sur téléphone, en mode clair, ouvrir `https://projet-de-restauration-vatel-production.up.railway.app/health` :
+   le JSON affiche `"etat":"ok"` et `"commit":"314fc8b"`.
+2. Sur téléphone, en mode sombre, ouvrir la même adresse en `http://` : le navigateur bascule tout seul en
+   `https://` et affiche le même JSON.
+3. Sur ordinateur, ouvrir `https://projet-de-restauration-vatel-production.up.railway.app/docs` : Swagger
+   s'affiche avec la seule route de santé.
+4. Sur ordinateur, dans le tableau de bord Railway, vérifier que le service `Postgres` n'a aucun domaine
+   public et que le service API est vert.
+
+**Résultat.**
+
+**Reste à faire.** `CORS_ORIGINS` vaut provisoirement `http://localhost:3000` : y ajouter l'URL web de
+l'application (F8) et celle du site (S2) dès qu'elles existent. Lire l'adresse réelle du client derrière le
+relais (`PROXIES_DE_CONFIANCE=1`) reste à confirmer en A3 avec les premières limites par route.
+

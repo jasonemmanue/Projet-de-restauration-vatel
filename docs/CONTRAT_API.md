@@ -1,5 +1,7 @@
 # Contrat d'API
 
+Adresse de production : `https://projet-de-restauration-vatel-production.up.railway.app` (santé sur `/health`).
+
 Toutes les routes sont préfixées par `/api/v1`. Ce fichier fait foi : l'application et le site n'appellent
 rien qui n'y figure pas. Une session qui a besoin d'un changement le signale dans son compte rendu.
 

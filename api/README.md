@@ -57,3 +57,20 @@ paiement réel n'est déclenché.
   seulement à la demande avec `undefer`.
 - Toute évolution du schéma passe par une nouvelle migration ; le test `test_base_migree_conforme_aux_modeles`
   échoue si modèles et base divergent.
+
+## Déploiement Railway
+
+Production : `https://projet-de-restauration-vatel-production.up.railway.app`, projet `pleasant-sparkle`,
+service `Projet-de-restauration-vatel`, base `Postgres` sans domaine public. Un `git push` sur `main` qui touche
+`api/**` redéploie.
+
+Railway déclare `railway.json` abandonné au profit de `.railway/railway.ts` : pour ne pas en dépendre, les
+réglages du service sont posés directement sur l'instance, et `railway.json` en garde une copie. Réglages en place :
+dossier racine `/api`, Dockerfile `Dockerfile`, chemins surveillés `/api/**`, contrôle `/health` avec 300 s de
+délai, redémarrage sur échec (5 essais). Variables : `DATABASE_URL=${{Postgres.DATABASE_URL}}`, `SECRET_KEY`,
+`ADMIN_ACTIONS_PASSWORD`, `CORS_ORIGINS`, `APP_ENV`, `PORT=8000` (port visé par le domaine public).
+
+Pour relire ces réglages : `railway api 'query($s:String!,$e:String!){ serviceInstance(serviceId:$s,
+environmentId:$e){ rootDirectory dockerfilePath watchPatterns healthcheckPath } }'` avec les identifiants donnés
+par `railway status`.
+
