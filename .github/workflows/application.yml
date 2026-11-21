@@ -17,7 +17,7 @@ concurrency:
 
 env:
   API_URL: https://projet-de-restauration-vatel-production.up.railway.app/api/v1
-  SITE_URL: https://cantine-vatel.web.app
+  SITE_URL: https://site-web-production-dc1229af.up.railway.app
 
 jobs:
   web:
@@ -86,6 +86,9 @@ jobs:
   apk:
     name: APK Android
     runs-on: ubuntu-latest
+    # Ecriture du depot : seule la publication de la Release en a besoin.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -139,3 +142,23 @@ jobs:
           name: cantine-vatel-apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
+
+      - name: Nommer l'APK
+        if: github.ref == 'refs/heads/android/apk'
+        run: cp app/build/app/outputs/flutter-apk/app-release.apk cantine-vatel.apk
+
+      # La branche android/apk sert a publier : l'APK y devient telechargeable depuis la page Releases.
+      - name: Publier la Release
+        if: github.ref == 'refs/heads/android/apk'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Cantine Vatel, APK ${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
+          files: cantine-vatel.apk
+          body: |
+            APK Android reliee a l API en ligne.
+            Application web : https://app-web-production-34865097.up.railway.app
+            Back office : https://back-office-production-f9e362fb.up.railway.app
+            Site : https://site-web-production-dc1229af.up.railway.app
