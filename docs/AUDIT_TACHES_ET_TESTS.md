@@ -484,3 +484,32 @@ raison, « Impossible hors ligne : réserver, recharger et payer demandent le r�
 
 **Reste à faire.** La luminosité ne passe pas au maximum à l'ouverture du ticket : cela demande un paquet qui
 n'est pas dans la liste imposée. À arbitrer, le plein écran suffit dans la plupart des cas.
+
+---
+
+## APP-12 a APP-14, recharge, notifications et espace parent
+
+**Fait.** Recharge : montants d'un toucher, montant libre, opérateur parmi Orange, MTN, Moov et Wave,
+numéro qui paie, ouverture de la page GeniusPay puis bouton « Vérifier le paiement » qui redemande au
+serveur, pastille « Mode test » tirée de la réponse. Lien de paiement créé et partagé par WhatsApp.
+Notifications : autorisation demandée à l'ouverture de l'écran et non au démarrage, jeton FCM déclaré au
+serveur, centre de notifications lisible hors ligne. Espace parent : enfants liés avec leur solde et leur
+repas du jour, liaison par code, seuil d'alerte de solde bas, recharge du compte d'un enfant.
+
+**Vérifié par Claude.** `flutter analyze` propre. Les constructions passent maintenant chez GitHub Actions,
+plus sur le poste : un fichier `.github/workflows/application.yml` construit l'application web et l'APK à
+chaque poussée sur `main`, garde l'APK en artefact pendant trente jours, et publie le web sur Firebase
+Hosting dès que le secret `FIREBASE_SERVICE_ACCOUNT` est posé.
+
+**À tester par vous.**
+1. Dans l'onglet Actions du dépôt, ouvrir la dernière exécution : les deux travaux doivent être verts et
+   l'APK téléchargeable en bas de la page.
+2. Sur téléphone, recharger 2 000 F en mode test : la page GeniusPay s'ouvre, et au retour le bouton de
+   vérification met le solde à jour.
+3. En tant que parent, lier un enfant avec son code, poser un seuil, recharger son compte.
+
+**Résultat.**
+
+**Reste à faire.** Deux secrets à poser dans GitHub pour que tout passe : `FIREBASE_SERVICE_ACCOUNT` pour la
+publication web, `FIREBASE_DEFINES` et `GOOGLE_SERVICES_JSON` pour les notifications dans l'APK. Sans eux la
+construction passe quand même, sans notifications poussées.

@@ -236,5 +236,22 @@
   "indicatifCi": "Ivory Coast",
   "aideNumeroCi": "Without the code: 10 digits, starting 01, 05, 07, 21, 25 or 27.",
   "finaliserProfil": "Complete your profile",
-  "finaliserExplication": "Google and Apple only give your name. Your number, role and price profile are still needed to order."
+  "finaliserExplication": "Google and Apple only give your name. Your number, role and price profile are still needed to order.",
+  "operateur": "Operator",
+  "telephonePayeur": "Paying number",
+  "recharger": "Top up",
+  "paiementOuvert": "The payment page is open. Come back here once paid.",
+  "paiementReussi": "Payment received, your balance is up to date.",
+  "paiementEchoue": "The payment did not go through.",
+  "paiementEnAttente": "The payment is still pending with the operator.",
+  "verifierPaiement": "Check the payment",
+  "faireePayerParUnProche": "Have a relative pay",
+  "messageLienDefaut": "Could you top up my canteen account?",
+  "famille": "My family",
+  "lierEnfant": "Link a child",
+  "codeLiaison": "Linking code",
+  "seuilAlerte": "Alert threshold",
+  "repasDeLenfant": "Their meals",
+  "rechargerPour": "Top up for {prenom}",
+  "aucunEnfant": "No child linked yet"
 }

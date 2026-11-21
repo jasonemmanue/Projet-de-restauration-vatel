@@ -316,5 +316,29 @@
   "indicatifCi": "Côte d’Ivoire",
   "aideNumeroCi": "Sans l'indicatif : 10 chiffres, commence par 01, 05, 07, 21, 25 ou 27.",
   "finaliserProfil": "Compléter ton profil",
-  "finaliserExplication": "Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander."
+  "finaliserExplication": "Google et Apple ne donnent que ton nom. Il manque ton numéro, ton rôle et ton profil tarifaire pour commander.",
+  "operateur": "Opérateur",
+  "telephonePayeur": "Numéro qui paie",
+  "recharger": "Recharger",
+  "paiementOuvert": "La page de paiement est ouverte. Reviens ici une fois payé.",
+  "paiementReussi": "Paiement reçu, ton solde est à jour.",
+  "paiementEchoue": "Le paiement n'a pas abouti.",
+  "paiementEnAttente": "Le paiement est encore en attente chez l'opérateur.",
+  "verifierPaiement": "Vérifier le paiement",
+  "faireePayerParUnProche": "Faire payer par un proche",
+  "messageLienDefaut": "Peux-tu recharger ma cantine ?",
+  "famille": "Ma famille",
+  "lierEnfant": "Lier un enfant",
+  "codeLiaison": "Code de liaison",
+  "seuilAlerte": "Seuil d'alerte",
+  "repasDeLenfant": "Ses repas",
+  "rechargerPour": "Recharger pour {prenom}",
+  "@rechargerPour": {
+    "placeholders": {
+      "prenom": {
+        "type": "String"
+      }
+    }
+  },
+  "aucunEnfant": "Aucun enfant lié pour l'instant"
 }
