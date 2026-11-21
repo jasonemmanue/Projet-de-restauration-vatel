@@ -15,9 +15,10 @@ Mis à jour le 21 novembre 2026.
 | 4 | Apple Developer (App ID, Services ID, clés .p8) | à faire, compte payant confirmé |
 | 5 | API Gmail (envoi réel des codes) | fait |
 | 6 | GeniusPay (clés, webhooks, taux de frais) | fait |
-| 7 | Fiches des boutiques (Play, App Store) | à faire |
+| 7 | Fiches des boutiques (Play, App Store) | écarté pour aujourd'hui |
 | 8 | Clé web push FCM (notifications sur le site) | fait |
-| 9 | Compte développeur Google Play (25 USD, une fois) | à faire |
+| 9 | Compte développeur Google Play (25 USD, une fois) | écarté pour aujourd'hui |
+| 11 | Codemagic, construction iOS vers TestFlight | en cours |
 
 Rappels permanents :
 - Projet Google Cloud et Firebase : `vatel-project`, numéro `814642268084`, propriétaire
@@ -382,3 +383,41 @@ Pas encore posées, faute d'URL du site : `APPLE_SERVICES_ID`, `APPLE_KEY_ID`,
 `APPLE_CLE_PRIVEE`. Elles ne servent qu'au bouton Apple **sur le web**. Dans l'application iOS,
 le bouton Apple fonctionne avec `APPLE_CLIENT_ID` seul, l'API vérifiant le jeton d'identité
 auprès des clés publiques d'Apple.
+
+---
+
+## 11. Codemagic, construction iOS vers TestFlight — en cours
+
+Construit sur macOS dans le nuage, donc pas de Mac nécessaire. Exige le compte Apple payant,
+confirmé.
+
+Préalables Apple :
+1. App ID `com.vatel.cantine` enregistré, avec Push Notifications et Sign in with Apple.
+2. Fiche de l'application créée dans App Store Connect (`https://appstoreconnect.apple.com/apps`),
+   sans quoi TestFlight refuse le téléversement.
+3. Clé **App Store Connect API** (`https://appstoreconnect.apple.com/access/integrations/api`),
+   accès **App Manager** au minimum. Relever l'Issuer ID et le Key ID, télécharger le `.p8` une
+   seule fois, hors dépôt. Comme les clés APNs, elle vaut pour toute l'équipe : celle de Prepaxia
+   est réutilisable.
+
+Codemagic :
+4. Inscription par GitHub, autoriser le dépôt, ajouter l'application en type **Flutter App**.
+5. **Project path = `app/`**. Le projet Flutter est dans un sous-dossier ; sans ce réglage le
+   build échoue en ne trouvant pas `pubspec.yaml`.
+6. Integrations → Apple Developer Portal → Issuer ID, Key ID, `.p8`.
+7. iOS code signing **Automatic**, bundle `com.vatel.cantine`, type App Store.
+8. Publish → App Store Connect → TestFlight activé, soumission App Store décochée.
+9. Déclencheur sur la branche **`ios/testflight`**, conformément à la convention du projet : on y
+   pousse l'état de `main`, on n'y écrit jamais de code.
+
+Pièges : numéro de build déjà utilisé (activer l'incrément automatique ou monter `version:` dans
+`app/pubspec.yaml`) ; échec de signature presque toujours dû à une clé API en accès *Developer* au
+lieu d'*App Manager* ; traitement TestFlight de 5 à 15 minutes après le téléversement ; question
+de conformité export au premier build, à laquelle on répond non, l'application n'utilisant que du
+HTTPS standard.
+
+L'éditeur de workflow graphique suffit : aucun `codemagic.yaml` n'est nécessaire.
+
+Valeurs récoltées :
+- Issuer ID App Store Connect : _(à remplir)_
+- Key ID de la clé Codemagic : _(à remplir)_
