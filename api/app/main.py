@@ -19,7 +19,16 @@ from app.core.journalisation import configurer_journaux
 from app.core.limites import creer_limiteur
 from app.core.securite import CorsStrict, GardeEtEntetes, LimiteTaille
 from app.db.moteur import creer_fabrique, creer_moteur
-from app.routes import admin_catalogue, admin_menus, admin_utilisateurs, auth, menus, moi, sante
+from app.routes import (
+    admin_catalogue,
+    admin_menus,
+    admin_utilisateurs,
+    auth,
+    menus,
+    moi,
+    reservations,
+    sante,
+)
 from app.services.amorcage import creer_admin_initial
 
 
@@ -53,7 +62,7 @@ def creer_application(config: Configuration | None = None) -> FastAPI:
     application.state.limiter = creer_limiteur(config.limite_debit_defaut)
 
     installer_gestionnaires(application)
-    for module in (sante, auth, moi, menus, admin_utilisateurs, admin_catalogue, admin_menus):
+    for module in (sante, auth, moi, menus, reservations, admin_utilisateurs, admin_catalogue, admin_menus):
         application.include_router(module.routeur)
 
     # add_middleware empile vers l'extérieur : la dernière ajoutée est la plus externe.

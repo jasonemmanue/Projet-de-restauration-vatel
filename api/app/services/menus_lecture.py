@@ -56,7 +56,8 @@ async def _notes(session: AsyncSession, plat_ids: set[uuid.UUID]) -> dict[uuid.U
     return {p: round(float(n), 1) for p, n in lignes.all()}
 
 
-async def _tarifs(session: AsyncSession, profil: str | None) -> list[TarifLu]:
+async def tarifs_du_profil(session: AsyncSession, profil: str | None) -> list[TarifLu]:
+    """Tarifs d'un profil, pour le calcul du prix d'un jour."""
     if profil is None:
         return []
     lignes = (await session.execute(select(Tarif).where(Tarif.profil == profil))).scalars().all()
@@ -88,7 +89,7 @@ async def lire_semaine(
             plats_par_menu[menu_plat.menu_id].append((menu_plat, plat))
     commandees = await _portions_commandees(session, ids)
     notes = await _notes(session, {p.id for liste in plats_par_menu.values() for _, p in liste})
-    tarifs = await _tarifs(session, lecteur.statut_convive)
+    tarifs = await tarifs_du_profil(session, lecteur.statut_convive)
     maintenant = datetime.now(UTC)
     sortie = []
     for jour in jours:

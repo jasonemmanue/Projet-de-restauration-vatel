@@ -13,8 +13,10 @@ from app.core.dependances import AdminAvecActions, adresse_client
 from app.core.erreurs import ErreurApi
 from app.db.session import SessionBase
 from app.routes.auth import vue_utilisateur
+from app.routes.reservations import CleGeste
+from app.schemas.commandes import AjustementEntree
 from app.schemas.comptes import Canal, StatutConvive, UtilisateurSortie
-from app.services import administration_comptes, comptes
+from app.services import administration_comptes, commandes_suivi, comptes
 
 routeur = APIRouter(prefix="/api/v1/admin/utilisateurs", tags=["admin"])
 
@@ -61,3 +63,26 @@ async def supprimer_compte(
         session, request.app.state.config, admin.utilisateur.id, utilisateur_id, adresse_client(request)
     )
     return {"supprime": True}
+
+
+@routeur.post("/{utilisateur_id}/ajustement")
+async def ajuster(
+    utilisateur_id: uuid.UUID,
+    corps: AjustementEntree,
+    admin: AdminAvecActions,
+    cle: CleGeste,
+    request: Request,
+    session: SessionBase,
+) -> dict[str, int]:
+    """Crédite ou débite un porte-monnaie à la main, motif obligatoire, journalisé."""
+    solde = await commandes_suivi.ajuster(
+        session,
+        admin.utilisateur.id,
+        utilisateur_id,
+        corps.sens,
+        corps.montant_xof,
+        corps.motif,
+        cle,
+        adresse_client(request),
+    )
+    return {"solde_apres_xof": solde}

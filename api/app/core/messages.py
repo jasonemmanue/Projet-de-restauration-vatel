@@ -4,6 +4,7 @@ Ils sont volontairement génériques : aucun ne révèle l'existence d'un compte
 Chaque bloc ajoute ici les codes qu'il crée, toujours dans les deux langues.
 """
 
+from app.core.messages_commandes import MESSAGES_COMMANDES
 from app.core.messages_comptes import MESSAGES_COMPTES
 from app.core.messages_menus import MESSAGES_MENUS
 
@@ -59,6 +60,7 @@ MESSAGES: dict[str, dict[str, str]] = {
 
 MESSAGES.update(MESSAGES_COMPTES)
 MESSAGES.update(MESSAGES_MENUS)
+MESSAGES.update(MESSAGES_COMMANDES)
 
 # Code générique associé à un statut HTTP quand aucune erreur métier n'est levée.
 CODE_PAR_STATUT: dict[int, str] = {
