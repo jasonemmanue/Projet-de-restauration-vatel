@@ -47,10 +47,10 @@ class Mouvement(AvecCreation, Base):
             "reservation",
             "annulation",
             "remboursement",
+            "supplement",
             "ajustement_admin",
-            "anti_gaspillage",
         ),
-        choix("reference_type", "reservation", "paiement", "lien_paiement"),
+        choix("reference_type", "lot_reservation", "reservation", "paiement", "lien_paiement"),
         CheckConstraint("montant_xof > 0", name="montant_positif"),
         CheckConstraint("solde_apres_xof >= 0", name="solde_positif"),
         Index("ix_mouvements_porte_monnaie_cree_le", "porte_monnaie_id", text("cree_le desc")),
@@ -80,6 +80,8 @@ class Paiement(AvecModification, Base):
         choix("mode", "test", "reel"),
         choix("etat", "initie", "en_attente", "reussi", "echoue", "expire"),
         CheckConstraint("montant_xof > 0", name="montant_positif"),
+        CheckConstraint("frais_xof >= 0", name="frais_positifs"),
+        CheckConstraint("net_xof >= 0", name="net_positif"),
         Index("ix_paiements_beneficiaire_cree_le", "beneficiaire_id", text("cree_le desc")),
         Index("ix_paiements_etat", "etat"),
         Index("ix_paiements_mode", "mode"),
@@ -101,6 +103,9 @@ class Paiement(AvecModification, Base):
     etat: Mapped[str] = mapped_column(Text, nullable=False)
     reference_geniuspay: Mapped[str | None] = mapped_column(Text, unique=True)
     cle_geste: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    # Frais retenus par GeniusPay et net pour la cantine, lus dans sa réponse : la cantine les supporte.
+    frais_xof: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    net_xof: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
     # Charge utile brute du prestataire : lourde et rarement lue, chargée seulement à la demande.
     charge_utile_webhook: Mapped[dict[str, Any] | None] = mapped_column(JSONB, deferred=True)
     motif_echec: Mapped[str | None] = mapped_column(Text)

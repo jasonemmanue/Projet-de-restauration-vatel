@@ -1,4 +1,5 @@
-"""Modèles du service : liens parent-enfant, réservations avec ticket QR, file des scans hors ligne."""
+"""Modèles du service : liens parent-enfant, commandes par lot en trois services avec ticket QR, file des
+scans hors ligne."""
 
 import uuid
 from datetime import date, datetime
@@ -10,6 +11,7 @@ from sqlalchemy.types import DateTime
 
 from app.db.base import AvecCreation, AvecModification, Base, choix, cle_primaire
 from app.models.comptes import UTILISATEUR_FK
+from app.models.menus import SERVICES
 
 
 class LienParentEnfant(AvecModification, Base):
@@ -39,13 +41,46 @@ class LienParentEnfant(AvecModification, Base):
     valide_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
+class LotReservation(AvecModification, Base):
+    """Geste de commande qui couvre une période : un jour, une semaine ou un mois. Propriétaire : A5.
+
+    Le lot, ses réservations et son unique débit s'écrivent dans la même transaction : tout ou rien.
+    """
+
+    __tablename__ = "lots_reservation"
+    __table_args__ = (
+        choix("portee", "jour", "semaine", "mois"),
+        choix("etat", "confirme", "partiellement_annule", "annule"),
+        CheckConstraint("fin >= debut", name="periode_valide"),
+        CheckConstraint("jours_reserves > 0", name="jours_positifs"),
+        CheckConstraint("total_xof >= 0", name="total_positif"),
+        Index("ix_lots_reservation_convive_debut", "convive_id", text("debut desc")),
+    )
+
+    id: Mapped[uuid.UUID] = cle_primaire()
+    convive_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey(UTILISATEUR_FK), nullable=False
+    )
+    portee: Mapped[str] = mapped_column(Text, nullable=False)
+    debut: Mapped[date] = mapped_column(Date, nullable=False)
+    fin: Mapped[date] = mapped_column(Date, nullable=False)
+    jours_reserves: Mapped[int] = mapped_column(Integer, nullable=False)
+    total_xof: Mapped[int] = mapped_column(Integer, nullable=False)
+    etat: Mapped[str] = mapped_column(Text, nullable=False)
+    cle_unique: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+
+
 class Reservation(AvecModification, Base):
-    """Réservation d'un repas, une seule vivante par convive et par jour. Propriétaire : A5."""
+    """Commande d'un jour, une seule vivante par convive et par jour, rattachée à son lot. Propriétaire : A5.
+
+    La commande engage : non retirée, elle passe à non_reclamee sans remboursement. Après le gel, elle ne
+    se modifie plus et ne peut qu'être supprimée, sans remboursement.
+    """
 
     __tablename__ = "reservations"
     __table_args__ = (
-        choix("etat", "confirmee", "servie", "annulee", "expiree"),
-        CheckConstraint("prix_xof >= 0", name="prix_positif"),
+        choix("etat", "confirmee", "servie", "annulee", "supprimee", "non_reclamee"),
+        CheckConstraint("total_xof >= 0", name="total_positif"),
         Index(
             "uq_reservations_convive_jour_vivante",
             "convive_id",
@@ -53,27 +88,49 @@ class Reservation(AvecModification, Base):
             unique=True,
             postgresql_where=text("etat in ('confirmee', 'servie')"),
         ),
-        Index("ix_reservations_date_creneau", "date_service", "creneau_id"),
+        Index("ix_reservations_date_etat", "date_service", "etat"),
         Index("ix_reservations_menu_etat", "menu_id", "etat"),
+        Index("ix_reservations_lot_id", "lot_id"),
     )
 
     id: Mapped[uuid.UUID] = cle_primaire()
+    lot_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("lots_reservation.id"), nullable=False
+    )
     convive_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey(UTILISATEUR_FK), nullable=False
     )
     menu_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("menus.id"), nullable=False)
-    creneau_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("creneaux.id"), nullable=False
-    )
-    plat_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("plats.id"), nullable=False)
     date_service: Mapped[date] = mapped_column(Date, nullable=False)
-    prix_xof: Mapped[int] = mapped_column(Integer, nullable=False)
+    total_xof: Mapped[int] = mapped_column(Integer, nullable=False)
     etat: Mapped[str] = mapped_column(Text, nullable=False)
     code_ticket: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     servie_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     servie_par: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey(UTILISATEUR_FK))
     annulee_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    cle_unique: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+
+
+class LigneReservation(AvecCreation, Base):
+    """Plat commandé dans un service, avec sa quantité et son supplément. Ajout seul. Propriétaire : A5."""
+
+    __tablename__ = "lignes_reservation"
+    __table_args__ = (
+        choix("service", *SERVICES),
+        CheckConstraint("quantite > 0", name="quantite_positive"),
+        CheckConstraint("supplement_xof >= 0", name="supplement_positif"),
+        Index("uq_lignes_reservation_reservation_plat", "reservation_id", "plat_id", unique=True),
+        Index("ix_lignes_reservation_plat_id", "plat_id"),
+        Index("ix_lignes_reservation_plat_service", "plat_id", "service"),
+    )
+
+    id: Mapped[uuid.UUID] = cle_primaire()
+    reservation_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("reservations.id", ondelete="CASCADE"), nullable=False
+    )
+    plat_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("plats.id"), nullable=False)
+    service: Mapped[str] = mapped_column(Text, nullable=False)
+    quantite: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("1"))
+    supplement_xof: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
 
 
 class FileScan(AvecCreation, Base):

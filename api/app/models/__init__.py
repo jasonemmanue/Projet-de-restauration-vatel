@@ -10,10 +10,10 @@ from app.models.comptes import (
     Tentative,
     Utilisateur,
 )
-from app.models.menus import Creneau, Menu, MenuPlat, Plat, Tarif
+from app.models.menus import Menu, MenuPlat, Plat, Tarif
 from app.models.profil import Appareil, Avatar, Signalement
 from app.models.retours import Avis, Notification
-from app.models.service import FileScan, LienParentEnfant, Reservation
+from app.models.service import FileScan, LienParentEnfant, LigneReservation, LotReservation, Reservation
 from app.models.stocks import Ingredient, MouvementStock
 
 __all__ = [
@@ -22,13 +22,14 @@ __all__ = [
     "Avis",
     "CodeVerification",
     "ConnexionQr",
-    "Creneau",
     "FileScan",
     "Ingredient",
     "JournalAdmin",
     "JournalVerification",
     "LienPaiement",
     "LienParentEnfant",
+    "LigneReservation",
+    "LotReservation",
     "Menu",
     "MenuPlat",
     "Mouvement",

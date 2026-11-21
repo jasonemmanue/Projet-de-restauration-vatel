@@ -73,9 +73,10 @@ async def test_ecriture_annulee_si_la_route_echoue(application_base: FastAPI) ->
 
 @exige_base
 async def test_parametres_de_depart_presents(application_base: FastAPI) -> None:
-    heure = await _relire(application_base, "heure_limite_defaut")
-    assert heure is not None
-    assert heure.valeur == "11:00"
+    gel = await _relire(application_base, "heure_gel_commandes")
+    assert gel is not None
+    assert gel.valeur == "18:00"
+    assert await _relire(application_base, "remise_anti_gaspillage_pourcent") is None
 
 
 @exige_base

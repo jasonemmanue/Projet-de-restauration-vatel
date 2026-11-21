@@ -55,11 +55,10 @@ class Notification(AvecModification, Base):
         choix(
             "type",
             "menu_publie",
-            "rappel_limite",
+            "rappel_gel",
             "solde_bas",
             "paiement_recu",
             "repas_servi",
-            "anti_gaspillage",
             "message_admin",
         ),
         choix("envoi_push", "non_demande", "en_attente", "envoye", "echoue"),
