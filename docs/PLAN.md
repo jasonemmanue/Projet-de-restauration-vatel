@@ -4,117 +4,132 @@ Ce fichier est le point de reprise. Un compte Claude coupé est remplacé par un
 reprend la ligne « en cours » à sa « prochaine action ». Chaque session met sa ligne à jour au moins toutes les
 20 à 30 minutes et à chaque sous-partie terminée, puis commit et pousse.
 
-États possibles : `à faire`, `en cours`, `fait`, `bloqué`.
-Remplir la colonne « session et compte » avec le nom de la session et le compte Claude qui la tient, par
-exemple `API-1 / compte 2`.
+États possibles : `à faire`, `en cours`, `fait`, `bloqué`. La colonne « session et compte » porte le nom de la
+session et le compte Claude qui la tient, par exemple `api / compte A`.
+
+Références de fond, déjà écrites avant le jour J et à ne pas réinventer :
+
+- `uiux vatel/PROMPTS_HACKATHON.md` : le contenu détaillé de chaque étape, qui fait foi.
+- `uiux vatel/LOTS_DE_TACHES.md` : le découpage en lots de 20 à 45 minutes, avec les heures.
+- `uiux vatel/PLAN_FINAL_HACKATHON.md` : la conduite de la journée, les trois comptes et les territoires.
+- `uiux vatel/maquettes/` : les captures de la maquette, par plateforme.
+- Dépôt GitHub : `https://github.com/jasonemmanue/Projet-de-restauration-vatel`.
+
+Territoires, repris du plan final : `api/`, `site/`, `.github/`, `README.md` à la session API ; `app/` en
+entier, `docs/marque/`, `docs/CHARTE.md` et la maquette à la session App. Jamais deux sessions dans le même
+fichier.
 
 ## Ce que contient chaque étape
 
 | Étape | Contenu |
 | --- | --- |
 | P00 | Cadrage : CLAUDE.md, cahier, modèle de données, contrat d'API, charte provisoire, plan, dépôt |
-| P01 | Charte définitive à partir du logo et de `docs/maquette` : valeurs de couleur des deux modes, thème |
-| A1 | Socle API : configuration, base, Alembic, santé avec commit, erreurs, CORS, `parametres`, `journal_admin`, module `recette` |
-| A2 | Authentification : inscription, connexion, jetons, sessions, codes de vérification, journal des vérifications |
-| A3 | Profil complet : informations, préférences, avatars, reçus, export, assistance et signalements |
-| A3b | Code PIN, preuve de dépense, biométrie par secret d'appareil |
-| A3c | Connexion d'un ordinateur par QR code scanné avec le téléphone |
-| A4 | Cœur métier : plats, tarifs, menus, créneaux, réservations, ticket, porte-monnaie et mouvements |
-| A5 | Paiements GeniusPay, webhooks test et réel, liens de paiement et page publique |
-| A6 | Parent : code de liaison, enfants, repas, seuil d'alerte, allergies |
-| A7 | Avis, modération et réponse de la cantine, suggestions |
-| A8 | Agent : scan, service du jour, file des scans hors ligne |
-| A9 | Notifications : appareils FCM, notifications in-app, envois ciblés |
-| A10 | Back office : tableau de bord, commandes du jour, utilisateurs, stocks, rapports CSV et PDF, anti-gaspillage, réglages, remise à zéro |
-| F1 | Socle Flutter : thème clair et sombre, GoRouter, Riverpod, Dio, traductions, stockage local |
-| F2 | Espace convive : accueil, menu, réservation, ticket, solde |
-| F2b | Hors ligne : cache lisible, file d'envoi, boutons d'argent grisés |
-| F2c | Français et anglais sur tous les écrans livrés |
-| F3 | Espace parent |
-| F4 | Espace agent avec scan de QR |
-| F5 | Espace admin dans la même application |
-| F6 | Recharge Mobile Money et liens de paiement dans l'application |
-| F7 | Notifications push et centre de notifications |
-| F8 | Connexion Google, Apple et par QR code |
-| F9 | Finition : zones sûres, haptique, transitions, accessibilité, aucun texte coupé |
-| M1 | Minimum jury : inscription, vérification et connexion de bout en bout |
-| M2 | Minimum jury : menu de la semaine affiché |
-| M3 | Minimum jury : réservation d'un repas et ticket QR |
-| M4 | Minimum jury : solde et historique |
-| M5 | Minimum jury : admin, menus, commandes du jour, tableau de bord |
-| S1 | Site vitrine Next.js |
-| S2 | Pages légales et page publique de paiement |
-| S3 | Responsive, référencement, déploiement du site |
-| E1 | Déploiement Railway : base, API, variables, domaines, FCM, clés GeniusPay |
-| T1 | Jeu de données de démonstration et remise à zéro |
-| T2 | Recette complète en ligne, bloc par bloc |
-| T3 | Répétition de la démonstration du jury |
-| T4 | Corrections finales, bascule de l'e-mail en réel |
+| P01 | Charte et logo repris de la maquette : palettes des deux modes, SVG et exports dans `docs/marque/` |
+| A1 | Fondations de l'API : structure, configuration, base, erreurs uniformes, santé avec commit, module de recette |
+| A2 | Déploiement de l'API sur Railway et recette « sante » en ligne |
+| A3 | Comptes, mot de passe, vérification par code, jetons, rôles, sessions |
+| A3b | Connexion par QR code, Google et Apple |
+| A3c | Profil complet, avatars, assistance et signalements |
+| A4 | Plats, tarifs, menus, créneaux |
+| A5 | Réservations, porte-monnaie, ticket QR, service de l'agent, liaison parent |
+| A6 | Paiements GeniusPay en mode test puis réel, liens de paiement |
+| A7 | Notifications : appareils, envois ciblés, centre de notifications |
+| A8 | Back office : tableau de bord, commandes du jour, stocks, rapports, utilisateurs |
+| A9 | Appréciations modérées par l'admin, suggestions |
+| A10 | Données de démo et remise à zéro |
+| F1 | Fondations de l'application : thème des deux modes, navigation, réseau, traductions |
+| F2 | Inscription, connexion et vérification |
+| F2b | Écrans de connexion par QR code, Google et Apple |
+| F2c | Écran de profil complet et paramètres |
+| F3 | Espace convive |
+| F4 | Espace parent |
+| F5 | Back office en vue globale |
+| F6 | Écran de l'agent |
+| F7 | Notifications sur Android, iOS et web |
+| F8 | Application web en ligne par la branche `web` |
+| F9 | Branches de build : `android/apk`, `ios/build-check`, `ios/simulateur`, `ios/testflight` |
+| M1 | Jalon jury : comptes et vérification livrée automatiquement, après A2 |
+| M2 | Jalon jury : réservation, porte-monnaie et back office minimum, après A4 |
+| M3 | Jalon jury : parcours complet du convive dans l'application, après F1 |
+| M4 | Jalon jury : back office minimum, menus, commandes du jour, tableau de bord |
+| M5 | Jalon de 12h30 : l'application complète en ligne, présentée au jury |
+| S1 | Site public Next.js |
+| S2 | Pages légales, paiement public, suppression de compte, mise en ligne |
+| S3 | Mini vidéo d'accueil en HTML |
+| E1 | La vérification par e-mail devient réelle, par l'API Gmail |
+| T1 | Audit de sécurité et corrections |
+| T2 | Tests, analyse et intégration continue |
+| T3 | README et documentation finale |
+| T4 | Préparation de la démonstration |
 
-## Phase 1, le minimum exigé par le jury
-
-| Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
-| --- | --- | --- | --- | --- | --- |
-| P00 | fait | Cadrage / compte 1 | CLAUDE.md, docs/, .gitignore, .env.example, README.md | Dépôt initialisé et cadrage écrit | Rien, étape close |
-| P01 | à faire | | docs/CHARTE.md | | Lire `docs/maquette/src/shared/styles/tokens.css` et reporter les valeurs des deux modes |
-| A1 | à faire | | api/ | | Créer le squelette FastAPI, la configuration et la migration initiale |
-| A2 | à faire | | api/ | | Écrire les tables `utilisateurs`, `sessions`, `codes_verification` et leurs routes |
-| F1 | à faire | | app/ | | Créer le projet Flutter, le thème des deux modes et la navigation |
-| M1 | à faire | | app/, api/ | | Enchaîner inscription, code de vérification en mode démo et connexion |
-| A4 | à faire | | api/ | | Écrire plats, menus, créneaux, réservations, porte-monnaie et leurs routes |
-| M2 | à faire | | app/ | | Afficher le menu de la semaine depuis `GET /menus/semaine` |
-| M3 | à faire | | app/ | | Réserver en trois touchers et afficher le ticket QR |
-| M4 | à faire | | app/ | | Afficher le solde et l'historique des mouvements |
-| M5 | à faire | | app/ | | Ouvrir l'espace admin : menus, commandes du jour, tableau de bord |
-
-## Phase 2, le reste de l'API
+## Phase 1, l'application complète du jury, 8h30 à 12h30
 
 | Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
 | --- | --- | --- | --- | --- | --- |
-| A3 | à faire | | api/ | | Écrire le profil complet, les avatars et les signalements |
-| A3b | à faire | | api/ | | Écrire le code PIN, la preuve de dépense et la biométrie |
-| A3c | à faire | | api/ | | Écrire la connexion par QR code et ses quatre routes |
-| A5 | à faire | | api/ | | Brancher GeniusPay en mode test et écrire les deux webhooks |
-| A6 | à faire | | api/ | | Écrire la liaison parent enfant et le suivi des repas |
-| A7 | à faire | | api/ | | Écrire les avis, leur modération et les suggestions |
-| A8 | à faire | | api/ | | Écrire le scan, le service du jour et la file hors ligne |
-| A9 | à faire | | api/ | | Brancher Firebase Cloud Messaging et les notifications in-app |
-| A10 | à faire | | api/ | | Écrire le back office, les rapports et la remise à zéro |
+| P00 | fait | cadrage / compte 1 | CLAUDE.md, docs/, .gitignore, .env.example, README.md | Dépôt initialisé, cadrage écrit et commité | Rien, étape close |
+| P01 | fait | cadrage / compte 1 | docs/CHARTE.md, docs/marque/, app/outils/marque.mjs | Palettes, contrastes, 9 SVG et 16 exports PNG produits | Rien, étape close. Les valeurs sont à reporter dans le thème Flutter en F1 |
+| A1 | à faire | | api/ | | Créer la structure FastAPI, la configuration, la migration initiale et `GET /sante` |
+| A2 | à faire | | api/, railway | | Déployer sur Railway et passer la recette « sante » en ligne |
+| F1 | à faire | | app/ | | Créer le projet Flutter, le thème des deux modes depuis docs/CHARTE.md et la navigation |
+| M1 | à faire | | api/ | | Inscription, code de vérification en mode démo, connexion, rôles |
+| A4 | à faire | | api/ | | Plats, tarifs, menus, créneaux et leurs routes |
+| M2 | à faire | | api/ | | Réservation, porte-monnaie, commandes du jour, tableau de bord |
+| M3 | à faire | | app/ | | Menu de la semaine, réservation en trois touchers, ticket QR, solde |
+| M4 | à faire | | app/ | | Back office minimum : menus, commandes du jour, tableau de bord |
+| M5 | à faire | | api/, app/ | | Vérifier l'application complète en ligne avant 12h30 |
 
-## Phase 3, l'application
-
-| Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
-| --- | --- | --- | --- | --- | --- |
-| F2 | à faire | | app/ | | Compléter l'espace convive au-delà du minimum |
-| F2b | à faire | | app/ | | Mettre en place le cache lisible hors ligne et la file d'envoi |
-| F2c | à faire | | app/ | | Sortir tous les textes dans les fichiers fr et en |
-| F3 | à faire | | app/ | | Construire l'espace parent |
-| F4 | à faire | | app/ | | Construire l'espace agent et le scan de QR |
-| F5 | à faire | | app/ | | Compléter l'espace admin |
-| F6 | à faire | | app/ | | Brancher la recharge Mobile Money et les liens de paiement |
-| F7 | à faire | | app/ | | Brancher les notifications push et le centre de notifications |
-| F8 | à faire | | app/ | | Ajouter Google, Apple et la connexion par QR |
-| F9 | à faire | | app/ | | Passer la finition sur tous les écrans, en clair et en sombre |
-
-## Phase 4, le site
+## Phase 2, compléter l'API
 
 | Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
 | --- | --- | --- | --- | --- | --- |
-| S1 | à faire | | site/ | | Créer le projet Next.js et la page d'accueil |
-| S2 | à faire | | site/ | | Écrire les pages légales et la page publique de paiement |
-| S3 | à faire | | site/ | | Vérifier le responsive, le référencement et déployer |
+| A3 | à faire | | api/ | | Compléter comptes, mot de passe oublié, code de secours, sessions ouvertes |
+| A3b | à faire | | api/ | | Connexion par QR code, Google et Apple |
+| A3c | à faire | | api/ | | Profil complet, avatars, export des données, signalements |
+| A5 | à faire | | api/ | | Ticket QR signé, scan de l'agent, file hors ligne, liaison parent |
+| A6 | à faire | | api/ | | GeniusPay en mode test, webhooks, puis mode réel protégé et liens de paiement |
+| A7 | à faire | | api/ | | Appareils, notifications ciblées et centre de notifications |
+| A8 | à faire | | api/ | | Stocks, rapports CSV et PDF, utilisateurs, journal des actions |
+| A9 | à faire | | api/ | | Appréciations avec modération et réponse, suggestions |
+| A10 | à faire | | api/ | | Jeu de démonstration complet et remise à zéro protégée |
 
-## Phase 5, le déploiement
+## Phase 3, compléter l'application
 
 | Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
 | --- | --- | --- | --- | --- | --- |
-| E1 | à faire | | api/, railway | | Créer la base et le service API sur Railway, poser les variables |
+| F2 | à faire | | app/ | | Écrans d'inscription, de connexion et de vérification |
+| F2b | à faire | | app/ | | Écrans de connexion par QR code, Google et Apple |
+| F2c | à faire | | app/ | | Écran de profil complet et paramètres, repris de la maquette |
+| F3 | à faire | | app/ | | Espace convive complet |
+| F4 | à faire | | app/ | | Espace parent |
+| F5 | à faire | | app/ | | Back office en vue globale |
+| F6 | à faire | | app/ | | Écran de l'agent et scan hors ligne |
+| F7 | à faire | | app/ | | Notifications sur les trois plateformes |
+| F8 | à faire | | app/ | | Publier l'application web par la branche `web` |
+| F9 | à faire | | app/ | | Déclencher les branches de build Android et iOS |
 
-## Phase 6, la recette
+## Phase 4, le site, le réel et la recette
 
 | Étape | État | Session et compte | Fichiers touchés | Dernière action | Prochaine action précise |
 | --- | --- | --- | --- | --- | --- |
-| T1 | à faire | | api/ | | Écrire le jeu de démonstration et la remise à zéro |
-| T2 | à faire | | api/ | | Lancer `python -m recette` sur chaque bloc en ligne |
-| T3 | à faire | | app/ | | Répéter la démonstration du jury de bout en bout |
-| T4 | à faire | | api/, app/ | | Corriger les croix et basculer l'e-mail en mode réel |
+| S1 | à faire | | site/ | | Créer le site public Next.js |
+| S2 | à faire | | site/ | | Pages légales, paiement public, suppression de compte, mise en ligne |
+| S3 | à faire | | site/ | | Mini vidéo d'accueil en HTML |
+| E1 | à faire | | api/ | | Basculer la vérification par e-mail en réel, par l'API Gmail |
+| T1 | à faire | | api/, app/ | | Audit de sécurité et corrections |
+| T2 | à faire | | api/, app/ | | Tests, analyse et intégration continue |
+| T3 | à faire | | README.md, docs/ | | README et documentation finale |
+| T4 | à faire | | app/ | | Préparer et répéter la démonstration |
+
+## Repris de la session « UI UX FINAL »
+
+Ce qu'elle laisse, déjà en place dans `uiux vatel/` : la maquette React finie et compilable pour les quatre
+rôles, les captures par plateforme dans `maquettes/`, le cahier des charges, les lots de tâches, les prompts et
+le plan final. Rien de tout cela n'est à refaire.
+
+Ce qui reste à reprendre pendant le codage :
+
+| Point | Où il se règle |
+| --- | --- |
+| Profil et paramètres complets ajoutés tard à la maquette (photo, informations, formule, statistiques, préférences, sécurité, appareils, suppression) | F2c côté application, A3 et A3c côté API |
+| Moov remplacé par Stripe dans le dernier build de la maquette, alors que le cahier parle de Mobile Money | À trancher avant A6 : la liste des opérateurs de `paiements` suit la décision prise |
+| La maquette n'est pas encore dans `docs/maquette/`, chemin que CLAUDE.md et tous les prompts citent | À copier sans `node_modules` ni `dist` par la session App, avant F1 |

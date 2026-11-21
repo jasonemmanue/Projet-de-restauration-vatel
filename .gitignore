@@ -96,3 +96,6 @@ desktop.ini
 
 # Dossiers de travail hors depot
 uiux vatel/
+
+# Dossier de travail des exports de marque
+docs/marque/exports/.travail/

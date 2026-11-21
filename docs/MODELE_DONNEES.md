@@ -17,7 +17,7 @@ Règles communes :
 - Chaque index se crée par une migration Alembic.
 
 ## utilisateurs
-Propriétaire : A2.
+Propriétaire : A3.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ Un compte créé par Google ou Apple reçoit un mot de passe haché aléatoire i
 faux jusqu'à la finalisation du profil, ce qui garde la colonne obligatoire.
 
 ## sessions
-Propriétaire : A2. Une ligne par appareil connecté, pour la déconnexion à distance.
+Propriétaire : A3. Une ligne par appareil connecté, pour la déconnexion à distance.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -65,7 +65,7 @@ Propriétaire : A2. Une ligne par appareil connecté, pour la déconnexion à di
 Index : `utilisateur_id`, `expire_le`.
 
 ## liens_parent_enfant
-Propriétaire : A6.
+Propriétaire : A5.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -155,7 +155,7 @@ Propriétaire : A4. Les créneaux de passage d'un jour, avec leur capacité.
 Index : unique `(menu_id, debut)` ; index sur `menu_id`.
 
 ## reservations
-Propriétaire : A4. Une seule réservation vivante par convive et par jour.
+Propriétaire : A5. Une seule réservation vivante par convive et par jour.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -177,7 +177,7 @@ Index : unique partiel `(convive_id, date_service)` sur les lignes `etat in (con
 `code_ticket` ; unique sur `cle_unique` ; index sur `(date_service, creneau_id)` et sur `(menu_id, etat)`.
 
 ## porte_monnaie
-Propriétaire : A4. Une ligne par utilisateur. Ne contient pas de solde modifiable.
+Propriétaire : A5. Une ligne par utilisateur. Ne contient pas de solde modifiable.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -192,7 +192,7 @@ Propriétaire : A4. Une ligne par utilisateur. Ne contient pas de solde modifiab
 d'un mouvement, à partir de la somme des mouvements, puis relu pour vérification.
 
 ## mouvements
-Propriétaire : A4. Le solde n'existe que par ces lignes. Table en ajout seul.
+Propriétaire : A5. Le solde n'existe que par ces lignes. Table en ajout seul.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -211,7 +211,7 @@ Index : `(porte_monnaie_id, cree_le desc)` ; unique sur `cle_unique` ; index sur
 Aucune mise à jour ni suppression. Une correction se fait par un mouvement inverse.
 
 ## paiements
-Propriétaire : A5. Recharges Mobile Money par GeniusPay.
+Propriétaire : A6. Recharges Mobile Money par GeniusPay.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -236,7 +236,7 @@ Le crédit du porte-monnaie se fait dans la transaction qui passe le paiement à
 notification part après la validation de cette transaction.
 
 ## liens_paiement
-Propriétaire : A5. Un parent ou un convive demande à un proche de payer.
+Propriétaire : A6. Un parent ou un convive demande à un proche de payer.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -253,7 +253,7 @@ Propriétaire : A5. Un parent ou un convive demande à un proche de payer.
 Index : unique `jeton_public` ; index sur `(createur_id, cree_le desc)`, sur `etat`.
 
 ## avis
-Propriétaire : A7. Note d'un plat servi, modérée par l'admin.
+Propriétaire : A9. Note d'un plat servi, modérée par l'admin.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -276,7 +276,7 @@ Propriétaire : A7. Note d'un plat servi, modérée par l'admin.
 Index : unique `(auteur_id, reservation_id)` ; unique `cle_unique` ; index sur `(plat_id, etat)`.
 
 ## ingredients
-Propriétaire : A10. Stock de matière, pour l'alerte et le rapport.
+Propriétaire : A8. Stock de matière, pour l'alerte et le rapport.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -290,7 +290,7 @@ Propriétaire : A10. Stock de matière, pour l'alerte et le rapport.
 Index : unique sur `lower(nom)` ; index partiel sur les lignes sous le seuil.
 
 ## mouvements_stock
-Propriétaire : A10. Table en ajout seul.
+Propriétaire : A8. Table en ajout seul.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -307,7 +307,7 @@ Propriétaire : A10. Table en ajout seul.
 Index : `(ingredient_id, cree_le desc)`.
 
 ## appareils
-Propriétaire : A9, sauf les colonnes de biométrie qui appartiennent à A3b. Un appareil connu, pour les
+Propriétaire : A7, sauf les colonnes de biométrie qui appartiennent à A3b. Un appareil connu, pour les
 notifications et la biométrie.
 
 | Colonne | Type | Contraintes |
@@ -326,7 +326,7 @@ notifications et la biométrie.
 Index : unique `jeton_fcm` ; index sur `utilisateur_id`.
 
 ## notifications
-Propriétaire : A9. Notification dans l'application, doublée ou non d'un envoi push.
+Propriétaire : A7. Notification dans l'application, doublée ou non d'un envoi push.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -378,7 +378,7 @@ Propriétaire : A1. Table en ajout seul, toute action sensible du back office.
 Index : `(admin_id, cree_le desc)` ; index sur `(cible_type, cible_id)`.
 
 ## codes_verification
-Propriétaire : A2.
+Propriétaire : A3.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -400,7 +400,7 @@ Le code en clair ne revient dans la réponse que si `mode_livraison` vaut `demo`
 téléphone, cinq caractères majuscules et chiffres pour l'e-mail.
 
 ## journal_verifications
-Propriétaire : A2. Table en ajout seul, sans identifiant en clair.
+Propriétaire : A3. Table en ajout seul, sans identifiant en clair.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -414,7 +414,7 @@ Propriétaire : A2. Table en ajout seul, sans identifiant en clair.
 Index : `(cree_le desc)` ; index sur `(canal, etape)`.
 
 ## file_scans
-Propriétaire : A8. Scans faits hors ligne par l'agent, envoyés au retour du réseau.
+Propriétaire : A5. Scans faits hors ligne par l'agent, envoyés au retour du réseau.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -432,7 +432,7 @@ Index : unique `cle_unique` ; index sur `(agent_id, recu_le desc)` ; index sur `
 Un renvoi du même `cle_unique` ne crée rien et renvoie le résultat déjà enregistré.
 
 ## connexions_qr
-Propriétaire : A3c. Connexion d'un ordinateur ou d'une tablette par QR scanné avec le téléphone connecté.
+Propriétaire : A3b. Connexion d'un ordinateur ou d'une tablette par QR scanné avec le téléphone connecté.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -450,7 +450,7 @@ Propriétaire : A3c. Connexion d'un ordinateur ou d'une tablette par QR scanné 
 Index : unique `jeton_demande` ; index sur `expire_le`.
 
 ## avatars
-Propriétaire : A3. Images de profil, prédéfinies ou envoyées.
+Propriétaire : A3c. Images de profil, prédéfinies ou envoyées.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
@@ -463,7 +463,7 @@ Propriétaire : A3. Images de profil, prédéfinies ou envoyées.
 Index : index partiel unique sur `utilisateur_id` parmi les avatars envoyés actifs.
 
 ## signalements
-Propriétaire : A3. Assistance et signalements envoyés depuis l'application.
+Propriétaire : A3c. Assistance et signalements envoyés depuis l'application.
 
 | Colonne | Type | Contraintes |
 | --- | --- | --- |
