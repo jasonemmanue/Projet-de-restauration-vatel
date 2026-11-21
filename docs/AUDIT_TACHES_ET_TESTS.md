@@ -420,3 +420,26 @@ avant A8.
 
 **Reste à faire.** Brancher les trois routes dès A8, et vérifier alors le parcours complet. Les trois taux de
 frais GeniusPay restent à zéro tant que l'exploitant ne les a pas donnés : le net affiché vaudra le brut.
+
+---
+
+## APP-09, jalon de 12h30
+
+**Fait.** `docs/JALON_12H30.md` : les adresses des trois briques, un tableau des sept fonctionnalités
+minimum avec l'endroit exact et le geste de vérification, une section qui dit sans détour ce qui est vrai et
+ce qui tourne encore sur un jeu de démonstration, et les commandes à lancer pour publier. Configuration
+Firebase Hosting posée à la racine (`firebase.json`, `.firebaserc`) : le site `vatel-project` existe déjà,
+adresse `https://vatel-project.web.app`.
+
+**Vérifié par Claude.** `firebase hosting:sites:list` confirme le site. Les constructions web et APK ont été
+lancées avec l'adresse de l'API de production et les valeurs Firebase.
+
+**À tester par vous.**
+1. Ouvrir `https://vatel-project.web.app` depuis un autre appareil que celui-ci.
+2. Installer l'APK sur un téléphone Android et refaire les sept gestes du tableau.
+3. Pousser les deux branches de construction depuis votre dossier, commandes données dans le document.
+
+**Résultat.**
+
+**Reste à faire.** La Release GitHub se crée à la main, faute de `gh` installé sur ce poste : le document
+donne l'adresse et le tag à utiliser.
