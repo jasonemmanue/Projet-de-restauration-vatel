@@ -434,5 +434,8 @@ derrière, et une valeur devinée ferait un build qui passe en pointant vers la 
 configuration. Ne rien créer sans sa réponse.
 
 Valeurs récoltées :
-- Issuer ID App Store Connect : _(à remplir)_
-- Key ID de la clé Codemagic : _(à remplir)_
+- Issuer ID App Store Connect : `44b5711e-bbe9-4263-867e-86c697304ba0`
+- Key ID de la clé Codemagic : `W9Q6M6CX64`
+- Fichier `.p8` de cette clé : chez l'exploitant, hors dépôt, téléchargeable une seule fois.
+  À ne pas confondre avec la clé APNs `7WB3QA78GD`, qui sert aux notifications.
+- Rappel : l'Issuer ID et le Key ID sont publics, la clé `.p8` ne l'est pas.
