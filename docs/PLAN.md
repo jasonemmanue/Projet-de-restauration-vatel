@@ -72,8 +72,8 @@ fichier.
 | A2 | fait | api / compte courant | Railway (service API, Postgres, variables, domaine), docs/CONTRAT_API.md, api/README.md | Déployé 314fc8b par la CLI, migration 0001 appliquée, recette « sante » en ligne 13/13 | Rien. Mettre à jour CORS_ORIGINS dans Railway quand l'URL web de l'application (F8) et celle du site (S2) seront connues |
 | F1 | fait | app / compte 1 | app/ (lib/core, lib/features, lib/shared, l10n fr et en, assets, android, ios, web) | Projet créé, thème des deux modes, navigation par rôle, client API, socle hors ligne, icônes et écrans de lancement, Firebase branché, boutons Google, Apple et QR ; analyze propre, test vert, build web réussi | Rien. Suite en F2 : écrans d'inscription, de connexion et de vérification |
 | M1 | bloqué | api / compte courant | api/app (auth, moi, admin_utilisateurs, services comptes), alembic 0002, api/recette/blocs/auth.py, docs/CONTRAT_API.md, docs/MODELE_DONNEES.md | 6a2f73d déployé, migration 0002 en ligne, recette « sante » 13/13 ; admin initial non créé : ADMIN_INITIAL_EMAIL de Railway n'est pas une adresse complète | L'exploitant corrige ADMIN_INITIAL_EMAIL dans Railway et pose RECETTE_* dans son terminal ; puis `railway restart`, recette « auth » en ligne, et suppression du compte d'essai `essai-…@recette.invalid` créé à la main |
-| A4 | à faire | | api/ | | Plats, tarifs, menus, créneaux et leurs routes |
-| M2 | à faire | | api/ | | Réservation, porte-monnaie, commandes du jour, tableau de bord |
+| A4 | à faire | | api/ | Plats, prix du menu par profil, menus de la semaine publiés le jeudi (`jour_publication_menu`), sans créneau ni heure de passage ; migration qui retire l'obligation de créneau et ajoute à `parametres` `heure_gel_commandes` et les taux de frais GeniusPay |
+| M2 | à faire | | api/ | Commande sur une période en trois services, plusieurs parts possibles, débit en une fois ; modification jusqu'au gel de la veille, ensuite suppression seule et sans remboursement ; commandes du jour par service et par plat pour la cuisine et les stocks |
 | M3 | à faire | | app/ | | Menu de la semaine, réservation en trois touchers, ticket QR, solde |
 | M4 | à faire | | app/ | | Back office minimum : menus, commandes du jour, tableau de bord |
 | M5 | à faire | | api/, app/ | | Vérifier l'application complète en ligne avant 12h30 |
@@ -86,7 +86,7 @@ fichier.
 | A3b | à faire | | api/ | | Connexion par QR code, Google et Apple |
 | A3c | à faire | | api/ | | Profil complet, avatars, export des données, signalements |
 | A5 | à faire | | api/ | | Ticket QR signé, scan de l'agent, file hors ligne, liaison parent |
-| A6 | à faire | | api/ | | GeniusPay en mode test, webhooks, puis mode réel protégé et liens de paiement |
+| A6 | à faire | | api/ | GeniusPay en test puis réel : `frais_xof` et `net_xof` lus dans la réponse et le webhook (`fees`, `net_amount`), jamais recalculés quand GeniusPay les donne ; les taux de `parametres` ne servent qu'à l'estimation affichée avant paiement ; retraits suivis par les webhooks `cashout.*` pour le net après retrait |
 | A7 | à faire | | api/ | | Appareils, notifications ciblées et centre de notifications |
 | A8 | à faire | | api/ | | Stocks, rapports CSV et PDF, utilisateurs, journal des actions |
 | A9 | à faire | | api/ | | Appréciations avec modération et réponse, suggestions |
